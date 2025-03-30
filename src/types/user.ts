@@ -5,15 +5,15 @@ export interface User {
   name: string;
   email: string;
   password?: string;
-  role?: ROLE;
+  role: ROLE;
   phoneNumber: string;
   address?: string;
   dateOfBirth?: Date;
   gender?: GENDER;
   createdAt?: Date;
   updatedAt?: Date;
+  doctor?: ObjectId;
   comparePassword(enteredPassword: string): Promise<boolean>;
-  
 }
 
 export enum ROLE {

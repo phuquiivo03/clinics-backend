@@ -56,6 +56,21 @@ const loginUser: RequestHandler = async (req, res) => {
   }
 };
 
+
+const getUserProfile: RequestHandler = async (req, res) => {
+  try {
+    const user = await userService.findById(req.user._id);
+    if (!user) {
+       res.status(404).json({ message: 'User not found' });
+       return;
+    }
+
+    res.status(200).json(userService.userWithoutPassword(user));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
 // // // Get User Profile
 // const getUserProfile: RequestHandler = async (req, res) => {
 //   try {
@@ -142,8 +157,6 @@ const loginUser: RequestHandler = async (req, res) => {
 export default {
   registerUser,
   loginUser,
-  // getUserProfile,
-  // updateUserProfile,
-  // getAllUsers,
-  // deleteUser,
+  getUserProfile
+
 }

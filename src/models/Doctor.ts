@@ -1,9 +1,12 @@
 
-import mongoose, { Document, Schema } from 'mongoose';
-import type { IDoctor } from '../types';
+import { Collection, model, Schema } from 'mongoose';
+import type { Doctor } from '../types';
+
+const DOCUMENT="Doctor"
+const COLLECTION="Doctors"
 
 
-const doctorSchema = new Schema<IDoctor>(
+const doctorSchema = new Schema<Doctor>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -79,4 +82,4 @@ const doctorSchema = new Schema<IDoctor>(
   }
 );
 
-export const Doctor = mongoose.model<IDoctor>('Doctor', doctorSchema);
+export default model<Doctor>(DOCUMENT, doctorSchema, COLLECTION);

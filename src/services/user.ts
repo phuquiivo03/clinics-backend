@@ -1,3 +1,4 @@
+import type { ObjectId } from "mongoose";
 import user from "../models/user";
 import  { type UserRepository, userRepository } from "../repositories";
 import type { User } from "../types";
@@ -48,6 +49,22 @@ class UserService {
             
         else {
             throw new Error('Invalid user data');
+        }
+    }
+
+    async findById(id: ObjectId): Promise<User | null> {
+        try {
+            return this.userRepository.findById(id);
+        }catch(error) {
+            throw error;
+        }
+    }
+
+    async findAndUpdate(id: ObjectId, data: Partial<User>): Promise<User | null> {
+        try {
+            return this.userRepository.update(id, data);
+        }catch(error) {
+            throw error;
         }
     }
 

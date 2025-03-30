@@ -1,25 +1,17 @@
 
-// import express from 'express';
-// import {
-//   getAllDoctors,
-//   getDoctorById,
-//   createDoctorProfile,
-//   updateDoctorProfile,
-//   addDoctorReview,
-//   getDoctorAvailability,
-// } from '../../controllers/doctor.controller';
-// import { authMiddleware } from '../../middleware/auth';
+import express from 'express';
+import { authMiddleware } from '../../middleware/auth';
+import { doctorController } from '../../controllers';
+const router = express.Router();
 
-// const router = express.Router();
+// Public routes
+router.get('/', doctorController.getAllDoctors);
+// router.get('/:id', doctorController.getDoctorById);
+// router.get('/:id/availability', doctorController.getDoctorAvailability);
 
-// // Public routes
-// router.get('/', getAllDoctors);
-// router.get('/:id', getDoctorById);
-// router.get('/:id/availability', getDoctorAvailability);
+// Protected routes
+router.post('/', authMiddleware, doctorController.createDoctorProfile);
+// router.put('/', authMiddleware, doctorController.updateDoctorProfile);
+// router.post('/:id/reviews', authMiddleware, doctorController.addDoctorReview);
 
-// // Protected routes
-// router.post('/', authMiddleware, createDoctorProfile);
-// router.put('/', authMiddleware, updateDoctorProfile);
-// router.post('/:id/reviews', authMiddleware, addDoctorReview);
-
-// export const doctorRoutes = router;
+export default router;

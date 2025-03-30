@@ -1,7 +1,7 @@
 
 import { model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import type { User } from '../types';
+import { ROLE, type User } from '../types';
 
 const DOCUMENT="User"
 const COLLECTION="Users"
@@ -24,8 +24,8 @@ const userSchema = new Schema<User>(
     },
     role: {
       type: String,
-      enum: ['admin', 'user', 'doctor'],
-      default: 'user',
+      enum: [ROLE.ADMIN, ROLE.NORMAL, ROLE.DOCTOR],
+      default: ROLE.NORMAL,
     },
     phoneNumber: {
       type: String,

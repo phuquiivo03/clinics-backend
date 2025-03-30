@@ -15,6 +15,7 @@ declare global {
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // res.send('authMiddleware');
+    console.log('middleware', req.signedCookies)
     const authHeader = req.signedCookies.authenToken || req.headers.authorization;
     
     // const token = authHeader.split(' ')[0];

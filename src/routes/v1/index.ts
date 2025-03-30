@@ -1,7 +1,11 @@
 import { Router } from "express";
 import userRouter from "./user.routes";
+import doctorRouter from "./doctor.routes";
+import consultationPackageRouter from "./consultationPackage.routes";
+import consultationServiceRouter from "./consultationService.routes";
 const router = Router();
 router.use("/user", userRouter);
-
-
+router.use("/doctor", doctorRouter);
+router.use("/consultationPackage", consultationPackageRouter);
+router.use("/consultationService", consultationServiceRouter);
 export default router;
