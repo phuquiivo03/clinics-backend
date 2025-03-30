@@ -1,0 +1,75 @@
+name: CI/CD Dev
+
+on:
+  push:
+    branches:
+      - dev
+  # workflow_dispatch:
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: phuquivo03/clinics-management-backend:latest
+          labels: phuquivo03/clinics-management-backend:latest
+
+
+  ec2_deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: push_to_registry
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_HOST: ${{ vars.EC2_HOST }}
+          SSH_USER: ${{ vars.EC2_USER }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
+          chmod 700 ~/.ssh/private.key
+
+      - name: Deploy to EC2
+        env:
+          SSH_HOST: ${{ vars.EC2_HOST }}
+          SSH_USER: ${{ vars.EC2_USER }}
+          
+          NOSQL_DB_TYPE: ${{ vars.NOSQL_DB_TYPE }}
+          NOSQL_DB_USER: ${{ vars.NOSQL_DB_USER }}
+          NOSQL_DB_PASSWORD: ${{ secrets.NOSQL_DB_PASSWORD }}
+          NOSQL_DB_HOST: ${{ vars.NOSQL_DB_HOST }}
+          NOSQL_DB_NAME: ${{ vars.NOSQL_DB_NAME }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          COOKIE_MAX_AGE: ${{ vars.COOKIE_MAX_AGE }}
+          
+
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
+            docker rm -f clinics-management-backend || true
+            docker rmi phuquivo03/clinics-management-backend:latest || true
+            docker run -it -d \
+            --name clinics-management-backend \
+            -e NODE_ENV=\"dev\" \
+            -e SECRET='${SECRET}' \
+            -e NOSQL_DB_TYPE=\"mongodb+srv\" \
+            -e NOSQL_DB_USER='${NOSQL_DB_USER}' \
+            -e NOSQL_DB_PASSWORD='${NOSQL_DB_PASSWORD}' \
+            -e NOSQL_DB_HOST='${NOSQL_DB_HOST}' \
+            -e NOSQL_DB_NAME='${NOSQL_DB_NAME}' \
+            phuquivo03/clinics-management-backend
+          "
