@@ -47,7 +47,7 @@ jobs:
         env:
           SSH_HOST: ${{ vars.EC2_HOST }}
           SSH_USER: ${{ vars.EC2_USER }}
-          
+          PORT: ${{vars.PORT}}
           NOSQL_DB_TYPE: ${{ vars.NOSQL_DB_TYPE }}
           NOSQL_DB_USER: ${{ vars.NOSQL_DB_USER }}
           NOSQL_DB_PASSWORD: ${{ secrets.NOSQL_DB_PASSWORD }}
@@ -64,6 +64,7 @@ jobs:
             sudo docker rmi phuquivo03/clinics-management-backend:latest || true
             sudo docker run -it -d \
             --name clinics-management-backend \
+            -e PORT='${PORT}' \
             -e NODE_ENV=\"dev\" \
             -e SECRET='${SECRET}' \
             -e NOSQL_DB_TYPE=\"mongodb+srv\" \
