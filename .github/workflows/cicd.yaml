@@ -60,9 +60,9 @@ jobs:
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
-            docker rm -f clinics-management-backend || true
-            docker rmi phuquivo03/clinics-management-backend:latest || true
-            docker run -it -d \
+            sudo docker rm -f clinics-management-backend || true
+            sudo docker rmi phuquivo03/clinics-management-backend:latest || true
+            sudo docker run -it -d \
             --name clinics-management-backend \
             -e NODE_ENV=\"dev\" \
             -e SECRET='${SECRET}' \
