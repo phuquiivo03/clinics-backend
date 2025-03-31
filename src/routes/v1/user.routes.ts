@@ -8,6 +8,8 @@ const router = express.Router();
 // Public routes
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
+router.post('/verify-otp', userController.verifyOTP);
+router.post('/create-user', userController.createUser);
 // // // Protected routes
 router.get('/profile', authMiddleware, userController.getUserProfile);
 // router.put('/profile', authMiddleware, userController.updateUserProfile);

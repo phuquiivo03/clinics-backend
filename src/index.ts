@@ -3,7 +3,7 @@ import appRouter from "./routes";
 import cookieParser from "cookie-parser";
 import './db/mongodb_connection';
 import { config } from "./config";
-
+import session from "express-session";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,9 +11,19 @@ app.use(express.json());
 // cookie setup
 app.use(cookieParser(config.cookie.secret));
 
+app.use(session({
+  secret: config.cookie.secret, // the same sercet with cookieParser
+  saveUninitialized : false,
+  resave: false,
+  cookie: {
+    maxAge: config.cookie.maxAge,
+  }
+}))
+
 app.use("/api", appRouter);
 
 app.get("/", (req, res) => {
+    console.log(req.session.phoneNumber);
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -33,6 +43,8 @@ app.get("/", (req, res) => {
     </html>
   `);
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

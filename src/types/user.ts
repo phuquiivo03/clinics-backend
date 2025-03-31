@@ -2,14 +2,14 @@ import type { Document, ObjectId } from "mongoose";
 
 export interface User {
   _id?: ObjectId;
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
   password?: string;
   role: ROLE;
   phoneNumber: string;
-  address?: string;
-  dateOfBirth?: Date;
-  gender?: GENDER;
+  address: string | null;
+  dateOfBirth: Date | null;
+  gender: GENDER | null;
   createdAt?: Date;
   updatedAt?: Date;
   doctor?: ObjectId;

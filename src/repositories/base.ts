@@ -10,6 +10,7 @@ interface BaseRepository<T> {
     findById(id: ObjectId, options?: MongooseFindOneOptions): Promise<T | null>;
     update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
     findAll(): Promise<T[] | []>;
+    delete(id: ObjectId): Promise<T | null>;
 
 }
 
@@ -75,6 +76,14 @@ class BaseRepositoryImpl<T> implements BaseRepository<T>{
                 return createdData;
             }
             throw new Error('Invalid data');
+        }catch(error) {
+            throw error;
+        }
+    }
+
+    async delete(id: ObjectId): Promise<T | null> {
+        try {
+            return this.model.findByIdAndDelete(id).exec();
         }catch(error) {
             throw error;
         }

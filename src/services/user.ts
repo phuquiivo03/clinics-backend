@@ -3,6 +3,7 @@ import user from "../models/user";
 import  { type UserRepository, userRepository } from "../repositories";
 import type { User } from "../types";
 import jwt from 'jsonwebtoken';
+import type { MongooseFindOneOptions } from "../repositories/type";
 // Generate JWT
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'default_secret', {
@@ -16,12 +17,11 @@ class UserService {
         this.userRepository = userRepository;
     }
 
-    async login(email: string, password: string): Promise<User> {
+    async login(phoneNumber: string, password: string): Promise<User> {
         try {
             const user = await this.userRepository.findOne({
-                filter: { email: email }
+                filter: { phoneNumber }
             })
-            console.log(user)
             if(!user) {
                 throw new Error('User not found');
             }
@@ -84,6 +84,17 @@ class UserService {
                 return user.comparePassword(enteredPassword);
             },
         };;
+    }
+
+    async findOne(options: MongooseFindOneOptions): Promise<User | null> {
+        try {
+            if(options.filter) {
+                return this.userRepository.findOne({ filter: options.filter });
+        }
+        return null;
+        }catch(error) {
+            throw error;
+        }
     }
 }
 

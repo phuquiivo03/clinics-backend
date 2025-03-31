@@ -9,11 +9,11 @@ const COLLECTION="Users"
 const userSchema = new Schema<User>(
   {
     name: {
-      type: String,
+      type: String || null,
       required: true,
     },
     email: {
-      type: String,
+      type: String || null,
       required: true,
       unique: true,
       lowercase: true,
@@ -31,13 +31,13 @@ const userSchema = new Schema<User>(
       type: String,
     },
     address: {
-      type: String,
+      type: String || null,
     },
     dateOfBirth: {
-      type: Date,
+      type: Date || null,
     },
     gender: {
-      type: String,
+      type: String || null,
       enum: ['male', 'female', 'other'],
     },
   },

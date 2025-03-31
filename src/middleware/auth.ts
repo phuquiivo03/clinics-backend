@@ -21,7 +21,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     // const token = authHeader.split(' ')[0];
     
     if (!authHeader) {
-      res.status(401).json({ message: 'Not authorized, no token' });
+      res.status(401).json({ message: 'Not authorized, no token' + req.signedCookies.authenToken  });
       return;
     }
 
