@@ -6,59 +6,9 @@ import {  ROLE, type User } from '../types';
 import { otpService, userService } from '../services';
 import { config } from '../config';
 import type { ICreateUserRequest } from '../dto/user';
+import UtilsService from '../services/utils';
 
 
-// Generate JWT
-const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'default_secret', {
-    expiresIn: '1d',
-  });
-};
-// Register User
-const registerUser: RequestHandler = async (req, res) => {
-  try {
-    const phoneNumber: string = req.body.phoneNumber;
-    //check if phone number already exists
-    const user = await userService.findOne({filter: {phoneNumber}});
-    if(user) {
-      res.status(400).json({ message: 'Phone number already exists' });
-      return;
-    }
-    // create OTP
-    const createdOtp = await otpService.create(phoneNumber);
-    if(!createdOtp) {
-      res.status(500).json({ message: 'Failed to create OTP' });
-    }
-    // store phone number to session
-    req.session.phoneNumber = phoneNumber;
-    res.status(201).json({ message: 'OTP created: '+ createdOtp?.code });
-  } catch(e) {
-    res.status(500).json({ message: (e as Error).message });
-  }
-  
-};
-
-const verifyOTP: RequestHandler = async (req, res) => {
-  try {
-    const phoneNumber: string = req.session.phoneNumber || '';
-    if(phoneNumber === '') {
-      res.status(400).json({ message: 'Phone number not found' });
-      return;
-    }
-    const code: string  = req.body.code;
-    const isValid = await otpService.verify(phoneNumber, code);
-    if (!isValid) {
-      res.status(400).json({ message: 'Invalid OTP' });
-      return;
-    }
-    // store verified to session -> tracking user is verified or not
-    req.session.verified = true;
-    res.status(200).json({ message: 'OTP verified' });
-
-  } catch (error) {
-    res.status(500).json({ message: (error as Error).message });
-  }
-}
 
 const createUser: RequestHandler = async (req, res) => {
   const { phoneNumber, verified} = req.session;
@@ -85,7 +35,7 @@ const createUser: RequestHandler = async (req, res) => {
       res.status(400).json({ message: 'Failed to create user' });
     } 
     // @ts-ignore
-    const authenToken = generateToken(result._id.toString());
+    const authenToken = UtilsService.generateToken(result._id.toString());
     res.cookie("authenToken", authenToken, {
       maxAge: config.cookie.maxAge,
       signed: true,
@@ -98,26 +48,6 @@ const createUser: RequestHandler = async (req, res) => {
   }
 }
 
-// Login User
-const loginUser: RequestHandler = async (req, res) => {
-  try {
-    const { phoneNumber, password } = req.body;
-
-   const result = await userService.login(phoneNumber, password);
-   if(result._id) {
-      const authenToken = generateToken(result._id.toString());
-      res.cookie("authenToken", authenToken, {
-        maxAge: config.cookie.maxAge,
-        signed: true,
-      })
-   }else {
-      res.status(400).json({ message: 'Failed to login' });
-   }
-    res.status(200).json(userService.userWithoutPassword(result));
-  } catch (error) {
-    res.status(500).json({ message: (error  as Error).message });
-  }
-};
 
 
 const getUserProfile: RequestHandler = async (req, res) => {
@@ -218,10 +148,6 @@ const getUserProfile: RequestHandler = async (req, res) => {
 
 
 export default {
-  registerUser,
-  loginUser,
   getUserProfile,
-  verifyOTP,
   createUser
-
 }

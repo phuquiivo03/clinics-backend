@@ -6,16 +6,7 @@ import { authMiddleware, adminMiddleware } from '../../middleware/auth';
 const router = express.Router();
 
 // Public routes
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-router.post('/verify-otp', userController.verifyOTP);
-router.post('/create-user', userController.createUser);
-// // // Protected routes
+router.post('/', userController.createUser);
+// Requires auhentication
 router.get('/profile', authMiddleware, userController.getUserProfile);
-// router.put('/profile', authMiddleware, userController.updateUserProfile);
-
-// // Admin routes
-// router.get('/', authMiddleware, adminMiddleware, userController.getAllUsers);
-// router.delete('/:id', authMiddleware, adminMiddleware, userController.deleteUser);
-
 export default router;
