@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { userController } from '../../controllers';
 import { authMiddleware, adminMiddleware } from '../../middleware/auth';

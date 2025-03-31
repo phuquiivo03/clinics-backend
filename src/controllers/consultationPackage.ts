@@ -11,13 +11,13 @@ const create: RequestHandler = async (req, res) => {
         }
         throw new Error('Invalid package data');
     }catch(error) {
-        res.status(401).json({ message: 'Server Error' });
+        res.status(401).json({ message: 'Failed to create package, Error: ' + (error as Error).message });
     }
 }
 
 const findAll: RequestHandler = async (req, res) => {
     try {
-        const consultationPackages = await consultationPackageService.findAll();
+        const consultationPackages = await consultationPackageService.findAll({selectFields: ["title", "icon"]});
         res.status(200).json(consultationPackages);
     }catch(error) {
         res.status(401).json({ message: 'Server Error' });

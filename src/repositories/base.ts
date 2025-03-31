@@ -1,7 +1,7 @@
 import type { Model, ObjectId } from "mongoose";
 import type { User } from "../types";
 import { userModel } from "../models";
-import type { MongooseFindOneOptions, MongooseUpdateOptions } from "./type";
+import type { MongooseFindManyOptions, MongooseFindOneOptions, MongooseUpdateOptions } from "./type";
 
 interface BaseRepository<T> {
     create(data: Partial<T>): Promise<T | null>;
@@ -9,7 +9,7 @@ interface BaseRepository<T> {
     findOne(options: MongooseFindOneOptions): Promise<T | null>;
     findById(id: ObjectId, options?: MongooseFindOneOptions): Promise<T | null>;
     update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
-    findAll(): Promise<T[] | []>;
+    findAll(options?: MongooseFindManyOptions): Promise<T[] | []>;
     delete(id: ObjectId): Promise<T | null>;
 
 }
@@ -61,8 +61,11 @@ class BaseRepositoryImpl<T> implements BaseRepository<T>{
         }
     }
 
-    async findAll(): Promise<T[] | []> {
+    async findAll(options?: MongooseFindManyOptions): Promise<T[] | []> {
         try {
+            if(options && options.selectFields) {
+                return this.model.find().select(options.selectFields);
+            }
             return this.model.find();
         }catch(error) {
             throw error;

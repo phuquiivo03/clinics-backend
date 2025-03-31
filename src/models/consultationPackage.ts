@@ -4,10 +4,13 @@ import type { ConsultationPackage } from '../types';
 
 const DOCUMENT = "ConsultationPackage";
 const COLLECTION = "ConsultationPackages";
-
 const consultationPackageSchema = new Schema<ConsultationPackage>(
     {
-        name: {
+        title: {
+            type: String,
+            required: true,
+        },
+        icon: {
             type: String,
             required: true,
         },
@@ -15,21 +18,63 @@ const consultationPackageSchema = new Schema<ConsultationPackage>(
             type: String,
             required: true,
         },
-        price: {
-            type: Number,
-            required: true,
-        },
-        duration: {
-            type: Number,
-            required: true,
-        },
-        services: [
+        features: [
+            {
+                type: String,
+                required: true,
+            },
+        ],
+        priceOptions: [
+            {
+                tier: {
+                    type: String,
+                    required: true,
+                },
+                price: {
+                    type: Number,
+                    required: true,
+                },
+                testsIncluded: {
+                    type: Number,
+                    required: true,
+                },
+            },
+        ],
+        tests: [
             {
                 type: Schema.Types.ObjectId,
                 ref: 'ConsultationService',
             },
         ],
-        
+        faq: [
+            {
+                question: {
+                    type: String,
+                    required: true,
+                },
+                answer: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
+        bookingOptions: [
+            {
+                type: {
+                    type: String,
+                    enum: ["Branch", "Home Sample Collection"],
+                    required: true,
+                },
+                description: {
+                    type: String,
+                    required: true,
+                },
+                actionUrl: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
     },
     {
         timestamps: true,

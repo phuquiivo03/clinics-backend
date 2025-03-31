@@ -1,4 +1,5 @@
 import  { type ConsultationPackageRepository, ConsultationPackageRepositoryImpl } from "../repositories";
+import type { MongooseFindManyOptions } from "../repositories/type";
 import type { ConsultationPackage } from "../types";
 
 class ConsultationPackageService {
@@ -20,9 +21,9 @@ class ConsultationPackageService {
         }
     }
 
-    async findAll(): Promise<ConsultationPackage[]> {
+    async findAll(options: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
         try {
-            return this.consultationPackageRepository.findAll();
+            return this.consultationPackageRepository.findAll(options);
         }catch(error) {
             throw error;
         }

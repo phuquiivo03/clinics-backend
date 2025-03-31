@@ -27,8 +27,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     try {
       const decoded = jwt.verify(authHeader, process.env.JWT_SECRET || 'default_secret') as IAuthenJWT;
-      console.log('decode', decoded);
-      req.user = await userRepository.findById(decoded.id, {selectFields: "-password"});
+      req.user = await userRepository.findById(decoded.id, {selectFields: ["-password"]});
       next();
     } catch (error) {
       console.error(error);

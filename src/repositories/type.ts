@@ -5,7 +5,7 @@ const SORT_DESC = -1;
 
 type SortOrder = typeof SORT_ASC | typeof SORT_DESC;
 
-type MongooseSelectFields = string; // e.g. 'name age'
+type MongooseSelectFields = string[]; // e.g. 'name age'
 
 export interface MongooseQueryOptions {
   // apply()
