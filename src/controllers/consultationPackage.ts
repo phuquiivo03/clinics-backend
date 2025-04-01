@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 import { consultationPackageService } from "../services";
 import type { IConsultationPackageRequest } from "../dto";
+import type { ObjectId } from "mongoose";
 
 const create: RequestHandler = async (req, res) => {
     try {
@@ -15,6 +16,19 @@ const create: RequestHandler = async (req, res) => {
     }
 }
 
+const findById: RequestHandler = async (req, res) => {
+    try {
+        const id = req.params.id as unknown as ObjectId;
+        const consultationPackage = await consultationPackageService.findById(id);
+        if(consultationPackage) {
+            res.status(200).json(consultationPackage);
+        }
+        res.status(404).json({ message: 'Package not found' });
+    }catch(error) {
+        res.status(401).json({ message: 'Failed to get, Error: ' + (error as Error).message });
+    }
+}
+
 const findAll: RequestHandler = async (req, res) => {
     try {
         const consultationPackages = await consultationPackageService.findAll({selectFields: ["title", "icon"]});
@@ -26,5 +40,6 @@ const findAll: RequestHandler = async (req, res) => {
 
 export default {
     create,
+    findById,
     findAll
 }

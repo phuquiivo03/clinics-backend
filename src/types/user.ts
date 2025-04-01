@@ -10,6 +10,7 @@ export interface User {
   address: string | null;
   dateOfBirth: Date | null;
   gender: GENDER | null;
+  occupation: string | null;
   createdAt?: Date;
   updatedAt?: Date;
   doctor?: ObjectId;

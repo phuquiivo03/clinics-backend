@@ -5,7 +5,7 @@ import type { RequestHandler } from 'express';
 import {  ROLE, type User } from '../types';
 import { otpService, userService } from '../services';
 import { config } from '../config';
-import type { ICreateUserRequest } from '../dto/user';
+import type { ICreateUserRequest, IUpdateUserInfoRequest } from '../dto/user';
 import UtilsService from '../services/utils';
 
 
@@ -28,6 +28,7 @@ const createUser: RequestHandler = async (req, res) => {
       address: null,
       dateOfBirth: null,
       gender: null,
+      occupation: null,
       comparePassword: async () => false // Provide a default implementation
     }
     const result = await  userService.create(data);
@@ -62,6 +63,32 @@ const getUserProfile: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+const updateUserProfile: RequestHandler = async (req, res) => {
+  try {
+    const userRequest: IUpdateUserInfoRequest = req.body;
+    const user = await userService.findById(req.user._id);
+    if (!user) {
+       res.status(404).json({ message: 'User not found' });
+       return;
+    }
+    const updatedUser = await userService.findAndUpdate(
+      req.user._id, 
+      {
+        ...userRequest,
+        phoneNumber: req.user.phoneNumber,
+        role: req.user.role
+      }
+    );
+    if(!updatedUser || createUser == null) {
+      res.status(400).json({ message: 'Failed to update user' });
+      return;
+    } 
+    res.status(200).json(userService.userWithoutPassword(updatedUser));
+  } catch(e) {
+    res.status(400).json({ message: (e as Error).message });
   }
 }
 // // // Get User Profile
@@ -149,5 +176,6 @@ const getUserProfile: RequestHandler = async (req, res) => {
 
 export default {
   getUserProfile,
-  createUser
+  createUser,
+  updateUserProfile
 }

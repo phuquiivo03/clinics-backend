@@ -18,6 +18,10 @@ const userSchema = new Schema<User>(
       unique: true,
       lowercase: true,
     },
+    occupation: {
+      type: String || null,
+      required: true,
+    },
     password: {
       type: String,
       required: true,

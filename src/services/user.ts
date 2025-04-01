@@ -74,6 +74,7 @@ class UserService {
             email: user.email,
             role: user.role,
             phoneNumber: user.phoneNumber,
+            occupation: user.occupation,
             address: user.address,
             dateOfBirth: user.dateOfBirth,
             gender: user.gender,
@@ -96,6 +97,8 @@ class UserService {
             throw error;
         }
     }
+
+
 }
 
 const userService = new UserService();

@@ -1,3 +1,4 @@
+import type { ObjectId } from "mongoose";
 import  { type ConsultationPackageRepository, ConsultationPackageRepositoryImpl } from "../repositories";
 import type { MongooseFindManyOptions } from "../repositories/type";
 import type { ConsultationPackage } from "../types";
@@ -16,6 +17,14 @@ class ConsultationPackageService {
                 return createdPackage;
             }
             throw new Error('Invalid package data');
+        }catch(error) {
+            throw error;
+        }
+    }
+
+    async findById(id: ObjectId): Promise<ConsultationPackage | null> {
+        try {
+            return this.consultationPackageRepository.findById(id);
         }catch(error) {
             throw error;
         }

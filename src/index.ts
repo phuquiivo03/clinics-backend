@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import './db/mongodb_connection';
 import { config } from "./config";
 import session from "express-session";
+import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,11 @@ app.use(session({
   cookie: {
     maxAge: config.cookie.maxAge,
   }
+}))
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
 }))
 
 app.use("/api", appRouter);
