@@ -28,7 +28,15 @@ app.use(session({
 
 app.use(cors({
   
-  origin: 'http://localhost:3000',
+  origin: function(origin, callback) {
+    // Allow requests from localhost:3000 and your production frontend
+    const allowedOrigins = ['http://localhost:3000', 'http://your-production-frontend-url'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,  
   allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
