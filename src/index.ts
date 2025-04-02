@@ -37,8 +37,15 @@ app.use(cors({
 
 app.use("/api", appRouter);
 
+app.get("/set", (req, res) => {
+  req.session.phoneNumber = "0337170203p"
+  res.send("Hello World");
+})
 
-
+app.get("/get", (req, res) => {
+  console.log(req.session.phoneNumber);
+  res.send("Hello World" + req.session.phoneNumber);
+})
 app.get("/", (req, res) => {
     console.log(req.session.phoneNumber);
   res.send(`
