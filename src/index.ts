@@ -22,21 +22,14 @@ app.use(session({
     path: '/',
     secure: false,
     httpOnly: true,
-    domain: '54.169.139.70'
+    domain: '54.169.139.70',
+    sameSite: 'none'
   }
 }))
 
 app.use(cors({
   
-  origin: function(origin, callback) {
-    // Allow requests from localhost:3000 and your production frontend
-    const allowedOrigins = ['http://localhost:3000', 'http://your-production-frontend-url'];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['http://localhost:3000'],
   credentials: true,  
   allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
