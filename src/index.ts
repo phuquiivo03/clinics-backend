@@ -19,13 +19,15 @@ app.use(session({
   
   cookie: {
     maxAge: config.cookie.maxAge,
-    // sameSite: 'lax',
-    // secure: true,
+    path: '/',
+    secure: false,
+    httpOnly: true,
     
   }
 }))
 
 app.use(cors({
+  
   origin: 'http://localhost:3000',
   credentials: true,  
   allowedHeaders: ['Content-Type', 'Cookie'],
