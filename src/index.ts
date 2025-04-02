@@ -23,7 +23,7 @@ app.use(session({
     secure: false,
     httpOnly: true,
     domain: '54.169.139.70',
-    sameSite: 'none'
+    sameSite: 'lax'
   }
 }))
 
