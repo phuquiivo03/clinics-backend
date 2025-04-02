@@ -20,6 +20,7 @@ const registerUser: RequestHandler = async (req, res) => {
       }
       // store phone number to session
       req.session.phoneNumber = phoneNumber;
+      console.log(req.session.phoneNumber, 'id', req.session.id); 
       res.status(201).json({ message: 'OTP created: '+ createdOtp?.code });
     } catch(e) {
       res.status(500).json({ message: (e as Error).message });
@@ -29,6 +30,7 @@ const registerUser: RequestHandler = async (req, res) => {
   
   const verifyOTP: RequestHandler = async (req, res) => {
     try {
+      console.log('verify', req.session.phoneNumber, 'id', req.session.id);
       const phoneNumber: string = req.session.phoneNumber || '';
       if(phoneNumber === '') {
         res.status(400).json({ message: 'Phone number not found' });

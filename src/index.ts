@@ -16,17 +16,24 @@ app.use(session({
   secret: config.cookie.secret, // the same sercet with cookieParser
   saveUninitialized : false,
   resave: false,
+  
   cookie: {
     maxAge: config.cookie.maxAge,
+    // sameSite: 'lax',
+    // secure: true,
+    
   }
 }))
 
 app.use(cors({
-  origin: '*',
+  origin: 'http://localhost:3000',
+  credentials: true,  
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
 }))
 
 app.use("/api", appRouter);
+
+
 
 app.get("/", (req, res) => {
     console.log(req.session.phoneNumber);
