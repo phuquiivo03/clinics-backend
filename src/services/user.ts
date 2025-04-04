@@ -36,7 +36,7 @@ class UserService {
     
     async create(data: User): Promise<User> {
         // Check if user already exists
-        const userExists = await this.userRepository.findOne({filter: { email: data.email }});
+        const userExists = await this.userRepository.findOne({filter: { phoneNumber: data.phoneNumber }});
 
         if (userExists) {
             throw new Error( 'User already exists' );

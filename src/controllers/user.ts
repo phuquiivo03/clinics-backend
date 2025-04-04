@@ -11,20 +11,20 @@ import UtilsService from '../services/utils';
 
 
 const createUser: RequestHandler = async (req, res) => {
-  const { phoneNumber, verified} = req.session;
-  if (!phoneNumber || !verified) {
-    res.status(400).json({ message: 'Phone number not found or not verified' });
-    return;
-  }
+  // const { phoneNumber, verified} = req.session;
+  // if (!phoneNumber || !verified) {
+  //   res.status(400).json({ message: 'Phone number not found or not verified' });
+  //   return;
+  // }
   try {
     
     const userRequest: ICreateUserRequest = req.body;
     const data: User = {
       ...userRequest,
-      phoneNumber,
+      // phoneNumber,
       role: ROLE.NORMAL,
-      name: 'null',
-      email: 'null',
+      name: null,
+      email: null,
       address: null,
       dateOfBirth: null,
       gender: null,
@@ -37,12 +37,15 @@ const createUser: RequestHandler = async (req, res) => {
     } 
     // @ts-ignore
     const authenToken = UtilsService.generateToken(result._id.toString());
-    res.cookie("authenToken", authenToken, {
-      maxAge: config.cookie.maxAge,
-      signed: true,
-    })
+    // res.cookie("authenToken", authenToken, {
+    //   maxAge: config.cookie.maxAge,
+    //   signed: true,
+    // })
 
-    res.status(201).json(userService.userWithoutPassword(result));
+    res.status(201).json({
+      user: userService.userWithoutPassword(result),
+      authenToken
+    });
   } catch (error) {
     res.status(400).json({ message: (error  as Error).message });
     

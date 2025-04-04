@@ -1,6 +1,7 @@
 import type { GENDER } from "../types";
 
 export type ICreateUserRequest = {
+    phoneNumber: string;
     password: string;
 }
 

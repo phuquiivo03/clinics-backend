@@ -10,17 +10,16 @@ const userSchema = new Schema<User>(
   {
     name: {
       type: String || null,
-      required: true,
+      required: false,
     },
     email: {
       type: String || null,
-      required: true,
-      unique: true,
+      required: false,
       lowercase: true,
     },
     occupation: {
       type: String || null,
-      required: true,
+      required: false,
     },
     password: {
       type: String,
@@ -33,6 +32,7 @@ const userSchema = new Schema<User>(
     },
     phoneNumber: {
       type: String,
+      required: true,
     },
     address: {
       type: String || null,
