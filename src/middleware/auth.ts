@@ -14,9 +14,11 @@ declare global {
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const authHeader = req.headers.authorization?.split('Bearer ')[1];
+    console.log('authHeader', authHeader)
     // res.send('authMiddleware');
-    console.log('middleware', req.signedCookies)
-    const authHeader = req.signedCookies.authenToken || req.headers.authorization;
+    // console.log('middleware', req.signedCookies)
+    // const authHeader = req.signedCookies.authenToken || req.headers.authorization;
     
     // const token = authHeader.split(' ')[0];
     
@@ -27,6 +29,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     try {
       const decoded = jwt.verify(authHeader, process.env.JWT_SECRET || 'default_secret') as IAuthenJWT;
+      if(decoded.expired < Date.now()) {
+        res.status(401).json({ message: 'Not authorized, token expired' });
+        return;
+      }
       req.user = await userRepository.findById(decoded.id, {selectFields: ["-password"]});
       next();
     } catch (error) {

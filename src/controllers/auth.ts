@@ -60,14 +60,18 @@ const loginUser: RequestHandler = async (req, res) => {
      const result = await userService.login(phoneNumber, password);
      if(result._id) {
         const authenToken = UtilsService.generateToken(result._id.toString());
-        res.cookie("authenToken", authenToken, {
-          maxAge: config.cookie.maxAge,
-          signed: true,
-        })
+        // res.cookie("authenToken", authenToken, {
+        //   maxAge: config.cookie.maxAge,
+        //   signed: true,
+        // })
+        res.status(200).json({...userService.userWithoutPassword(
+          result,
+        ), authenToken});
+        return;
      }else {
         res.status(400).json({ message: 'Failed to login' });
+        return;
      }
-      res.status(200).json(userService.userWithoutPassword(result));
     } catch (error) {
       res.status(500).json({ message: (error  as Error).message });
     }
