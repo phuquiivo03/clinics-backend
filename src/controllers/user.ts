@@ -1,10 +1,9 @@
-
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import type { RequestHandler } from 'express';
-import {  ROLE, type User } from '../types';
+import { ROLE, type User } from '../types';
 import { otpService, userService } from '../services';
-import { config } from '../config';
+import { createUserSchema, updateUserInfoSchema } from '../schemas';
 import type { ICreateUserRequest, IUpdateUserInfoRequest } from '../dto/user';
 import UtilsService from '../services/utils';
 
@@ -17,8 +16,18 @@ const createUser: RequestHandler = async (req, res) => {
   //   return;
   // }
   try {
+    // Validate request body against schema
+    const validationResult = createUserSchema.safeParse(req.body);
     
-    const userRequest: ICreateUserRequest = req.body;
+    if (!validationResult.success) {
+      res.status(400).json({ 
+        message: 'Validation failed', 
+        errors: validationResult.error.errors 
+      });
+      return;
+    }
+    
+    const userRequest: ICreateUserRequest = validationResult.data;
     const data: User = {
       ...userRequest,
       // phoneNumber,
@@ -31,9 +40,10 @@ const createUser: RequestHandler = async (req, res) => {
       occupation: null,
       comparePassword: async () => false // Provide a default implementation
     }
-    const result = await  userService.create(data);
+    const result = await userService.create(data);
     if(!result._id) {
       res.status(400).json({ message: 'Failed to create user' });
+      return;
     } 
     // @ts-ignore
     const authenToken = UtilsService.generateToken(result._id.toString());
@@ -47,8 +57,7 @@ const createUser: RequestHandler = async (req, res) => {
       authenToken
     });
   } catch (error) {
-    res.status(400).json({ message: (error  as Error).message });
-    
+    res.status(400).json({ message: (error as Error).message });
   }
 }
 
@@ -71,7 +80,18 @@ const getUserProfile: RequestHandler = async (req, res) => {
 
 const updateUserProfile: RequestHandler = async (req, res) => {
   try {
-    const userRequest: IUpdateUserInfoRequest = req.body;
+    // Validate request body against schema
+    const validationResult = updateUserInfoSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      res.status(400).json({ 
+        message: 'Validation failed', 
+        errors: validationResult.error.errors 
+      });
+      return;
+    }
+    
+    const userRequest: IUpdateUserInfoRequest = validationResult.data;
     const user = await userService.findById(req.user._id);
     if (!user) {
        res.status(404).json({ message: 'User not found' });

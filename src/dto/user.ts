@@ -1,9 +1,10 @@
-import type { GENDER } from "../types";
+import { GENDER } from "../types";
 
 export type ICreateUserRequest = {
     phoneNumber: string;
     password: string;
 }
+
 
 
 export type IUpdateUserInfoRequest = {
@@ -13,3 +14,4 @@ export type IUpdateUserInfoRequest = {
     gender: GENDER;
     address: string;
 }
+
