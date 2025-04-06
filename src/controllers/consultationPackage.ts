@@ -2,39 +2,44 @@ import type { RequestHandler } from "express";
 import { consultationPackageService } from "../services";
 import type { IConsultationPackageRequest } from "../dto";
 import type { ObjectId } from "mongoose";
+import { CustomExpress } from "../pkg/app/response";
+import { ErrorCode } from "../pkg/e/code";
 
-const create: RequestHandler = async (req, res) => {
+const create: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
     try {
         const consultationPackageRequest: IConsultationPackageRequest  = req.body;
         const consultationPackage = await consultationPackageService.create(consultationPackageRequest);
         if(consultationPackage) {
-            res.status(201).json(consultationPackage);
+            appExpress.response201(consultationPackage);
         }
         throw new Error('Invalid package data');
     }catch(error) {
-        res.status(401).json({ message: 'Failed to create package, Error: ' + (error as Error).message });
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {})
     }
 }
 
-const findById: RequestHandler = async (req, res) => {
+const findById: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
     try {
         const id = req.params.id as unknown as ObjectId;
         const consultationPackage = await consultationPackageService.findById(id);
         if(consultationPackage) {
-            res.status(200).json(consultationPackage);
+            appExpress.response200(consultationPackage);
         }
-        res.status(404).json({ message: 'Package not found' });
+        appExpress.response404(ErrorCode.NOT_FOUND, {})
     }catch(error) {
-        res.status(401).json({ message: 'Failed to get, Error: ' + (error as Error).message });
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {})
     }
 }
 
-const findAll: RequestHandler = async (req, res) => {
+const findAll: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
     try {
         const consultationPackages = await consultationPackageService.findAll({selectFields: ["title", "icon"]});
-        res.status(200).json(consultationPackages);
+        appExpress.response200(consultationPackages);
     }catch(error) {
-        res.status(401).json({ message: 'Server Error' });
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {})
     }
 }
 

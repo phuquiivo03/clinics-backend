@@ -2,33 +2,37 @@ import type { RequestHandler } from "express";
 import { otpService, userService } from "../services";
 import UtilsService from "../services/utils";
 import { config } from "../config";
-
+import { CustomExpress } from "../pkg/app/response";
+import { ErrorCode } from "../pkg/e/code";
 // Register User
-const registerUser: RequestHandler = async (req, res) => {
+const registerUser: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
     try {
       const phoneNumber: string = req.body.phoneNumber;
       //check if phone number already exists
       const user = await userService.findOne({filter: {phoneNumber}});
       if(user) {
-        res.status(400).json({ message: 'Phone number already exists' });
+        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {})
         return;
       }
       // create OTP
       const createdOtp = await otpService.create(phoneNumber);
       if(!createdOtp) {
-        res.status(500).json({ message: 'Failed to create OTP' });
+        appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})
+        return;
       }
       // store phone number to session
       // req.session.phoneNumber = phoneNumber;
       // console.log(req.session.phoneNumber, 'id', req.session.id); 
-      res.status(201).json({ message: 'OTP created: '+ createdOtp?.code });
+      appExpress.response201({ message: 'OTP created: '+ createdOtp?.code });
     } catch(e) {
-      res.status(500).json({ message: (e as Error).message });
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})
     }
     
   };
   
-  const verifyOTP: RequestHandler = async (req, res) => {
+  const verifyOTP: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
     try {
       // console.log('verify', req.session.phoneNumber, 'id', req.session.id);
       // const phoneNumber: string = req.session.phoneNumber || '';
@@ -40,7 +44,7 @@ const registerUser: RequestHandler = async (req, res) => {
       const phoneNumber: string  = req.body.phoneNumber;
       const isValid = await otpService.verify(phoneNumber, code);
       if (!isValid) {
-        res.status(400).json({ message: 'Invalid OTP' });
+        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {})
         return;
       }
       // store verified to session -> tracking user is verified or not
@@ -48,13 +52,14 @@ const registerUser: RequestHandler = async (req, res) => {
       // res.status(200).json({ message: 'OTP verified' });
   
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})
     }
   }
 
 
 // Login User
-const loginUser: RequestHandler = async (req, res) => {
+const loginUser: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
     try {
       const { phoneNumber, password } = req.body;
   
@@ -65,16 +70,16 @@ const loginUser: RequestHandler = async (req, res) => {
         //   maxAge: config.cookie.maxAge,
         //   signed: true,
         // })
-        res.status(200).json({...userService.userWithoutPassword(
+        appExpress.response200({...userService.userWithoutPassword(
           result,
         ), authenToken});
         return;
      }else {
-        res.status(400).json({ message: 'Failed to login' });
+        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {})
         return;
      }
     } catch (error) {
-      res.status(500).json({ message: (error  as Error).message });
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})
     }
   };
   
