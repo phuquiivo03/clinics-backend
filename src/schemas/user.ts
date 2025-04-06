@@ -3,7 +3,7 @@ import { GENDER } from "../types";
 
 export const updateUserInfoSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email format"),
+    email: z.string().email("Invalid email format").optional(),
     dateOfBirth: z.string()
         .or(z.date())
         .pipe(z.coerce.date())

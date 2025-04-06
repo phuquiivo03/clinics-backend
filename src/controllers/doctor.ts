@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { doctorService, userService } from '../services';
 import type { ICreateDoctorRequest } from '../dto';
 import { ROLE, type Doctor } from '../types';
+import { createDoctorSchema } from '../schemas';
 
 // Get All Doctors
 const getAllDoctors: RequestHandler = async (req, res) => {
@@ -36,11 +37,16 @@ const getAllDoctors: RequestHandler = async (req, res) => {
 // Create a Doctor Profile
 const createDoctorProfile: RequestHandler = async (req, res) => {
   try {
+
+    const validationResult = createDoctorSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      res.status(400).json({ message: 'Validation failed', errors: validationResult.error.errors });
+      return;
+    }
     
-    const doctorRequest: ICreateDoctorRequest= req.body;
+    const doctorRequest = validationResult.data;
     // Check if doctor profile already exists
     const existingDoctor = await doctorService.findOne({ filter: {user: req.user._id} });
-
     if (existingDoctor) {
       res.status(400).json({ message: 'Doctor profile already exists for this user' });
       return;

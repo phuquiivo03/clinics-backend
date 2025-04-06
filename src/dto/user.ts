@@ -9,7 +9,7 @@ export type ICreateUserRequest = {
 
 export type IUpdateUserInfoRequest = {
     name: string;
-    email: string;
+    email?: string;
     dateOfBirth: Date;
     gender: GENDER;
     address: string;
