@@ -23,6 +23,16 @@ class ScheduleService {
             throw error;
         }
     }
+
+    async findByUserId(userId: ObjectId): Promise<Schedule[] | []> {
+        try {
+            return scheduleRepository.findAll({ 
+                filter: { userId }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 const scheduleService = new ScheduleService();

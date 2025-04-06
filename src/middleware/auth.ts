@@ -1,7 +1,7 @@
 
 import { type Request, type Response, type NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import type { IAuthenJWT } from '../types';
+import { ROLE, type IAuthenJWT } from '../types';
 import { userRepository } from '../repositories';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
@@ -48,9 +48,11 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const appExpress = new CustomExpress(req, res, next);
-  if (req.user && req.user.role === 'admin') {
+  if (req.user && req.user.role === ROLE.ADMIN) {
     next();
   } else {
-    appExpress.response403(ErrorCode.FORBIDDEN, {})
+    appExpress.response403(ErrorCode.FORBIDDEN, {
+      message: "Require admin role"
+    })
   }
 };

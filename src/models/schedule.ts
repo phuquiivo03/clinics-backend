@@ -6,18 +6,9 @@ const COLLECTION = "Schedules";
 
 const scheduleSchema = new Schema<Schedule>(
   {
-    doctor_id: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
-    },
-    room_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    service_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'ConsultationService',
       required: true,
     },
     date: {

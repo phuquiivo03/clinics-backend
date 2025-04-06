@@ -80,7 +80,7 @@ const loginUser: RequestHandler = async (req, res, next) => {
         return;
      }
     } catch (error) {
-      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {message: (error as Error).message})
     }
   };
   

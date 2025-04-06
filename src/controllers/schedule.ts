@@ -33,6 +33,23 @@ const create: RequestHandler = async (req, res, next) => {
     }
 };
 
+// Add a method to find schedules by user ID
+const findByUserId: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+        const userId = req.params.userId;
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+            return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {});
+        }
+        
+        const objectId: ObjectId = userId as unknown as ObjectId;
+        const schedules = await scheduleService.findByUserId(objectId);
+        return appExpress.response200(schedules);
+    } catch (error) {
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    }
+};
+
 const findById: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
@@ -58,5 +75,6 @@ const findById: RequestHandler = async (req, res, next) => {
 
 export default {
     create,
-    findById
+    findById,
+    findByUserId
 }; 
