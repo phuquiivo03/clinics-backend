@@ -23,9 +23,8 @@ const createUser: RequestHandler = async (req, res, next) => {
     const validationResult = createUserSchema.safeParse(req.body);
     
     if (!validationResult.success) {
-      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
-        ...validationResult.error
-      })
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult.error
+      )
       return;
     }
     
@@ -88,7 +87,9 @@ const updateUserProfile: RequestHandler = async (req, res, next) => {
     const validationResult = updateUserInfoSchema.safeParse(req.body);
     
     if (!validationResult.success) {
-      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {})
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+        ...validationResult.error
+      })
       return;
     }
     

@@ -17,4 +17,6 @@ export const ErrorMessages: { [key in ErrorCode]: string } = {
     [ErrorCode.TOKEN_INVALID]: "Token Invalid",
     [ErrorCode.TOKEN_MISSING]: "Token Missing",
     [ErrorCode.INSUFFICIENT_PERMISSIONS]: "Insufficient Permissions",
+    [ErrorCode.OTP_INVALID]: "OTP Invalid",
+    
 }

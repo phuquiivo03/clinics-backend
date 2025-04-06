@@ -42,14 +42,15 @@ const registerUser: RequestHandler = async (req, res, next) => {
       // }
       const code: string  = req.body.code;
       const phoneNumber: string  = req.body.phoneNumber;
+      console.log('verify(', phoneNumber, code)
       const isValid = await otpService.verify(phoneNumber, code);
       if (!isValid) {
-        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {})
+        appExpress.response401(ErrorCode.OTP_INVALID, {})
         return;
       }
       // store verified to session -> tracking user is verified or not
       // req.session.verified = true;
-      // res.status(200).json({ message: 'OTP verified' });
+      appExpress.response201({message: "OTP verified!"})
   
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {})

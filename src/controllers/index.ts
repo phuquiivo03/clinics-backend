@@ -1,14 +1,19 @@
 // import appoinmentController from './appointment';
 import userController from './user';
 import doctorController from './doctor';
-import authController from './auth';
-import consultationPackageController from './consultationPackage';
 import consultationServiceController from './consultationService';
+import consultationPackageController from './consultationPackage';
+import authController from './auth';
+import roomController from './room';
+import scheduleController from './schedule';
+
 export {
     // appoinmentController,
     userController,
     doctorController,
-    authController,
+    consultationServiceController,
     consultationPackageController,
-    consultationServiceController
+    authController,
+    roomController,
+    scheduleController
 }

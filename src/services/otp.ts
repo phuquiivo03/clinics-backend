@@ -24,6 +24,7 @@ class OTPService {
     async verify(phoneNumber: string, code: string): Promise<boolean> {
         try {
             const otp = await this.OTPRepository.findOne({ filter: { phoneNumber, code } });
+           console.log(otp)
             if (!otp) {
                 return false;
             }
