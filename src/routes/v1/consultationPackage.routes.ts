@@ -5,6 +5,7 @@ const router = Router();
 
 router.get("/", consultationPackageController.findAll);
 router.get("/:id", consultationPackageController.findById);
+router.get("/:id/details", consultationPackageController.findByIdWithFullDetails);
 router.post("/", consultationPackageController.create);
 
 

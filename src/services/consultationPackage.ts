@@ -30,6 +30,14 @@ class ConsultationPackageService {
         }
     }
 
+    async findByIdWithFullDetails(id: ObjectId): Promise<ConsultationPackage | null> {
+        try {
+            return this.consultationPackageRepository.findByIdWithFullDetails(id);
+        } catch(error) {
+            throw error;
+        }
+    }
+
     async findAll(options: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
         try {
             return this.consultationPackageRepository.findAll(options);

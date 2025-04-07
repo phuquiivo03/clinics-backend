@@ -3,6 +3,7 @@ import { consultationServiceController } from "../../controllers";
 
 const router = Router();
 router.get("/", consultationServiceController.findAll);
+router.get("/:id", consultationServiceController.findById);
 router.post("/", consultationServiceController.create);
 router.post("/createMany", consultationServiceController.createMany);
 

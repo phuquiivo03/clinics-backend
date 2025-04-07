@@ -1,5 +1,6 @@
 import  { type ConsultationServiceRepository, ConsultationServiceRepositoryImpl } from "../repositories";
 import type { ConsultationService } from "../types";
+import type { ObjectId } from "mongoose";
 
 class ConsultationServiceService {
     readonly consultationServiceRepository: ConsultationServiceRepository;
@@ -10,11 +11,11 @@ class ConsultationServiceService {
 
     async create(data: Partial<ConsultationService>): Promise<ConsultationService> {
         try {
-            const createdPackage = await this.consultationServiceRepository.create(data);
-            if(createdPackage) {
-                return createdPackage;
+            const createdService = await this.consultationServiceRepository.create(data);
+            if(createdService) {
+                return createdService;
             }
-            throw new Error('Invalid package data');
+            throw new Error('Invalid service data');
         }catch(error) {
             throw error;
         }
@@ -22,12 +23,20 @@ class ConsultationServiceService {
 
     async createMany(data: Partial<ConsultationService[]>): Promise<ConsultationService[]> {
         try {
-            const createdPackage = await this.consultationServiceRepository.createMany(data);
-            if(createdPackage) {
-                return createdPackage;
+            const createdServices = await this.consultationServiceRepository.createMany(data);
+            if(createdServices) {
+                return createdServices;
             }
-            throw new Error('Invalid package data');
+            throw new Error('Invalid service data');
         }catch(error) {
+            throw error;
+        }
+    }
+
+    async findById(id: ObjectId): Promise<ConsultationService | null> {
+        try {
+            return this.consultationServiceRepository.findById(id);
+        } catch(error) {
             throw error;
         }
     }

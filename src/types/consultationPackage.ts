@@ -10,6 +10,7 @@ export interface ConsultationPackage {
     features: string[]; // List of benefits (e.g., early detection, progress tracking)
     priceOptions: PriceOption[]; // Different package tiers (Basic, Advanced)
     tests: ConsultationService[] | ObjectId[]; // List of test categories and individual tests
+    maxSlotPerPeriod: number;
     faq?: FAQItem[]; // Frequently asked questions
     bookingOptions?: BookingOption[]; // Methods to book the package
   }

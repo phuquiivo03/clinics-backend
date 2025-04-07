@@ -14,11 +14,24 @@ const consultationServiceSchema = new Schema<ConsultationService>(
             type: String,
             required: true,
         },
+        duration: {
+            type: Number,
+            required: true,
+        },
+        room: {
+            type: Schema.Types.ObjectId,
+            ref: 'Room',
+            required: true,
+        },
+        doctor: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
         price: {
             type: Number,
             required: true,
         }
-        
     },
     {
         timestamps: true,

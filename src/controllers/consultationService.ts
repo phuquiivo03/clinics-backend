@@ -3,31 +3,103 @@ import { consultationServiceService } from "../services";
 import type { IConsultationServiceRequest } from "../dto";
 import { CustomExpress } from "../pkg/app/response";
 import { ErrorCode } from "../pkg/e/code";
+import { createConsultationServiceSchema, findConsultationServiceByIdSchema } from "../schemas";
+import type { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 const create: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
-        const consultationServiceRequest: IConsultationServiceRequest  = req.body;
-        const consultationPackage = await consultationServiceService.create(consultationServiceRequest);
-        if(consultationPackage) {
-            appExpress.response201(consultationPackage);
+        // Validate the request body against schema
+        const validationResult = createConsultationServiceSchema.safeParse(req.body);
+        if (!validationResult.success) {
+            return appExpress.response400(
+                ErrorCode.INVALID_REQUEST_BODY,
+                validationResult.error.format()
+            );
         }
-        throw new Error('Invalid package data');
+        
+        const validatedData = validationResult.data;
+        // Prepare service data with proper room reference
+        const serviceData: any = {
+            name: validatedData.name,
+            description: validatedData.description,
+            duration: validatedData.duration,
+            price: validatedData.price,
+            room: new mongoose.Types.ObjectId(validatedData.room),
+            doctor: new mongoose.Types.ObjectId(validatedData.doctor)
+        };
+        
+        const consultationService = await consultationServiceService.create(serviceData);
+        if(consultationService) {
+            return appExpress.response201(consultationService);
+        }
+        throw new Error('Invalid service data');
     }catch(error) {
         appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    }
+}
+
+const findById: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+        // Validate the ID parameter
+        const validationResult = findConsultationServiceByIdSchema.safeParse({ id: req.params.id });
+        if (!validationResult.success) {
+            return appExpress.response400(
+                ErrorCode.INVALID_REQUEST_PARAMS,
+                validationResult.error.format()
+            );
+        }
+        
+        const id = req.params.id as unknown as ObjectId;
+        const consultationService = await consultationServiceService.findById(id);
+        if(consultationService) {
+            return appExpress.response200(consultationService);
+        }
+        appExpress.response404(ErrorCode.NOT_FOUND, {});
+    } catch(error) {
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+            message: (error as Error).message
+        });
     }
 }
 
 const createMany: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
-        const consultationServiceRequest: IConsultationServiceRequest[]  = req.body;
-        const consultationPackage = await consultationServiceService.createMany(consultationServiceRequest);
-        if(consultationPackage) {
-            appExpress.response201(consultationPackage);
+        const servicesData = req.body;
+        if (!Array.isArray(servicesData)) {
+            return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+                message: "Request body must be an array"
+            });
         }
-        throw new Error('Invalid package data');
-    }catch(error) {
+
+        // Validate and transform each item
+        const processedData = servicesData.map(item => {
+            const validationResult = createConsultationServiceSchema.safeParse(item);
+            if (!validationResult.success) {
+                throw new Error("Invalid service data in array");
+            }
+            
+            const validatedItem = validationResult.data;
+            return {
+                name: validatedItem.name,
+                description: validatedItem.description,
+                duration: validatedItem.duration,
+                price: validatedItem.price,
+                room: new mongoose.Types.ObjectId(validatedItem.room),
+                doctor: new mongoose.Types.ObjectId(validatedItem.doctor)
+            };
+        });
+
+        // Use type assertion to match expected type
+        const consultationServices = await consultationServiceService.createMany(processedData as any);
+        if(consultationServices) {
+            return appExpress.response201(consultationServices);
+        }
+        throw new Error('Invalid service data');
+    } catch(error) {
         appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
     }
 }
@@ -35,8 +107,8 @@ const createMany: RequestHandler = async (req, res, next) => {
 const findAll: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
-        const consultationPackages = await consultationServiceService.findAll();
-        appExpress.response200(consultationPackages);
+        const consultationServices = await consultationServiceService.findAll();
+        appExpress.response200(consultationServices);
     }catch(error) {
         appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
     }
@@ -45,5 +117,6 @@ const findAll: RequestHandler = async (req, res, next) => {
 export default {
     create,
     createMany,
+    findById,
     findAll
 }

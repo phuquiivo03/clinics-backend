@@ -46,6 +46,10 @@ const consultationPackageSchema = new Schema<ConsultationPackage>(
                 ref: 'ConsultationService',
             },
         ],
+        maxSlotPerPeriod: {
+            type: Number,
+            required: true
+        },
         faq: [
             {
                 question: {
