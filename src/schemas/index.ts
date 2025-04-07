@@ -4,3 +4,6 @@ export * from './schedule';
 export * from './room';
 export * from './consultationService';
 export * from './consultationPackage';
+export * from './periodPackage';
+export * from './dayPackage';
+export * from './packageWeek';

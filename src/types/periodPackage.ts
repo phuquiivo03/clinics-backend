@@ -1,9 +1,10 @@
 import type { ObjectId } from "mongoose";
 import type { ConsultationPackage } from "./consultationPackage";
 
-export interface DayPackages {
+export interface PeriodPackage {
     _id?: ObjectId,
-    day_pkg_id: ObjectId
-    pkg_id: ObjectId | ConsultationPackage,
+    startTime: Date,
+    endTime: Date,
+    pkg: ObjectId | ConsultationPackage
     booked: number
 }

@@ -5,6 +5,9 @@ import consultationServiceModel from './consultationService';
 import otpModel from './otp';
 import scheduleModel from './schedule';
 import roomModel from './room';
+import periodPackageModel from './periodPackage';
+import dayPackageModel from './dayPackage';
+import packageWeekModel from './packageWeek';
 
 export {
     userModel,
@@ -13,5 +16,8 @@ export {
     consultationServiceModel,
     otpModel,
     scheduleModel,
-    roomModel
+    roomModel,
+    periodPackageModel,
+    dayPackageModel,
+    packageWeekModel
 }

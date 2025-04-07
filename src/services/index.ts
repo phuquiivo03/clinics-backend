@@ -5,6 +5,9 @@ import consultationPackageService from "./consultationPackage";
 import otpService from "./otp";
 import roomService from './room';
 import scheduleService from './schedule';
+import periodPackageService from './periodPackage';
+import dayPackageService from './dayPackage';
+import packageWeekService from './packageWeek';
 
 export {
     userService,
@@ -13,5 +16,8 @@ export {
     consultationPackageService,
     otpService,
     roomService,
-    scheduleService
+    scheduleService,
+    periodPackageService,
+    dayPackageService,
+    packageWeekService
 }

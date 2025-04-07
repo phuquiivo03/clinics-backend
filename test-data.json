@@ -1,0 +1,46 @@
+{
+  "consultationPackage": {
+    "create": {
+      "name": "Premium Health Check",
+      "description": "Comprehensive health check with specialist consultations",
+      "price": 500000,
+      "duration": 120
+    }
+  },
+  "periodPackage": {
+    "create": {
+      "startTime": "2023-12-01T08:00:00.000Z",
+      "endTime": "2023-12-01T10:00:00.000Z",
+      "booked": 0
+    },
+    "update": {
+      "startTime": "2023-12-01T09:00:00.000Z",
+      "endTime": "2023-12-01T11:00:00.000Z"
+    },
+    "incrementBooked": {}
+  },
+  "dayPackage": {
+    "create": {
+      "day_pkg_id": "DAY20231201",
+      "period_pkgs": []
+    },
+    "update": {
+      "day_pkg_id": "DAY20231201-UPDATED"
+    }
+  },
+  "packageWeek": {
+    "create": {
+      "startDate": "2023-12-01",
+      "endDate": "2023-12-07",
+      "packageDays": []
+    },
+    "update": {
+      "startDate": "2023-12-02",
+      "endDate": "2023-12-08"
+    },
+    "dateRangeQuery": {
+      "startDate": "2023-12-01",
+      "endDate": "2023-12-31"
+    }
+  }
+} 
