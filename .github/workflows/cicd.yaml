@@ -62,7 +62,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
             sudo docker rm -f clinics-management-backend || true
             sudo docker rmi phuquivo03/clinics-management-backend:latest || true
-            sudo docker run -it -d -p 80:8081 \
+            sudo docker run -it -d \
             --name clinics-management-backend \
             -e PORT='${PORT}' \
             -e NODE_ENV=\"dev\" \
@@ -72,5 +72,9 @@ jobs:
             -e NOSQL_DB_PASSWORD='${NOSQL_DB_PASSWORD}' \
             -e NOSQL_DB_HOST='${NOSQL_DB_HOST}' \
             -e NOSQL_DB_NAME='${NOSQL_DB_NAME}' \
+            -e VIRTUAL_HOST=\"devq-be0x7.site\" \
+            -e VIRTUAL_PORT=8081 \
+            -e LETSENCRYPT_HOST=\"devq-be0x7.site\" \
+            -e LETSENCRYPT_EMAIL=\"phuquivo03.cb@gmail.com\" \
             phuquivo03/clinics-management-backend
           "
