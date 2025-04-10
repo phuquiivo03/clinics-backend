@@ -27,7 +27,6 @@ jobs:
           tags: phuquivo03/clinics-management-backend:latest
           labels: phuquivo03/clinics-management-backend:latest
 
-
   ec2_deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
@@ -56,7 +55,6 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
           COOKIE_MAX_AGE: ${{ vars.COOKIE_MAX_AGE }}
-          
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "

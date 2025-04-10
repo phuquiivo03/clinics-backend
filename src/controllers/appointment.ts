@@ -1,4 +1,3 @@
-
 // import type { RequestHandler } from 'express';
 // import { Appointment } from '../models/Appointment';
 // import { Doctor } from '../models/doctor';
@@ -204,7 +203,6 @@
 //     res.status(500).json({ message: 'Server Error' });
 //   }
 // };
-
 
 // export default {
 //  getUserAppointments,

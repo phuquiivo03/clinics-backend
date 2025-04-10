@@ -1,9 +1,9 @@
-import type { ObjectId } from "mongoose";
-import type { DayPackage } from "./dayPackage";
+import type { ObjectId } from 'mongoose';
+import type { DayPackage } from './dayPackage';
 
-export interface packageWeek {
-    _id?: ObjectId,
-    startDate: Date,
-    endDate: Date,
-    packageDays: DayPackage[]
+export interface PackageWeek {
+  _id?: ObjectId;
+  startDate: Date;
+  endDate: Date;
+  packageDays: DayPackage[];
 }

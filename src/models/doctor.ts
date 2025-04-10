@@ -1,10 +1,8 @@
-
-import { Collection, model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import type { Doctor } from '../types';
 
-const DOCUMENT="Doctor"
-const COLLECTION="Doctors"
-
+const DOCUMENT = 'Doctor';
+const COLLECTION = 'Doctors';
 
 const doctorSchema = new Schema<Doctor>(
   {
@@ -79,7 +77,7 @@ const doctorSchema = new Schema<Doctor>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<Doctor>(DOCUMENT, doctorSchema, COLLECTION);

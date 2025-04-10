@@ -1,4 +1,4 @@
-import type { Document, ObjectId } from "mongoose";
+import type { ObjectId } from 'mongoose';
 
 export interface User {
   _id?: ObjectId;
@@ -24,7 +24,7 @@ export enum ROLE {
 }
 
 export enum GENDER {
-  MALE = "male",
-  FEMALE="female",
-  OTHER="other"
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
 }

@@ -9,13 +9,13 @@ import { ErrorCode } from '../pkg/e/code';
 
 // Get All Doctors
 const getAllDoctors: RequestHandler = async (req, res, next) => {
-    const appExpress = new CustomExpress(req, res, next);
-    try {
-        const doctors = await doctorService.findAll();
-        appExpress.response200(doctors);
-    } catch (error) {
-        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
-    }
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const doctors = await doctorService.findAll();
+    appExpress.response200(doctors);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+  }
 };
 
 // // Get Doctor By ID
@@ -37,47 +37,49 @@ const getAllDoctors: RequestHandler = async (req, res, next) => {
 
 // Create a Doctor Profile
 const createDoctorProfile: RequestHandler = async (req, res, next) => {
-    const appExpress = new CustomExpress(req, res, next);
-    try {
-        const validationResult = createDoctorSchema.safeParse(req.body);
-        if (!validationResult.success) {
-            appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult.error.errors);
-            return;
-        }
-        
-        const doctorRequest = validationResult.data;
-        // Check if doctor profile already exists
-        const existingDoctor = await doctorService.findOne({ filter: {user: req.user._id} });
-        if (existingDoctor) {
-            appExpress.response400(ErrorCode.INVALID_REQUEST, { message: 'Doctor profile already exists for this user' });
-            return;
-        }
-
-        // Create doctor profile
-        const doctorData: Partial<Doctor> = {
-            user: req.user._id,
-            ...doctorRequest,
-            averageRating: 0,
-            reviews: [],
-            availability: [],
-            bio: 'undefined', // Ensure required fields are included
-        };
-
-        const createdDoctor = await doctorService.create(doctorData);
-
-        // Update user role to doctor
-        await userService.findAndUpdate(req.user._id, { role: ROLE.DOCTOR });
-        appExpress.response201(createdDoctor);
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, error.errors);
-        } else {
-            appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
-        }
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const validationResult = createDoctorSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult.error.errors);
+      return;
     }
+
+    const doctorRequest = validationResult.data;
+    // Check if doctor profile already exists
+    const existingDoctor = await doctorService.findOne({ filter: { user: req.user._id } });
+    if (existingDoctor) {
+      appExpress.response400(ErrorCode.INVALID_REQUEST, {
+        message: 'Doctor profile already exists for this user',
+      });
+      return;
+    }
+
+    // Create doctor profile
+    const doctorData: Partial<Doctor> = {
+      user: req.user._id,
+      ...doctorRequest,
+      averageRating: 0,
+      reviews: [],
+      availability: [],
+      bio: 'undefined', // Ensure required fields are included
+    };
+
+    const createdDoctor = await doctorService.create(doctorData);
+
+    // Update user role to doctor
+    await userService.findAndUpdate(req.user._id, { role: ROLE.DOCTOR });
+    appExpress.response201(createdDoctor);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, error.errors);
+    } else {
+      appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    }
+  }
 };
 
 export default {
-    getAllDoctors,
-    createDoctorProfile,
-}
+  getAllDoctors,
+  createDoctorProfile,
+};

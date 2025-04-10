@@ -1,4 +1,3 @@
-
 // import express from 'express';
 // import {appoinmentController} from '../../controllers';
 // // import { authMiddleware } from '../../middleware/auth';

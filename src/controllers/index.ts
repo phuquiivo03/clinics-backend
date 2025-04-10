@@ -11,15 +11,15 @@ import dayPackageController from './dayPackage';
 import packageWeekController from './packageWeek';
 
 export {
-    // appoinmentController,
-    userController,
-    doctorController,
-    consultationServiceController,
-    consultationPackageController,
-    authController,
-    roomController,
-    scheduleController,
-    periodPackageController,
-    dayPackageController,
-    packageWeekController
-}
+  // appoinmentController,
+  userController,
+  doctorController,
+  consultationServiceController,
+  consultationPackageController,
+  authController,
+  roomController,
+  scheduleController,
+  periodPackageController,
+  dayPackageController,
+  packageWeekController,
+};

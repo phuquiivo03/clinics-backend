@@ -10,14 +10,14 @@ import dayPackageModel from './dayPackage';
 import packageWeekModel from './packageWeek';
 
 export {
-    userModel,
-    doctorModel,
-    consulationPackageModel,
-    consultationServiceModel,
-    otpModel,
-    scheduleModel,
-    roomModel,
-    periodPackageModel,
-    dayPackageModel,
-    packageWeekModel
-}
+  userModel,
+  doctorModel,
+  consulationPackageModel,
+  consultationServiceModel,
+  otpModel,
+  scheduleModel,
+  roomModel,
+  periodPackageModel,
+  dayPackageModel,
+  packageWeekModel,
+};

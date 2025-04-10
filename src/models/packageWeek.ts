@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
-import type { packageWeek as PackageWeek } from '../types/packageWeek';
+import type { PackageWeek as PackageWeek } from '../types/packageWeek';
 
-const DOCUMENT = "PackageWeek";
-const COLLECTION = "PackageWeeks";
+const DOCUMENT = 'PackageWeek';
+const COLLECTION = 'PackageWeeks';
 
 const packageWeekSchema = new Schema<PackageWeek>(
   {
@@ -14,14 +14,16 @@ const packageWeekSchema = new Schema<PackageWeek>(
       type: Date,
       required: true,
     },
-    packageDays: [{
-      type: Schema.Types.ObjectId,
-      ref: 'DayPackage',
-    }]
+    packageDays: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'DayPackage',
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export default model<PackageWeek>(DOCUMENT, packageWeekSchema, COLLECTION); 
+export default model<PackageWeek>(DOCUMENT, packageWeekSchema, COLLECTION);

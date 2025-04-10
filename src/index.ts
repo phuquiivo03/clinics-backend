@@ -1,10 +1,10 @@
-import express, { Router, type Response, type Request } from "express";
-import appRouter from "./routes";
-import cookieParser from "cookie-parser";
+import express, { Router, type Response, type Request } from 'express';
+import appRouter from './routes';
+import cookieParser from 'cookie-parser';
 import './db/mongodb_connection';
-import { config } from "./config";
-import session from "express-session";
-import cors from "cors";
+import { config } from './config';
+import session from 'express-session';
+import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -12,42 +12,45 @@ app.use(express.json());
 // cookie setup
 app.use(cookieParser(config.cookie.secret));
 
-app.use(session({
-  secret: config.cookie.secret, // the same sercet with cookieParser
-  saveUninitialized : false,
-  resave: false,
-  
-  cookie: {
-    maxAge: config.cookie.maxAge,
-    path: '/',
-    secure: false,
-    httpOnly: true,
-    domain: '*',
-    sameSite: 'lax'
-  }
-}))
+app.use(
+  session({
+    secret: config.cookie.secret, // the same sercet with cookieParser
+    saveUninitialized: false,
+    resave: false,
 
-app.use(cors({
-  
-  origin: ['http://localhost:3000'],
-  credentials: true,  
-  allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials', 'Authorization'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-}))
+    cookie: {
+      maxAge: config.cookie.maxAge,
+      path: '/',
+      secure: false,
+      httpOnly: true,
+      domain: '*',
+      sameSite: 'lax',
+    },
+  }),
+);
 
-app.use("/api", appRouter);
+app.use(
+  cors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  }),
+);
 
-app.get("/set", (req, res) => {
-  req.session.phoneNumber = "0337170203p"
-  res.send("Hello World");
-})
+app.use('/api', appRouter);
 
-app.get("/get", (req, res) => {
+app.get('/set', (req, res) => {
+  req.session.phoneNumber = '0337170203p';
+  res.send('Hello World');
+});
+
+app.get('/get', (req, res) => {
   console.log(req.session.phoneNumber);
-  res.send("Hello World" + req.session.phoneNumber);
-})
-app.get("/", (req, res) => {
-    console.log(req.session.phoneNumber);
+  res.send('Hello World' + req.session.phoneNumber);
+});
+app.get('/', (req, res) => {
+  console.log(req.session.phoneNumber);
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -67,8 +70,6 @@ app.get("/", (req, res) => {
     </html>
   `);
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

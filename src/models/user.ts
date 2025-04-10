@@ -1,10 +1,9 @@
-
 import { model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { ROLE, type User } from '../types';
 
-const DOCUMENT="User"
-const COLLECTION="Users"
+const DOCUMENT = 'User';
+const COLLECTION = 'Users';
 
 const userSchema = new Schema<User>(
   {
@@ -47,7 +46,7 @@ const userSchema = new Schema<User>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Hash password before saving
@@ -56,11 +55,10 @@ userSchema.pre('save', async function (next) {
     next();
   }
 
-  if(this.password) {
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-}
+  if (this.password) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 });
 
 // Compare password method

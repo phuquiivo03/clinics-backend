@@ -1,20 +1,20 @@
 import { model, Schema } from 'mongoose';
 import type { DayPackage } from '../types/dayPackage';
 
-const DOCUMENT = "DayPackage";
-const COLLECTION = "DayPackages";
+const DOCUMENT = 'DayPackage';
+const COLLECTION = 'DayPackages';
 
-const dayPackageSchema = new Schema<DayPackage>(
-  {
-    day_offset: {
-      type: Number,
-      required: true,
-    },
-    period_pkgs: [{
+const dayPackageSchema = new Schema<DayPackage>({
+  dayOffset: {
+    type: Number,
+    required: true,
+  },
+  periodPkgs: [
+    {
       type: Schema.Types.ObjectId,
       ref: 'PeriodPackage',
-    }]
-  }
-);
+    },
+  ],
+});
 
-export default model<DayPackage>(DOCUMENT, dayPackageSchema, COLLECTION); 
+export default model<DayPackage>(DOCUMENT, dayPackageSchema, COLLECTION);

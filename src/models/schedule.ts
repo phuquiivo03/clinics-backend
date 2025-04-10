@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
 import type { Schedule } from '../types/schedules';
 
-const DOCUMENT = "Schedule";
-const COLLECTION = "Schedules";
+const DOCUMENT = 'Schedule';
+const COLLECTION = 'Schedules';
 
 const scheduleSchema = new Schema<Schedule>(
   {
@@ -15,11 +15,11 @@ const scheduleSchema = new Schema<Schedule>(
       type: Date,
       required: true,
     },
-    start_time: {
+    startTime: {
       type: String,
       required: true,
     },
-    end_time: {
+    endTime: {
       type: String,
       required: true,
     },
@@ -27,14 +27,14 @@ const scheduleSchema = new Schema<Schedule>(
       type: String,
       required: true,
     },
-    package_id: {
+    packageId: {
       type: Schema.Types.ObjectId,
       ref: 'ConsultationPackage',
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<Schedule>(DOCUMENT, scheduleSchema, COLLECTION);

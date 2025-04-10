@@ -1,10 +1,8 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 const router = Router();
-router.get("/", (req, res) => { 
-    res.send("Server is up and running");   
+router.get('/', (req, res) => {
+  res.send('Server is up and running');
+});
 
- })
-
-
- export default router
+export default router;

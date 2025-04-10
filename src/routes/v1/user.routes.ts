@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Public routes
 router.post('/', userController.createUser);
-router.patch('/', authMiddleware, userController.updateUserProfile)
+router.patch('/', authMiddleware, userController.updateUserProfile);
 // Requires auhentication
 router.get('/profile', authMiddleware, userController.getUserProfile);
 export default router;
