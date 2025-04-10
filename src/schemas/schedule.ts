@@ -15,6 +15,7 @@ export const createScheduleSchema = z.object({
     errorMap: () => ({ message: `Status must be one of: ${scheduleStatusEnum.join(", ")}` })
   }),
   package_id: z.string().min(1, "Package ID is required").optional(),
+  package_period_id: z.string().min(1, "Package Week ID is required"),
 });
 
 // Schema for updating a schedule

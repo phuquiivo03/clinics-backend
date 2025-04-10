@@ -33,9 +33,9 @@ class PackageWeekService {
         }
     }
 
-    async findByDateRange(startDate: Date, endDate: Date): Promise<PackageWeek[]> {
+    async findByDateRangeWithFullDetails(startDate: Date, endDate: Date): Promise<PackageWeek[]> {
         try {
-            return packageWeekRepository.findByDateRange(startDate, endDate);
+            return packageWeekRepository.findByDateRangeWithFullDetails(startDate, endDate);
         } catch (error) {
             throw error;
         }

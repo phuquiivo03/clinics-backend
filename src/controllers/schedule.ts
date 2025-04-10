@@ -1,11 +1,12 @@
 import type { RequestHandler } from "express";
-import { scheduleService } from "../services";
+import { periodPackageService, scheduleService } from "../services";
 import { CustomExpress } from "../pkg/app/response";
 import { ErrorCode } from "../pkg/e/code";
 import type { Schedule } from "../types/schedules";
 import type { ObjectId } from "mongoose";
 import mongoose from "mongoose";
 import { createScheduleSchema, findScheduleByIdSchema } from "../schemas";
+import periodPackage from "./periodPackage";
 
 const create: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
@@ -18,14 +19,23 @@ const create: RequestHandler = async (req, res, next) => {
                 validationResult.error.format()
             );
         }
-
         // Add date conversion
         const scheduleData: any = validationResult.data;
         scheduleData.date = new Date(scheduleData.date);
         
         const schedule = await scheduleService.create(scheduleData);
         if (schedule) {
-            return appExpress.response201(schedule);
+            const period_pkg_id: ObjectId = scheduleData.package_period_id as unknown as ObjectId;
+            const period_pkg = await periodPackageService.findById(period_pkg_id);
+            if (period_pkg) {
+                period_pkg.booked += 1;
+                await periodPackageService.update(period_pkg_id, period_pkg);
+                return appExpress.response201(schedule);
+            }else {
+                return appExpress.response404(ErrorCode.NOT_FOUND, {
+                    message: 'Period package not found'
+                });
+            }
         }
         throw new Error('Invalid schedule data');
     } catch (error) {

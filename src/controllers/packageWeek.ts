@@ -89,11 +89,11 @@ const findWithFullDetails: RequestHandler = async (req, res, next) => {
     }
 };
 
-const findByDateRange: RequestHandler = async (req, res, next) => {
+const findByDateRangeWithFullDetails: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
-        const { startDate, endDate } = req.query;
-        
+        const { startDate, endDate } = req.params;
+        console.log('startDate', startDate)
         if (!startDate || !endDate || typeof startDate !== 'string' || typeof endDate !== 'string') {
             return appExpress.response400(ErrorCode.INVALID_REQUEST_QUERY, {
                 message: "Start date and end date are required"
@@ -109,10 +109,10 @@ const findByDateRange: RequestHandler = async (req, res, next) => {
             });
         }
         
-        const packageWeeks = await packageWeekService.findByDateRange(start, end);
+        const packageWeeks = await packageWeekService.findByDateRangeWithFullDetails(start, end);
         return appExpress.response200(packageWeeks);
     } catch (error) {
-        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+        appExpress.response400(ErrorCode.BAD_REQUEST, {
             message: (error as Error).message
         });
     }
@@ -201,7 +201,7 @@ export default {
     create,
     findById,
     findWithFullDetails,
-    findByDateRange,
+    findByDateRangeWithFullDetails,
     update,
     addDayPackage
 }; 

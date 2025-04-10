@@ -6,7 +6,7 @@ const router = Router();
 // GET endpoints
 router.get("/:id", packageWeekController.findById);
 router.get("/:id/details", packageWeekController.findWithFullDetails);
-router.get("/date-range", packageWeekController.findByDateRange);
+router.get("/date-range/:startDate/:endDate", packageWeekController.findByDateRangeWithFullDetails);
 
 // POST endpoints
 router.post("/", packageWeekController.create);

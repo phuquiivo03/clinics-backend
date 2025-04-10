@@ -5,7 +5,7 @@ import type { ObjectId } from "mongoose";
 
 interface PackageWeekRepository extends BaseRepository<PackageWeek> {
     findWithFullDetails(id: ObjectId): Promise<PackageWeek | null>;
-    findByDateRange(startDate: Date, endDate: Date): Promise<PackageWeek[]>;
+    findByDateRangeWithFullDetails(startDate: Date, endDate: Date): Promise<PackageWeek[]>;
 }
 
 class PackageWeekRepositoryImpl extends BaseRepositoryImpl<PackageWeek> implements PackageWeekRepository {
@@ -31,7 +31,7 @@ class PackageWeekRepositoryImpl extends BaseRepositoryImpl<PackageWeek> implemen
         }
     }
 
-    async findByDateRange(startDate: Date, endDate: Date): Promise<PackageWeek[]> {
+    async findByDateRangeWithFullDetails(startDate: Date, endDate: Date): Promise<PackageWeek[]> {
         try {
             return this.model.find({
                 $or: [
@@ -39,6 +39,15 @@ class PackageWeekRepositoryImpl extends BaseRepositoryImpl<PackageWeek> implemen
                     { startDate: { $gte: startDate, $lte: endDate } },
                     { endDate: { $gte: startDate, $lte: endDate } }
                 ]
+            })
+            .populate({
+                path: 'packageDays',
+                populate: {
+                    path: 'period_pkgs',
+                    populate: {
+                        path: 'pkg'
+                    }
+                }
             }).exec();
         } catch (error) {
             throw error;
