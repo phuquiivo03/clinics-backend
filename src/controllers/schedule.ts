@@ -20,22 +20,76 @@ const create: RequestHandler = async (req, res, next) => {
     // Add date conversion
     const scheduleData: any = validationResult.data;
     scheduleData.date = new Date(scheduleData.date);
+    // create transaction
 
-    const schedule = await scheduleService.create(scheduleData);
-    if (schedule) {
+    const session = await mongoose.startSession();
+
+    try {
+      // Start the transaction
+      session.startTransaction();
+
+      // Create schedule
+      const schedule = await scheduleService.create(scheduleData, session);
+
+      if (!schedule) {
+        await session.abortTransaction();
+        return appExpress.response404(ErrorCode.NOT_FOUND, {
+          message: 'Schedule not found',
+        });
+      }
+
       const periodPkgId: ObjectId = scheduleData.packagePeriodId as unknown as ObjectId;
-      const periodPkg = await periodPackageService.findById(periodPkgId);
-      if (periodPkg) {
-        periodPkg.booked += 1;
-        await periodPackageService.update(periodPkgId, periodPkg);
-        return appExpress.response201(schedule);
-      } else {
+      const periodPkg = await periodPackageService.findById(periodPkgId, { session });
+
+      if (!periodPkg) {
+        await session.abortTransaction();
         return appExpress.response404(ErrorCode.NOT_FOUND, {
           message: 'Period package not found',
         });
       }
+
+      periodPkg.booked += 1;
+      const updatedPeriodPkg = await periodPackageService.update(periodPkgId, periodPkg, {
+        session,
+      });
+
+      if (!updatedPeriodPkg) {
+        await session.abortTransaction();
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Failed to update period package',
+        });
+      }
+
+      // If we get here, everything succeeded
+      await session.commitTransaction();
+      return appExpress.response201(schedule);
+    } catch (error: any) {
+      // If there's an error, abort the transaction
+      await session.abortTransaction();
+
+      // Handle specific error types
+      if (error.message === 'Period package not found') {
+        return appExpress.response404(ErrorCode.NOT_FOUND, {
+          message: 'Period package not found',
+        });
+      } else if (error.message === 'Failed to update period package') {
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Failed to update period package',
+        });
+      } else if (error.message === 'Schedule not found') {
+        return appExpress.response404(ErrorCode.NOT_FOUND, {
+          message: 'Schedule not found',
+        });
+      }
+
+      // Generic error handling
+      return appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+        message: error.message,
+      });
+    } finally {
+      // Always end the session
+      await session.endSession();
     }
-    throw new Error('Invalid schedule data');
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,

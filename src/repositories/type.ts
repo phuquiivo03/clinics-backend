@@ -1,4 +1,4 @@
-import { type PopulateOptions } from "mongoose";
+import { type ClientSession, type PopulateOptions } from 'mongoose';
 
 const SORT_ASC = 1;
 const SORT_DESC = -1;
@@ -16,6 +16,7 @@ export interface MongooseFindOneOptions {
   selectFields?: MongooseSelectFields;
   filter?: Record<string, any>;
   sort?: Record<string, SortOrder>;
+  session?: ClientSession;
 }
 
 export interface MongooseFindManyOptions {
@@ -39,4 +40,5 @@ export interface MongooseUpdateOptions {
   // QueryOptions
   upsert?: boolean;
   new?: boolean;
+  session?: ClientSession;
 }

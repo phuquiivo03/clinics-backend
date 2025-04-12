@@ -1,7 +1,7 @@
-import { type ObjectId } from 'mongoose';
+import { type ClientSession, type ObjectId } from 'mongoose';
 import periodPackageRepository from '../repositories/periodPackage';
 import type { PeriodPackage } from '../types/periodPackage';
-import type { MongooseFindOneOptions } from '../repositories/type';
+import type { MongooseFindOneOptions, MongooseUpdateOptions } from '../repositories/type';
 
 class PeriodPackageService {
   async create(data: Partial<PeriodPackage>): Promise<PeriodPackage | null> {
@@ -24,9 +24,13 @@ class PeriodPackageService {
     }
   }
 
-  async update(id: ObjectId, data: Partial<PeriodPackage>): Promise<PeriodPackage | null> {
+  async update(
+    id: ObjectId,
+    data: Partial<PeriodPackage>,
+    options?: MongooseUpdateOptions,
+  ): Promise<PeriodPackage | null> {
     try {
-      return periodPackageRepository.update(id, data, { new: true });
+      return periodPackageRepository.update(id, data, options);
     } catch (error) {
       throw error;
     }

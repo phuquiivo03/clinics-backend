@@ -1,12 +1,12 @@
-import { type ObjectId } from 'mongoose';
+import { type ClientSession, type ObjectId } from 'mongoose';
 import scheduleRepository from '../repositories/schedule';
 import type { Schedule } from '../types/schedules';
 import type { MongooseFindOneOptions } from '../repositories/type';
 
 class ScheduleService {
-  async create(data: Partial<Schedule>): Promise<Schedule | null> {
+  async create(data: Partial<Schedule>, session?: ClientSession): Promise<Schedule | null> {
     try {
-      const schedule = await scheduleRepository.create(data);
+      const schedule = await scheduleRepository.create(data, session);
       if (schedule) {
         return schedule;
       }
@@ -16,7 +16,11 @@ class ScheduleService {
     }
   }
 
-  async findById(id: ObjectId, options?: MongooseFindOneOptions): Promise<Schedule | null> {
+  async findById(
+    id: ObjectId,
+    options?: MongooseFindOneOptions,
+    session?: ClientSession,
+  ): Promise<Schedule | null> {
     try {
       return scheduleRepository.findById(id, options);
     } catch (error) {

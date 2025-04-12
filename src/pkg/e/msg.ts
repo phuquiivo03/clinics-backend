@@ -11,9 +11,9 @@ export const ErrorMessages: { [key in ErrorCode]: string } = {
   [ErrorCode.INVALID_REQUEST_PARAMS]: 'Invalid Request Params',
   [ErrorCode.INVALID_REQUEST_QUERY]: 'Invalid Request Query',
 
-  [ErrorCode.TOKEN_EXPIRED]: 'Token Expired',
-  [ErrorCode.TOKEN_INVALID]: 'Token Invalid',
-  [ErrorCode.TOKEN_MISSING]: 'Token Missing',
+  [ErrorCode.TOKEN_EXPIRED]: 'Authen token expired',
+  [ErrorCode.TOKEN_INVALID]: 'Authen token invalid',
+  [ErrorCode.TOKEN_MISSING]: 'Authen token missing',
   [ErrorCode.INSUFFICIENT_PERMISSIONS]: 'Insufficient Permissions',
   [ErrorCode.OTP_INVALID]: 'OTP Invalid',
 };

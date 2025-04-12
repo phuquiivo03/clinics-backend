@@ -9,17 +9,17 @@ export const createScheduleSchema = z.object({
   date: z.string().refine((value) => !isNaN(Date.parse(value)), {
     message: 'Date must be a valid date string',
   }),
-  start_time: z
+  startTime: z
     .string()
     .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time must be in HH:MM format'),
-  end_time: z
+  endTime: z
     .string()
     .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'End time must be in HH:MM format'),
   status: z.enum(scheduleStatusEnum, {
     errorMap: () => ({ message: `Status must be one of: ${scheduleStatusEnum.join(', ')}` }),
   }),
-  package_id: z.string().min(1, 'Package ID is required').optional(),
-  package_period_id: z.string().min(1, 'Package Week ID is required'),
+  packageId: z.string().min(1, 'Package ID is required').optional(),
+  packagePeriodId: z.string().min(1, 'Package Week ID is required'),
 });
 
 // Schema for updating a schedule

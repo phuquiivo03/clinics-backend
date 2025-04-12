@@ -1,4 +1,4 @@
-import type { Model, ObjectId } from 'mongoose';
+import type { ClientSession, Model, ObjectId } from 'mongoose';
 import type {
   MongooseFindManyOptions,
   MongooseFindOneOptions,
@@ -6,10 +6,14 @@ import type {
 } from './type';
 
 interface BaseRepository<T> {
-  create(data: Partial<T>): Promise<T | null>;
+  create(data: Partial<T>, session?: ClientSession): Promise<T | null>;
   createMany(data: Partial<T[]>): Promise<T[] | null>;
   findOne(options: MongooseFindOneOptions): Promise<T | null>;
-  findById(id: ObjectId, options?: MongooseFindOneOptions): Promise<T | null>;
+  findById(
+    id: ObjectId,
+    options?: MongooseFindOneOptions,
+    session?: ClientSession,
+  ): Promise<T | null>;
   update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
   findAll(options?: MongooseFindManyOptions): Promise<T[] | []>;
   delete(id: ObjectId): Promise<T | null>;
@@ -21,9 +25,10 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     this.model = model;
   }
 
-  async create(data: Partial<T>): Promise<T | null> {
+  async create(data: Partial<T>, session?: ClientSession): Promise<T | null> {
     try {
-      return this.model.create(data);
+      const doc: T[] = await this.model.create([data], { session });
+      return doc[0] || null;
     } catch (error) {
       throw error;
     }
