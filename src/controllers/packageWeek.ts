@@ -4,6 +4,7 @@ import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { PackageWeek as PackageWeek } from '../types/packageWeek';
 import type { ObjectId } from 'mongoose';
+import redisClient from '../db/redis_connection';
 import mongoose from 'mongoose';
 import {
   createPackageWeekSchema,
@@ -113,7 +114,16 @@ const findByDateRangeWithFullDetails: RequestHandler = async (req, res, next) =>
       });
     }
 
+    const redisKey = `package-weeks-${startDate}-${endDate}`;
+    const cachedPackageWeeks = await redisClient.get(redisKey);
+    if (cachedPackageWeeks) {
+      return appExpress.response200(JSON.parse(cachedPackageWeeks));
+    }
+
     const packageWeeks = await packageWeekService.findByDateRangeWithFullDetails(start, end);
+    await redisClient.set(redisKey, JSON.stringify(packageWeeks), {
+      EX: 30,
+    });
     return appExpress.response200(packageWeeks);
   } catch (error) {
     appExpress.response400(ErrorCode.BAD_REQUEST, {
