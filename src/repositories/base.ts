@@ -4,7 +4,6 @@ import type {
   MongooseFindOneOptions,
   MongooseUpdateOptions,
 } from './type';
-import { config } from '../config';
 
 interface BaseRepository<T> {
   create(data: Partial<T>, session?: ClientSession): Promise<T | null>;
@@ -104,16 +103,11 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
   async findMany(options?: MongooseFindManyOptions): Promise<T[] | []> {
     try {
       if (options?.pagination) {
-        const page = options.pagination.page || config.app.pagination.defaultPage;
-        const limit = options.pagination.limit || config.app.pagination.defaultLimit;
-        const query = this.model
+        return this.model
           .find()
-          .skip(page * limit)
-          .limit(limit);
-        if (options.selectFields) {
-          query.select(options.selectFields);
-        }
-        return query.exec();
+          .skip((options.pagination.page || 1 - 1) * (options.pagination.limit || 10))
+          .limit(options.pagination.limit || 10)
+          .select(options.selectFields || '');
       }
       return this.model.find();
     } catch (error) {

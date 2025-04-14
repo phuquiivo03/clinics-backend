@@ -2,6 +2,13 @@ FROM oven/bun:1
 
 WORKDIR /app
 
+# Install Python and build essentials
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy package files
 COPY package.json ./
 
