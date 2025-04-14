@@ -55,6 +55,10 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
           COOKIE_MAX_AGE: ${{ vars.COOKIE_MAX_AGE }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
@@ -73,8 +77,10 @@ jobs:
             -e NOSQL_DB_NAME='${NOSQL_DB_NAME}' \
             -e VIRTUAL_HOST=\"devq-be0x7.site\" \
             -e VIRTUAL_PORT=8081 \
-            -e REDIS_URL=\"redis://localhost\" \
-            -e REDIS_PORT=6379 \
+            -e REDIS_URL=\"${REDIS_URL}\" \
+            -e REDIS_PORT=${REDIS_PORT} \
+            -e REDIS_USERNAME=${REDIS_USERNAME} \
+            -e REDIS_PASSWORD=${REDIS_PASSWORD} \
             -e LETSENCRYPT_HOST=\"devq-be0x7.site\" \
             -e LETSENCRYPT_EMAIL=\"phuquivo03.cb@gmail.com\" \
             phuquivo03/clinics-management-backend

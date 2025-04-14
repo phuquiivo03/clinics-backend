@@ -12,7 +12,11 @@ export const config = {
     maxAge: parseInt(process.env.COOKIE_MAX_AGE || '60000'),
   },
   redis: {
-    url: `${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
+    // url: `${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
+    username: process.env.REDIS_USERNAME,
+    password: process.env.REDIS_PASSWORD,
+    host: process.env.REDIS_URL,
+    port: parseInt(process.env.REDIS_PORT || '13992'),
   },
   app: {
     pagination: {
