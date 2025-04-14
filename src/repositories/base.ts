@@ -7,7 +7,7 @@ import type {
 
 interface BaseRepository<T> {
   create(data: Partial<T>, session?: ClientSession): Promise<T | null>;
-  createMany(data: Partial<T[]>): Promise<T[] | null>;
+  createMany(data: Partial<T[]>, session?: ClientSession): Promise<T[] | null>;
   findOne(options: MongooseFindOneOptions): Promise<T | null>;
   findById(
     id: ObjectId,

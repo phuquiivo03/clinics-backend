@@ -5,6 +5,7 @@ const router = Router();
 router.get('/', (req, res) => {
   res.send('Hello, Bun + Express');
 });
+
 router.use('/v1', v1Router);
 router.use('/health', healthRouter);
 export default router;

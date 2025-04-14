@@ -63,6 +63,7 @@ jobs:
             sudo docker run -it -d \
             --name clinics-management-backend \
             -e PORT='${PORT}' \
+            -e SERVER_URL=\"https://devq-be0x7.site\" \
             -e NODE_ENV=\"dev\" \
             -e SECRET='${SECRET}' \
             -e NOSQL_DB_TYPE=\"mongodb+srv\" \

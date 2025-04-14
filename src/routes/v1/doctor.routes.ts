@@ -1,16 +1,22 @@
-import express from 'express';
-import { authMiddleware } from '../../middleware/auth';
+import { Router } from 'express';
+import { authMiddleware, adminMiddleware } from '../../middleware/auth';
 import { doctorController } from '../../controllers';
-const router = express.Router();
+const router = Router();
 
 // Public routes
+
 router.get('/', doctorController.getAllDoctors);
+
+// Uncomment when the controller method is implemented
 // router.get('/:id', doctorController.getDoctorById);
-// router.get('/:id/availability', doctorController.getDoctorAvailability);
 
 // Protected routes
-router.post('/', authMiddleware, doctorController.createDoctorProfile);
-// router.put('/', authMiddleware, doctorController.updateDoctorProfile);
-// router.post('/:id/reviews', authMiddleware, doctorController.addDoctorReview);
+
+router.post('/', authMiddleware, adminMiddleware, doctorController.createDoctorProfile);
+
+// Uncomment when the controller method is implemented
+// router.patch('/:id', authMiddleware, adminMiddleware, doctorController.updateDoctor);
+// Uncomment when the controller method is implemented
+// router.delete('/:id', authMiddleware, adminMiddleware, doctorController.deleteDoctor);
 
 export default router;

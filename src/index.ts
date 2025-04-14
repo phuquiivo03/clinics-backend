@@ -5,6 +5,9 @@ import './db/mongodb_connection';
 import { config } from './config';
 import session from 'express-session';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -38,6 +41,25 @@ app.use(
   }),
 );
 
+// Swagger documentation route with options
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: 'list',
+      filter: true,
+      showExtensions: true,
+      showCommonExtensions: true,
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Clinics Management API Documentation',
+  }),
+);
+
 app.use('/api', appRouter);
 
 app.get('/set', (req, res) => {
@@ -49,6 +71,7 @@ app.get('/get', (req, res) => {
   console.log(req.session.phoneNumber);
   res.send('Hello World' + req.session.phoneNumber);
 });
+
 app.get('/', (req, res) => {
   console.log(req.session.phoneNumber);
   res.send(`
@@ -63,8 +86,13 @@ app.get('/', (req, res) => {
       <h1>Welcome to the Clinics Management Server</h1>
       <button 
         style="background-color: green; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; hover: background-color: darkgreen;" 
-        onclick="window.location.href='/docs'">
-        Go to Docs
+        onclick="window.location.href='/api-docs'">
+        Go to API Documentation
+      </button>
+      <button 
+        style="background-color: blue; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-left: 10px; hover: background-color: darkblue;" 
+        onclick="window.location.href='/swagger.json'">
+        View Swagger JSON
       </button>
     </body>
     </html>
@@ -73,4 +101,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`API Documentation is available at http://localhost:${PORT}/api-docs`);
 });

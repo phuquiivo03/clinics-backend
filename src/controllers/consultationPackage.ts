@@ -38,6 +38,21 @@ const create: RequestHandler = async (req, res, next) => {
   }
 };
 
+const createMany: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const consultationPackages = await consultationPackageService.createMany(req.body);
+    if (consultationPackages) {
+      return appExpress.response201(consultationPackages);
+    }
+    throw new Error('Invalid package data');
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
+
 const findById: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
@@ -102,6 +117,7 @@ const findAll: RequestHandler = async (req, res, next) => {
 
 export default {
   create,
+  createMany,
   findById,
   findByIdWithFullDetails,
   findAll,

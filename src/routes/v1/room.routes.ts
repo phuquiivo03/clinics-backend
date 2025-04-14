@@ -16,7 +16,7 @@ router.post('/createMany', roomController.createMany);
 // PUT endpoints
 router.put('/:id', roomController.update);
 
-// DELETE endpoints
+// DELETE endpointsiis
 router.delete('/:id', roomController.delete);
 
 export default router;

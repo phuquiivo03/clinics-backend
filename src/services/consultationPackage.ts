@@ -25,6 +25,18 @@ class ConsultationPackageService {
     }
   }
 
+  async createMany(data: Partial<ConsultationPackage[]>): Promise<ConsultationPackage[]> {
+    try {
+      const createdPackages = await this.consultationPackageRepository.createMany(data);
+      if (!createdPackages) {
+        throw new Error('Failed to create packages');
+      }
+      return createdPackages;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findById(id: ObjectId): Promise<ConsultationPackage | null> {
     try {
       return this.consultationPackageRepository.findById(id);

@@ -100,7 +100,9 @@ const createMany: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid service data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
   }
 };
 
