@@ -7,7 +7,7 @@ import session from 'express-session';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger';
-
+import redisClient from './db/redis_connection';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -62,9 +62,12 @@ app.use(
 
 app.use('/api', appRouter);
 
-app.get('/set', (req, res) => {
-  req.session.phoneNumber = '0337170203p';
-  res.send('Hello World');
+app.get('/set', async (req, res) => {
+  await redisClient.HSET('person', 'name', 'quideva');
+  const available = await redisClient.HGET('person', 'name');
+  res.send(available);
+  // req.session.phoneNumber = '0337170203p';
+  // res.send('Hello World');
 });
 
 app.get('/get', (req, res) => {
