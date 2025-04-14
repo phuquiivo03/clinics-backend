@@ -29,7 +29,10 @@ const create: RequestHandler = async (req, res, next) => {
       session.startTransaction();
 
       // Create schedule
-      const schedule = await scheduleService.create(scheduleData, session);
+      const schedule = await scheduleService.create(
+        { ...scheduleData, userId: req.user.id },
+        session,
+      );
 
       if (!schedule) {
         await session.abortTransaction();
@@ -45,6 +48,12 @@ const create: RequestHandler = async (req, res, next) => {
         await session.abortTransaction();
         return appExpress.response404(ErrorCode.NOT_FOUND, {
           message: 'Period package not found',
+        });
+      }
+      if (periodPkg.booked >= periodPkg.maxBook) {
+        await session.abortTransaction();
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Period package is full',
         });
       }
 

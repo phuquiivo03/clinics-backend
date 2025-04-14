@@ -5,7 +5,6 @@ const scheduleStatusEnum = ['pending', 'confirmed', 'cancelled', 'completed'] as
 
 // Schema for creating a schedule
 export const createScheduleSchema = z.object({
-  userId: z.string().min(1, 'User ID is required'),
   date: z.string().refine((value) => !isNaN(Date.parse(value)), {
     message: 'Date must be a valid date string',
   }),

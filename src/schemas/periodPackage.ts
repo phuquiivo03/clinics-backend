@@ -11,6 +11,7 @@ export const createPeriodPackageSchema = z.object({
     .string()
     .or(z.date())
     .transform((val) => new Date(val)),
+  maxBook: z.number().int().min(0, 'Max booked slots must be a non-negative number').default(0),
 });
 
 export const updatePeriodPackageSchema = createPeriodPackageSchema.partial().extend({

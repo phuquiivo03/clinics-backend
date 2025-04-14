@@ -7,4 +7,5 @@ export interface PeriodPackage {
   endTime: Date;
   pkg: ObjectId | ConsultationPackage;
   booked: number;
+  maxBook: number;
 }

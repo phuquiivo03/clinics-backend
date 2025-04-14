@@ -16,6 +16,11 @@ const periodPackageSchema = new Schema<PeriodPackage>(
       default: 0,
       required: true,
     },
+    maxBook: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     startTime: {
       type: Date,
       required: true,
