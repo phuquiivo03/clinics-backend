@@ -6,6 +6,7 @@ import { ErrorCode } from '../pkg/e/code';
 import { createConsultationServiceSchema, findConsultationServiceByIdSchema } from '../schemas';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
+import type { MongooseFindManyOptions } from '../repositories/type';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -115,10 +116,29 @@ const findAll: RequestHandler = async (req, res, next) => {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
+const findMany: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  const { page, limit } = req.query;
+  const options: MongooseFindManyOptions = {
+    pagination: {
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+    },
+  };
+  try {
+    const consultationServices = await consultationServiceService.findMany(options);
+    appExpress.response200(consultationServices);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
 
 export default {
   create,
   createMany,
   findById,
   findAll,
+  findMany,
 };

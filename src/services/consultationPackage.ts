@@ -60,6 +60,14 @@ class ConsultationPackageService {
       throw error;
     }
   }
+
+  async findMany(options?: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
+    try {
+      return this.consultationPackageRepository.findMany(options);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const consultationPackageService = new ConsultationPackageService();

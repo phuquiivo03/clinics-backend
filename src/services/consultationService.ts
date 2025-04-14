@@ -2,6 +2,7 @@ import {
   type ConsultationServiceRepository,
   ConsultationServiceRepositoryImpl,
 } from '../repositories';
+import type { MongooseFindManyOptions } from '../repositories/type';
 import type { ConsultationService } from '../types';
 import type { ObjectId } from 'mongoose';
 
@@ -47,6 +48,14 @@ class ConsultationServiceService {
   async findAll(): Promise<ConsultationService[]> {
     try {
       return this.consultationServiceRepository.findAll();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(options?: MongooseFindManyOptions): Promise<ConsultationService[]> {
+    try {
+      return this.consultationServiceRepository.findMany(options);
     } catch (error) {
       throw error;
     }

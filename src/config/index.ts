@@ -11,4 +11,10 @@ export const config = {
     secret: process.env.COOKIE_SECRET || 'default_secret',
     maxAge: parseInt(process.env.COOKIE_MAX_AGE || '60000'),
   },
+  app: {
+    pagination: {
+      defaultPage: parseInt(process.env.PAGINATION_DEFAULT_PAGE || '1'),
+      defaultLimit: parseInt(process.env.PAGINATION_DEFAULT_LIMIT || '10'),
+    },
+  },
 };

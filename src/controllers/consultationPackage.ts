@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import { createConsultationPackageSchema, findConsultationPackageByIdSchema } from '../schemas';
+import type { MongooseFindManyOptions } from '../repositories/type';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -115,10 +116,31 @@ const findAll: RequestHandler = async (req, res, next) => {
   }
 };
 
+const findMany: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  const { page, limit } = req.query;
+  const options: MongooseFindManyOptions = {
+    pagination: {
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+    },
+    selectFields: ['title', 'icon'],
+  };
+  try {
+    const consultationPackages = await consultationPackageService.findMany(options);
+    appExpress.response200(consultationPackages);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
+
 export default {
   create,
   createMany,
   findById,
   findByIdWithFullDetails,
   findAll,
+  findMany,
 };

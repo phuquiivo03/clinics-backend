@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/consultation-packages:
+ * /api/v1/consultation-packages:
  *   get:
  *     summary: Get all consultation packages
  *     tags: [Consultation Packages]
@@ -191,7 +191,7 @@
 
 /**
  * @swagger
- * /api/consultation-packages/{id}:
+ * /api/v1/consultation-package/{id}:
  *   get:
  *     summary: Get a consultation package by ID
  *     tags: [Consultation Packages]
@@ -425,6 +425,78 @@
  *                 error:
  *                   type: string
  *                   example: Consultation package not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/v1/consultation-package/many:
+ *   get:
+ *     summary: Get many consultation packages
+ *     tags: [Consultation Packages]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to filter packages by title or description
+ *     responses:
+ *       200:
+ *         description: List of consultation packages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ConsultationPackage'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 100
+ *                     page:
+ *                       type: integer
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     pages:
+ *                       type: integer
+ *                       example: 10
  *       500:
  *         description: Server error
  *         content:

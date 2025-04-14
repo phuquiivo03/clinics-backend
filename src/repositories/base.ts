@@ -4,6 +4,7 @@ import type {
   MongooseFindOneOptions,
   MongooseUpdateOptions,
 } from './type';
+import { config } from '../config';
 
 interface BaseRepository<T> {
   create(data: Partial<T>, session?: ClientSession): Promise<T | null>;
@@ -17,6 +18,7 @@ interface BaseRepository<T> {
   update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
   findAll(options?: MongooseFindManyOptions): Promise<T[] | []>;
   delete(id: ObjectId): Promise<T | null>;
+  findMany(options?: MongooseFindManyOptions): Promise<T[] | []>;
 }
 
 class BaseRepositoryImpl<T> implements BaseRepository<T> {
@@ -94,6 +96,26 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
   async delete(id: ObjectId): Promise<T | null> {
     try {
       return this.model.findByIdAndDelete(id).exec();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(options?: MongooseFindManyOptions): Promise<T[] | []> {
+    try {
+      if (options?.pagination) {
+        const page = options.pagination.page || config.app.pagination.defaultPage;
+        const limit = options.pagination.limit || config.app.pagination.defaultLimit;
+        const query = this.model
+          .find()
+          .skip(page * limit)
+          .limit(limit);
+        if (options.selectFields) {
+          query.select(options.selectFields);
+        }
+        return query.exec();
+      }
+      return this.model.find();
     } catch (error) {
       throw error;
     }

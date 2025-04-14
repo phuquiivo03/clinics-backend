@@ -264,3 +264,53 @@
  *          404:
  *              description: Consultation service not found
  */
+
+/**
+ * @swagger
+ * /api/v1/consultation-service/many:
+ *  get:
+ *      summary: Get many consultation services
+ *      description: Retrieve a list of many consultation services
+ *      tags: [Consultation Service]
+ *      parameters:
+ *          - in: query
+ *            name: page
+ *            required: false
+ *            schema:
+ *              type: integer
+ *              example: 1
+ *          - in: query
+ *            name: limit
+ *            required: false
+ *            schema:
+ *              type: integer
+ *              example: 10
+ *      responses:
+ *          200:
+ *              description: Consultation services retrieved successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              data:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/ConsultationService'
+ *                                  example: [{
+ *                                      _id: "666666666666666666666666",
+ *                                      name: "Consultation Service 1",
+ *                                      description: "Consultation Service 1 Description",
+ *                                      duration: 30,
+ *                                      room: "666666666666666666666666",
+ *                                      doctor: "666666666666666666666666",
+ *                                      price: 100
+ *                                  }]
+ *                              message:
+ *                                  type: string
+ *                                  example: "Consultation services retrieved successfully"
+ *          401:
+ *              description: Unauthorized
+ *          403:
+ *              description: Forbidden - Admin access required
+ */

@@ -24,8 +24,10 @@ export interface MongooseFindManyOptions {
   selectFields?: MongooseSelectFields;
   filter?: Record<string, any>;
   sort?: Record<string, SortOrder>;
-  limit?: number;
-  offset?: number;
+  pagination?: {
+    page?: number;
+    limit?: number;
+  };
 }
 
 export interface MongooseFindPageOptions {
@@ -33,7 +35,7 @@ export interface MongooseFindPageOptions {
   selectFields?: MongooseSelectFields;
   sort?: Record<string, SortOrder>;
   page?: number;
-  perPage?: number;
+  limit?: number;
 }
 
 export interface MongooseUpdateOptions {
