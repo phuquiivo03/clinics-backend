@@ -73,6 +73,8 @@ jobs:
             -e NOSQL_DB_NAME='${NOSQL_DB_NAME}' \
             -e VIRTUAL_HOST=\"devq-be0x7.site\" \
             -e VIRTUAL_PORT=8081 \
+            -e REDIS_URL=\"redis://localhost\" \
+            -e REDIS_PORT=6379 \
             -e LETSENCRYPT_HOST=\"devq-be0x7.site\" \
             -e LETSENCRYPT_EMAIL=\"phuquivo03.cb@gmail.com\" \
             phuquivo03/clinics-management-backend
