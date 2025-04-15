@@ -105,7 +105,7 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
       if (options?.pagination) {
         return this.model
           .find()
-          .skip((options.pagination.page || 1 - 1) * (options.pagination.limit || 10))
+          .skip(((options.pagination.page || 1) - 1) * (options.pagination.limit || 10))
           .limit(options.pagination.limit || 10)
           .select(options.selectFields || '');
       }

@@ -447,3 +447,49 @@
  *           description: Link to book the service
  *           example: "https://example.com/book/branch"
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Blog:
+ *       type: object
+ *       required:
+ *         - title
+ *         - content
+ *         - author
+ *       properties:
+ *         _id:
+ *           type: string
+ *           format: uid
+ *           description: The unique identifier for the blog
+ *           example: "507f1f77bcf86cd799439011"
+ *         title:
+ *           type: string
+ *           description: The title of the blog post
+ *           example: "Understanding Heart Health"
+ *         content:
+ *           type: string
+ *           description: The main content of the blog post
+ *           example: "Heart health is crucial for overall well-being..."
+ *         active:
+ *           type: boolean
+ *           description: Whether the blog post is active and visible
+ *           default: false
+ *           example: true
+ *         author:
+ *           type: string
+ *           format: uid
+ *           description: Reference to the user who created the blog post
+ *           example: "507f1f77bcf86cd799439011"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The timestamp when the blog was created
+ *           example: "2024-01-01T00:00:00.000Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The timestamp when the blog was last updated
+ *           example: "2024-01-01T00:00:00.000Z"
+ */

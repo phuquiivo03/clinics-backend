@@ -1,8 +1,12 @@
+import type { ObjectId } from 'mongoose';
+import type { User } from './user';
+
 export interface Blog {
-    id: number;
-    title: string;
-    content: string;
-    author: string;
-    createdAt: Date;
-    updatedAt: Date;
+  _id?: ObjectId;
+  title: string;
+  content: string;
+  active: boolean;
+  author: User | ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }

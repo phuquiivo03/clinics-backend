@@ -9,6 +9,7 @@ import scheduleRouter from './schedule.routes';
 import periodPackageRouter from './periodPackage.routes';
 import dayPackageRouter from './dayPackage.routes';
 import packageWeekRouter from './packageWeek.routes';
+import blogRouter from './blog.routes';
 
 const router = Router();
 router.use('/user', userRouter);
@@ -21,5 +22,6 @@ router.use('/schedule', scheduleRouter);
 router.use('/period-package', periodPackageRouter);
 router.use('/day-package', dayPackageRouter);
 router.use('/package-week', packageWeekRouter);
+router.use('/blog', blogRouter);
 
 export default router;
