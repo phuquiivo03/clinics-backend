@@ -15,7 +15,7 @@ export class PromotionController {
   async createPromotion(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
-      const promotionData: Omit<Promotion, '_id'> = req.body;
+      const promotionData: Promotion = req.body;
       const promotion = await this.promotionService.create(promotionData);
       appExpress.response201(promotion);
     } catch (error) {

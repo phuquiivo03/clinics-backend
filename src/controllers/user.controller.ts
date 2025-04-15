@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 import type { RequestHandler } from 'express';
 import { ROLE, type User } from '../types';
 import { otpService, userService } from '../services/index.service';
@@ -11,21 +11,13 @@ import { ErrorCode } from '../pkg/e/code';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  // const { phoneNumber, verified} = req.session;
-  // if (!phoneNumber || !verified) {
-  //   res.status(400).json({ message: 'Phone number not found or not verified' });
-  //   return;
-  // }
   try {
     // Validate request body against schema
-    const validationResult = createUserSchema.safeParse(req.body);
-
-    if (!validationResult.success) {
-      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult.error);
-      return;
+    const userRequest = UtilsService.validateBody<ICreateUserRequest>(createUserSchema, req.body);
+    if (userRequest instanceof ZodError) {
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, userRequest);
     }
-
-    const userRequest: ICreateUserRequest = validationResult.data;
+    // const userRequest: ICreateUserRequest = req.body;
     const data: User = {
       ...userRequest,
       // phoneNumber,
@@ -45,10 +37,6 @@ const createUser: RequestHandler = async (req, res, next) => {
     }
     // @ts-ignore
     const authenToken = UtilsService.generateToken(result._id.toString());
-    // res.cookie("authenToken", authenToken, {
-    //   maxAge: config.cookie.maxAge,
-    //   signed: true,
-    // })
 
     appExpress.response201({
       user: userService.userWithoutPassword(result),
