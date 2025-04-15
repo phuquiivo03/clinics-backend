@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import v1Router from './v1';
+import v1Router from './v1/index.routes';
 import healthRouter from './health';
 const router = Router();
 router.get('/', (req, res) => {

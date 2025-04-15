@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { consultationServiceService } from '../services';
+import { consultationServiceService } from '../services/index.service';
 import type { IConsultationServiceRequest } from '../dto';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';

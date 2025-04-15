@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { z } from 'zod';
-import { doctorService, userService } from '../services';
+import { doctorService, userService } from '../services/index.service';
 import type { ICreateDoctorRequest } from '../dto';
 import { ROLE, type Doctor } from '../types';
 import { createDoctorSchema } from '../schemas';

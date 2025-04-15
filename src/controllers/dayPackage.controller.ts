@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { dayPackageService } from '../services';
+import { dayPackageService } from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { DayPackage } from '../types/dayPackage';

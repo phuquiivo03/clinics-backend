@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { consultationPackageService } from '../services';
+import { consultationPackageService } from '../services/index.service';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
 import { CustomExpress } from '../pkg/app/response';

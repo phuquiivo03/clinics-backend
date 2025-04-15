@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
-import { otpService, userService } from '../services';
-import UtilsService from '../services/utils';
+import { otpService, userService } from '../services/index.service';
+import UtilsService from '../services/utils.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 // Register User

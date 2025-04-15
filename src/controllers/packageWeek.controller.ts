@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { packageWeekService } from '../services';
+import { packageWeekService } from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { PackageWeek as PackageWeek } from '../types/packageWeek';

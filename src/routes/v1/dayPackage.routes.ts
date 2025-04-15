@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { dayPackageController } from '../../controllers';
+import { dayPackageController } from '../../controllers/index.controller';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { consultationPackageController } from '../../controllers';
+import { consultationPackageController } from '../../controllers/index.controller';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { packageWeekController } from '../../controllers';
+import { packageWeekController } from '../../controllers/index.controller';
 
 const router = Router();
 

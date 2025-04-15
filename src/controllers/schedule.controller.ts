@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { periodPackageService, scheduleService } from '../services';
+import { periodPackageService, scheduleService } from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId } from 'mongoose';

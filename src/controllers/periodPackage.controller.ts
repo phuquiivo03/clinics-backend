@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { periodPackageService } from '../services';
+import { periodPackageService } from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { PeriodPackage } from '../types/periodPackage';

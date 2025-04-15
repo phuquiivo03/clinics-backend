@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { roomService } from '../services';
+import { roomService } from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { Room } from '../types/room';

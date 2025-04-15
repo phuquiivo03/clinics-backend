@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { consultationServiceController } from '../../controllers';
+import { consultationServiceController } from '../../controllers/index.controller';
 
 const router = Router();
 router.get('/', consultationServiceController.findAll);

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { scheduleController } from '../../controllers';
+import { scheduleController } from '../../controllers/index.controller';
 import { authMiddleware } from '../../middleware/auth';
 
 const router = Router();

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware, adminMiddleware } from '../../middleware/auth';
-import { doctorController } from '../../controllers';
+import { doctorController } from '../../controllers/index.controller';
 const router = Router();
 
 // Public routes

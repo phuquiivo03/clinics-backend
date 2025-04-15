@@ -1,7 +1,7 @@
 import { type ObjectId } from 'mongoose';
 import dayPackageRepository from '../repositories/dayPackage';
 import type { DayPackage } from '../types/dayPackage';
-import periodPackageService from './periodPackage';
+import periodPackageService from './periodPackage.service';
 import type { MongooseFindOneOptions } from '../repositories/type';
 
 class DayPackageService {

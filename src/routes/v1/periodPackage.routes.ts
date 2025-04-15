@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { periodPackageController } from '../../controllers';
+import { periodPackageController } from '../../controllers/index.controller';
 
 const router = Router();
 

@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import type { RequestHandler } from 'express';
 import { ROLE, type User } from '../types';
-import { otpService, userService } from '../services';
+import { otpService, userService } from '../services/index.service';
 import { createUserSchema, updateUserInfoSchema } from '../schemas';
 import type { ICreateUserRequest, IUpdateUserInfoRequest } from '../dto/user';
-import UtilsService from '../services/utils';
+import UtilsService from '../services/utils.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 
