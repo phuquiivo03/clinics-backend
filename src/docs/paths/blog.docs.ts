@@ -22,6 +22,7 @@
  *             required:
  *               - title
  *               - content
+ *               - coverImage
  *             properties:
  *               title:
  *                 type: string
@@ -31,6 +32,10 @@
  *                 type: string
  *                 description: The main content of the blog post
  *                 example: "Heart health is crucial for overall well-being..."
+ *               coverImage:
+ *                 type: string
+ *                 description: The URL of the blog post cover image
+ *                 example: "https://example.com/images/heart-health.jpg"
  *               active:
  *                 type: boolean
  *                 description: Whether the blog post should be active
@@ -99,6 +104,10 @@
  *             type: array
  *             items:
  *               type: object
+ *               required:
+ *                 - title
+ *                 - content
+ *                 - coverImage
  *               properties:
  *                 title:
  *                   type: string
@@ -108,6 +117,10 @@
  *                   type: string
  *                   description: The main content of the blog post
  *                   example: "Heart health is crucial for overall well-being..."
+ *                 coverImage:
+ *                   type: string
+ *                   description: The URL of the blog post cover image
+ *                   example: "https://example.com/images/heart-health.jpg"
  *                 active:
  *                   type: boolean
  *                   description: Whether the blog post should be active
@@ -211,6 +224,9 @@
  *               content:
  *                 type: string
  *                 description: The main content of the blog post
+ *               coverImage:
+ *                 type: string
+ *                 description: The URL of the blog post cover image
  *               active:
  *                 type: boolean
  *                 description: Whether the blog post should be active

@@ -3,7 +3,7 @@ import { BlogService } from '../services/blog.service';
 import type { Blog } from '../types/blogs';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
-import { Schema } from 'mongoose';
+import { Schema, type ObjectId } from 'mongoose';
 import redisClient from '../db/redis_connection';
 
 export class BlogController {
@@ -48,7 +48,7 @@ export class BlogController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     try {
-      const redisKey = `blogs:active:${page}:${limit}`;
+      const redisKey = `blogs:active-:${page}:${limit}`;
       const cachedBlogs = await redisClient.get(redisKey);
       if (cachedBlogs) {
         appExpress.response200(JSON.parse(cachedBlogs));
@@ -57,6 +57,7 @@ export class BlogController {
       const blogs = await this.blogService.findMany({
         filter: { active: true },
         pagination: { page, limit },
+        selectFields: ['_id', 'title', 'coverImage', 'createdAt', 'updatedAt'],
       });
       await redisClient.set(redisKey, JSON.stringify(blogs), { EX: 30 });
       appExpress.response200(blogs);
@@ -75,7 +76,7 @@ export class BlogController {
         });
         return;
       }
-      const blog = await this.blogService.findById(new Schema.Types.ObjectId(id));
+      const blog = await this.blogService.findById(id as unknown as ObjectId);
       if (!blog) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Blog not found' });
         return;
