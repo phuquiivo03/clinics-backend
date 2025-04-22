@@ -493,3 +493,38 @@
  *           description: The timestamp when the blog was last updated
  *           example: "2024-01-01T00:00:00.000Z"
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Specialty:
+ *       type: object
+ *       required:
+ *         - name
+ *         - description
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The auto-generated id of the specialty
+ *         name:
+ *           type: string
+ *           description: The name of the specialty
+ *         description:
+ *           type: string
+ *           description: The description of the specialty
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the specialty was created
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date when the specialty was last updated
+ *       example:
+ *         _id: 507f1f77bcf86cd799439011
+ *         name: Cardiology
+ *         description: Medical specialty dealing with disorders of the heart
+ *         createdAt: 2024-04-22T10:00:00.000Z
+ *         updatedAt: 2024-04-22T10:00:00.000Z
+ */

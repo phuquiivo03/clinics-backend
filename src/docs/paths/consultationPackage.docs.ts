@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-packages:
+ * /api/v1/consultation-package:
  *   get:
  *     summary: Get all consultation packages
  *     tags: [Consultation Packages]

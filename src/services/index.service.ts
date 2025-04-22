@@ -8,7 +8,8 @@ import scheduleService from './schedule.service';
 import periodPackageService from './periodPackage.service';
 import dayPackageService from './dayPackage.service';
 import packageWeekService from './packageWeek.service';
-
+import specialtyService from './specialty.service';
+import blogService from './blog.service';
 export {
   userService,
   doctorService,
@@ -20,4 +21,6 @@ export {
   periodPackageService,
   dayPackageService,
   packageWeekService,
+  specialtyService,
+  blogService,
 };

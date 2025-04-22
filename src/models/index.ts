@@ -8,6 +8,7 @@ import roomModel from './room';
 import periodPackageModel from './periodPackage';
 import dayPackageModel from './dayPackage';
 import packageWeekModel from './packageWeek';
+import specialtyModel from './specialty';
 
 export {
   userModel,
@@ -20,4 +21,5 @@ export {
   periodPackageModel,
   dayPackageModel,
   packageWeekModel,
+  specialtyModel,
 };

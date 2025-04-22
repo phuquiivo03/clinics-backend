@@ -3,7 +3,7 @@ import { type BlogRepository, BlogRepositoryImpl } from '../repositories';
 import type { ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
 
-export class BlogService {
+class BlogService {
   private blogRepository: BlogRepository;
 
   constructor() {
@@ -53,3 +53,6 @@ export class BlogService {
     return await this.blogRepository.update(id, { active: !blog.active }, { new: true });
   }
 }
+
+const blogService = new BlogService();
+export default blogService;

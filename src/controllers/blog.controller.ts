@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { BlogService } from '../services/blog.service';
+import blogService from '../services/blog.service';
 import type { Blog } from '../types/blogs';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
@@ -7,11 +7,7 @@ import { Schema, type ObjectId } from 'mongoose';
 import redisClient from '../db/redis_connection';
 
 export class BlogController {
-  private blogService: BlogService;
-
-  constructor() {
-    this.blogService = new BlogService();
-  }
+  constructor() {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
@@ -20,7 +16,7 @@ export class BlogController {
         ...req.body,
         author: req.user?._id,
       };
-      const blog = await this.blogService.create(blogData);
+      const blog = await blogService.create(blogData);
       appExpress.response201(blog);
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
@@ -34,7 +30,7 @@ export class BlogController {
         ...blog,
         author: req.user?._id,
       }));
-      const blogs = await this.blogService.createMany(blogsData);
+      const blogs = await blogService.createMany(blogsData);
       appExpress.response201(blogs);
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
@@ -54,7 +50,7 @@ export class BlogController {
         appExpress.response200(JSON.parse(cachedBlogs));
         return;
       }
-      const blogs = await this.blogService.findMany({
+      const blogs = await blogService.findMany({
         filter: { active: true },
         pagination: { page, limit },
         selectFields: ['_id', 'title', 'coverImage', 'createdAt', 'updatedAt'],
@@ -76,7 +72,7 @@ export class BlogController {
         });
         return;
       }
-      const blog = await this.blogService.findById(id as unknown as ObjectId);
+      const blog = await blogService.findById(id as unknown as ObjectId);
       if (!blog) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Blog not found' });
         return;
@@ -90,7 +86,7 @@ export class BlogController {
   async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
-      const blogs = await this.blogService.findAll();
+      const blogs = await blogService.findAll();
       appExpress.response200(blogs);
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
@@ -107,7 +103,7 @@ export class BlogController {
         });
         return;
       }
-      const blog = await this.blogService.update(new Schema.Types.ObjectId(id), req.body);
+      const blog = await blogService.update(new Schema.Types.ObjectId(id), req.body);
       if (!blog) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Blog not found' });
         return;
@@ -128,7 +124,7 @@ export class BlogController {
         });
         return;
       }
-      const blog = await this.blogService.delete(new Schema.Types.ObjectId(id));
+      const blog = await blogService.delete(new Schema.Types.ObjectId(id));
       if (!blog) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Blog not found' });
         return;
@@ -149,7 +145,7 @@ export class BlogController {
         });
         return;
       }
-      const blog = await this.blogService.toggleStatus(new Schema.Types.ObjectId(id));
+      const blog = await blogService.toggleStatus(new Schema.Types.ObjectId(id));
       if (!blog) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Blog not found' });
         return;

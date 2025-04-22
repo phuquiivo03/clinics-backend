@@ -109,6 +109,9 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
           .limit(options.pagination.limit || 10)
           .select(options.selectFields || '');
       }
+      if (options?.filter) {
+        return this.model.find(options.filter);
+      }
       return this.model.find();
     } catch (error) {
       throw error;
