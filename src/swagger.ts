@@ -29,14 +29,14 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: process.env.SERVER_URL,
+        url: process.env.SERVER_URL || 'http://localhost:8081',
         description: 'Development server',
       },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: process.env.NODE_ENV === 'dev' ? 'https' : 'http',
+          type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
           description: 'Enter your JWT token in the format: Bearer <token>',
