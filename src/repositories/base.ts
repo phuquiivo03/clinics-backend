@@ -51,6 +51,9 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     if (options && options.selectFields) {
       query.select(options.selectFields);
     }
+    if (options && options.populateOptions) {
+      query.populate(options.populateOptions);
+    }
     return query.exec();
   }
 
@@ -71,10 +74,14 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
   async findAll(options?: MongooseFindManyOptions): Promise<T[] | []> {
     try {
+      const query = this.model.find();
       if (options && options.selectFields) {
-        return this.model.find().select(options.selectFields);
+        query.select(options.selectFields);
       }
-      return this.model.find();
+      if (options?.populateOptions) {
+        query.populate(options.populateOptions);
+      }
+      return query.exec();
     } catch (error) {
       throw error;
     }
@@ -101,18 +108,22 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
   }
 
   async findMany(options?: MongooseFindManyOptions): Promise<T[] | []> {
+    console.log('FINDMANY::OPTIONS', options);
     try {
+      const query = this.model.find();
       if (options?.pagination) {
-        return this.model
-          .find()
-          .skip(((options.pagination.page || 1) - 1) * (options.pagination.limit || 10))
-          .limit(options.pagination.limit || 10)
-          .select(options.selectFields || '');
+        query.skip(((options.pagination.page || 1) - 1) * (options.pagination.limit || 10));
+        query.limit(options.pagination.limit || 10);
+        query.select(options.selectFields || '');
       }
       if (options?.filter) {
-        return this.model.find(options.filter);
+        query.find(options.filter);
       }
-      return this.model.find();
+      if (options?.populateOptions) {
+        console.log('POPULATE::OPTIONS', options.populateOptions);
+        query.populate(options.populateOptions);
+      }
+      return query.exec();
     } catch (error) {
       throw error;
     }

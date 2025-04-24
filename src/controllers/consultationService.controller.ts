@@ -6,7 +6,7 @@ import { ErrorCode } from '../pkg/e/code';
 import { createConsultationServiceSchema, findConsultationServiceByIdSchema } from '../schemas';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -53,8 +53,15 @@ const findById: RequestHandler = async (req, res, next) => {
       );
     }
 
+    const options: MongooseFindOneOptions = {
+      populateOptions: {
+        path: 'specialization',
+        select: ['name', 'description'],
+      },
+    };
+
     const id = req.params.id as unknown as ObjectId;
-    const consultationService = await consultationServiceService.findById(id);
+    const consultationService = await consultationServiceService.findById(id, options);
     if (consultationService) {
       return appExpress.response200(consultationService);
     }
@@ -135,10 +142,29 @@ const findMany: RequestHandler = async (req, res, next) => {
   }
 };
 
+const findBySpecialization: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const { specialization } = req.params;
+    const options: MongooseFindManyOptions = {
+      filter: {
+        specialization: specialization as unknown as ObjectId,
+      },
+    };
+    const consultationServices = await consultationServiceService.findMany(options);
+    appExpress.response200(consultationServices);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
+
 export default {
   create,
   createMany,
   findById,
   findAll,
   findMany,
+  findBySpecialization,
 };

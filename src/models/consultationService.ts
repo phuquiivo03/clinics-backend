@@ -32,6 +32,11 @@ const consultationServiceSchema = new Schema<ConsultationService>(
       type: Number,
       required: true,
     },
+    specialization: {
+      type: Schema.Types.ObjectId,
+      ref: 'Specialty',
+      required: false,
+    },
   },
   {
     timestamps: true,

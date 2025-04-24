@@ -1,5 +1,5 @@
 import { DoctorRepositoryImpl, type DoctorRepository } from '../repositories';
-import type { MongooseFindOneOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { Doctor } from '../types';
 
 class DoctorService {
@@ -22,9 +22,9 @@ class DoctorService {
     }
   }
 
-  async findAll(): Promise<Doctor[] | []> {
+  async findAll(options?: MongooseFindManyOptions): Promise<Doctor[] | []> {
     try {
-      return this.doctorRepository.findAll();
+      return this.doctorRepository.findAll(options);
     } catch (error) {
       throw error;
     }
@@ -33,6 +33,14 @@ class DoctorService {
   async findOne(options: MongooseFindOneOptions): Promise<Doctor | null> {
     try {
       return this.doctorRepository.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(options: MongooseFindManyOptions): Promise<Doctor[] | []> {
+    try {
+      return this.doctorRepository.findMany(options);
     } catch (error) {
       throw error;
     }

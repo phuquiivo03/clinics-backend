@@ -1,7 +1,8 @@
+import { isValidObjectId } from 'mongoose';
 import { z } from 'zod';
 
 export const createDoctorSchema = z.object({
-  specialization: z.string().min(1, 'Specialization is required'),
+  specialization: z.string().refine(isValidObjectId, 'Invalid specialization ID format'),
   experience: z.number().min(0, 'Experience must be a positive number'),
   qualifications: z.array(z.string()),
   consultationFee: z.number().min(0, 'Consultation fee must be a positive number'),

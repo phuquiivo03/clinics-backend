@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import { z } from 'zod';
 
 // Schema for creating a consultation service
@@ -8,6 +9,7 @@ export const createConsultationServiceSchema = z.object({
   room: z.string().min(1, 'Room ID is required'),
   doctor: z.string().min(1, 'Doctor ID is required'),
   price: z.number().positive('Price must be a positive number'),
+  specialization: z.string().refine(isValidObjectId, 'Invalid specialization ID format').optional(),
 });
 
 // Schema for updating a consultation service

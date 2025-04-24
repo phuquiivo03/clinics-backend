@@ -12,7 +12,8 @@ const doctorSchema = new Schema<Doctor>(
       required: true,
     },
     specialization: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Specialty',
       required: true,
     },
     experience: {

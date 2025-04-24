@@ -6,7 +6,7 @@ const router = Router();
 // Public routes
 
 router.get('/', doctorController.getAllDoctors);
-
+router.get('/specialization/:specialization', doctorController.findBySpecialization);
 // Uncomment when the controller method is implemented
 // router.get('/:id', doctorController.getDoctorById);
 

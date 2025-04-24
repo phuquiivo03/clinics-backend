@@ -1,8 +1,8 @@
 import type { ObjectId, Document } from 'mongoose';
-
+import type { Specialty } from './specialty';
 export interface Doctor extends Document {
   user: ObjectId;
-  specialization: string;
+  specialization: ObjectId | Specialty;
   experience: number;
   qualifications: string[];
   bio: string;

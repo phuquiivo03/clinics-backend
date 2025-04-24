@@ -6,12 +6,20 @@ import { ROLE, type Doctor } from '../types';
 import { createDoctorSchema } from '../schemas';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
+import type { MongooseFindManyOptions } from '../repositories/type';
+import type { ObjectId } from 'mongoose';
 
 // Get All Doctors
 const getAllDoctors: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const doctors = await doctorService.findAll();
+    const options: MongooseFindManyOptions = {
+      populateOptions: {
+        path: 'specialization',
+        select: ['name', 'description'],
+      },
+    };
+    const doctors = await doctorService.findAll(options);
     appExpress.response200(doctors);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
@@ -59,6 +67,7 @@ const createDoctorProfile: RequestHandler = async (req, res, next) => {
     const doctorData: Partial<Doctor> = {
       user: req.user._id,
       ...doctorRequest,
+      specialization: doctorRequest.specialization as unknown as ObjectId,
       averageRating: 0,
       reviews: [],
       availability: [],
@@ -79,7 +88,22 @@ const createDoctorProfile: RequestHandler = async (req, res, next) => {
   }
 };
 
+const findBySpecialization: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const { specialization } = req.params;
+    const options: MongooseFindManyOptions = {
+      filter: { specialization: specialization as unknown as ObjectId },
+    };
+    const doctors = await doctorService.findMany(options);
+    appExpress.response200(doctors);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+  }
+};
+
 export default {
   getAllDoctors,
   createDoctorProfile,
+  findBySpecialization,
 };
