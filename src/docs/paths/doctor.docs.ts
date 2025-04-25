@@ -28,6 +28,31 @@
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Doctor'
+ *   post:
+ *     summary: Create a new doctor
+ *     tags: [Doctors]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               specialization:
+ *                 type: string
+ *               experience:
+ *                 type: number
+ *               qualifications:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               consultationFee:
+ *                 type: number
+ *                 minimum: 0
+ *
+ *
+ *
  */
 
 /**

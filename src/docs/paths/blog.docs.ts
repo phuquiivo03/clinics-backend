@@ -41,6 +41,12 @@
  *                 description: Whether the blog post should be active
  *                 default: false
  *                 example: true
+ *               specialties:
+ *                 type: array
+ *                 description: The specialties of the blog post
+ *                 items:
+ *                   type: string
+ *                 example: ["heart-health", "nutrition"]
  *     responses:
  *       201:
  *         description: Blog post created successfully
