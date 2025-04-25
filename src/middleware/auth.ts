@@ -4,6 +4,7 @@ import { ROLE, type IAuthenJWT } from '../types';
 import { userRepository } from '../repositories';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
+import { config } from '../config';
 // Extend Express Request type to include user
 declare global {
   namespace Express {
@@ -57,4 +58,9 @@ export const adminMiddleware = (req: Request, res: Response, next: NextFunction)
       message: 'Require admin role',
     });
   }
+};
+
+export const verifyPhoneNumber = async (req: Request, res: Response, next: NextFunction) => {
+  const appExpress = new CustomExpress(req, res, next);
+  const phoneNumber = req.body.phoneNumber;
 };

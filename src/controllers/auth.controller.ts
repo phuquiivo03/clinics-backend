@@ -3,15 +3,32 @@ import { otpService, userService } from '../services/index.service';
 import UtilsService from '../services/utils.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
+import redisClient from '../db/redis_connection';
+import { config } from '../config';
+import { registerSchema, verifyOTPSchema } from '../schemas/authen';
+import { ZodError } from 'zod';
+
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const phoneNumber: string = req.body.phoneNumber;
+    const userRequest = UtilsService.validateBody<{ phoneNumber: string }>(
+      registerSchema,
+      req.body,
+    );
+    if (userRequest instanceof ZodError) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: userRequest.message,
+      });
+      return;
+    }
+    const phoneNumber: string = userRequest.phoneNumber;
     //check if phone number already exists
     const user = await userService.findOne({ filter: { phoneNumber } });
     if (user) {
-      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Phone number already exists',
+      });
       return;
     }
     // create OTP
@@ -20,9 +37,7 @@ const registerUser: RequestHandler = async (req, res, next) => {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
       return;
     }
-    // store phone number to session
-    // req.session.phoneNumber = phoneNumber;
-    // console.log(req.session.phoneNumber, 'id', req.session.id);
+
     appExpress.response201({ message: 'OTP created: ' + createdOtp?.code });
   } catch (e) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
@@ -32,22 +47,25 @@ const registerUser: RequestHandler = async (req, res, next) => {
 const verifyOTP: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    // console.log('verify', req.session.phoneNumber, 'id', req.session.id);
-    // const phoneNumber: string = req.session.phoneNumber || '';
-    // if(phoneNumber === '') {
-    //   res.status(400).json({ message: 'Phone number not found' });
-    //   return;
-    // }
-    const code: string = req.body.code;
-    const phoneNumber: string = req.body.phoneNumber;
-    console.log('verify(', phoneNumber, code);
+    const userRequest = UtilsService.validateBody<{ phoneNumber: string; code: string }>(
+      verifyOTPSchema,
+      req.body,
+    );
+    if (userRequest instanceof ZodError) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: userRequest.message,
+      });
+      return;
+    }
+    const { phoneNumber, code } = userRequest;
     const isValid = await otpService.verify(phoneNumber, code);
     if (!isValid) {
       appExpress.response401(ErrorCode.OTP_INVALID, {});
       return;
     }
-    // store verified to session -> tracking user is verified or not
-    // req.session.verified = true;
+    // create cache for phone number
+    const cacheKey = config.redis.key.phoneNumberVerified(phoneNumber);
+    await redisClient.set(cacheKey, 'true', { EX: config.redis.cache.phoneNumberVerified });
     appExpress.response201({ message: 'OTP verified!' });
   } catch (error) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
@@ -63,10 +81,7 @@ const loginUser: RequestHandler = async (req, res, next) => {
     const result = await userService.login(phoneNumber, password);
     if (result._id) {
       const authenToken = UtilsService.generateToken(result._id.toString());
-      // res.cookie("authenToken", authenToken, {
-      //   maxAge: config.cookie.maxAge,
-      //   signed: true,
-      // })
+
       appExpress.response200({ ...userService.userWithoutPassword(result), authenToken });
       return;
     } else {

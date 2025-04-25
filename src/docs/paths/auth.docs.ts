@@ -49,8 +49,8 @@
  *                 type: string
  *                 description: The OTP code
  *             example:
- *               phoneNumber: 01234567890
- *               code: 123456
+ *               phoneNumber: "0712345689"
+ *               code: "123456"
  *     responses:
  *       200:
  *         description: OTP verified successfully
@@ -75,7 +75,7 @@
  *                 type: string
  *                 description: The phone number of the user
  *             example:
- *               phoneNumber: 01234567890
+ *               phoneNumber: "0712345689"
  *     responses:
  *       200:
  *         description: User registered successfully

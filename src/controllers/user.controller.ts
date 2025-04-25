@@ -8,6 +8,8 @@ import type { ICreateUserRequest, IUpdateUserInfoRequest } from '../dto/user';
 import UtilsService from '../services/utils.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
+import { config } from '../config';
+import redisClient from '../db/redis_connection';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -15,12 +17,23 @@ const createUser: RequestHandler = async (req, res, next) => {
     // Validate request body against schema
     const userRequest = UtilsService.validateBody<ICreateUserRequest>(createUserSchema, req.body);
     if (userRequest instanceof ZodError) {
-      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, userRequest);
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+        message: userRequest.message,
+      });
     }
-    // const userRequest: ICreateUserRequest = req.body;
+
+    // check if phone number is verified
+    const cacheKey = config.redis.key.phoneNumberVerified(userRequest.phoneNumber);
+    const isVerified = await redisClient.get(cacheKey);
+    if (!isVerified) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Phone number is not verified',
+      });
+      return;
+    }
+
     const data: User = {
       ...userRequest,
-      // phoneNumber,
       role: ROLE.NORMAL,
       name: null,
       email: null,

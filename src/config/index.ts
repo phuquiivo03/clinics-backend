@@ -17,6 +17,15 @@ export const config = {
     password: process.env.REDIS_PASSWORD,
     host: process.env.REDIS_URL,
     port: parseInt(process.env.REDIS_PORT || '13992'),
+    cache: {
+      expireTime: 60,
+      phoneNumberVerified: 60 * 5, // 5 minutes
+    },
+    key: {
+      phoneNumberVerified: (phoneNumber: string) => {
+        return `verified_${phoneNumber}`;
+      },
+    },
   },
   app: {
     pagination: {

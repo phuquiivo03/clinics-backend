@@ -6,7 +6,7 @@ export interface ConsultationService {
   _id?: ObjectId;
   name: string;
   description: string;
-  specialization?: Specialty | ObjectId;
+  specialization: Specialty | ObjectId;
   duration: number;
   room: Room | ObjectId;
   doctor: User | ObjectId;

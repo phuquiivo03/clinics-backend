@@ -24,7 +24,8 @@
  *                                      duration: 30,
  *                                      room: "666666666666666666666666",
  *                                      doctor: "666666666666666666666666",
- *                                      price: 100
+ *                                      price: 100,
+ *                                      specialization: "666666666666666666666666"
  *                                  }]
  *                              message:
  *                                  type: string
@@ -75,6 +76,10 @@
  *                              type: number
  *                              minimum: 0
  *                              example: 78000
+ *                          specialization:
+ *                              type: string
+ *                              format: uid
+ *                              example: "67e9180afb886c8bef80f7c3"
  *      responses:
  *          201:
  *              description: Consultation service created successfully
@@ -92,7 +97,8 @@
  *                                      duration: 30,
  *                                      room: "67f2519ec765019a3fd5ec9a",
  *                                      doctor: "67e9180afb886c8bef80f7c3",
- *                                      price: 78000
+ *                                      price: 78000,
+ *                                      specialization: "67e9180afb886c8bef80f7c3"
  *                                  }
  *                              message:
  *                                  type: string
@@ -137,7 +143,8 @@
  *                                      duration: 30,
  *                                      room: "67f2519ec765019a3fd5ec9a",
  *                                      doctor: "67e9180afb886c8bef80f7c3",
- *                                      price: 78000
+ *                                      price: 78000,
+ *                                      specialization: "67e9180afb886c8bef80f7c3"
  *                                  }
  *                              message:
  *                                  type: string
@@ -189,6 +196,10 @@
  *                              type: number
  *                              minimum: 0
  *                              example: 85000
+ *                          specialization:
+ *                              type: string
+ *                              format: uid
+ *                              example: "67e9180afb886c8bef80f7c3"
  *      responses:
  *          200:
  *              description: Consultation service updated successfully
@@ -206,7 +217,8 @@
  *                                      duration: 45,
  *                                      room: "67f2519ec765019a3fd5ec9a",
  *                                      doctor: "67e9180afb886c8bef80f7c3",
- *                                      price: 85000
+ *                                      price: 85000,
+ *                                      specialization: "67e9180afb886c8bef80f7c3"
  *                                  }
  *                              message:
  *                                  type: string
@@ -250,7 +262,8 @@
  *                                      duration: 30,
  *                                      room: "67f2519ec765019a3fd5ec9a",
  *                                      doctor: "67e9180afb886c8bef80f7c3",
- *                                      price: 78000
+ *                                      price: 78000,
+ *                                      specialization: "67e9180afb886c8bef80f7c3"
  *                                  }
  *                              message:
  *                                  type: string
@@ -304,7 +317,8 @@
  *                                      duration: 30,
  *                                      room: "666666666666666666666666",
  *                                      doctor: "666666666666666666666666",
- *                                      price: 100
+ *                                      price: 100,
+ *                                      specialization: "666666666666666666666666"
  *                                  }]
  *                              message:
  *                                  type: string

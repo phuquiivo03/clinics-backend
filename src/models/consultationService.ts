@@ -35,7 +35,7 @@ const consultationServiceSchema = new Schema<ConsultationService>(
     specialization: {
       type: Schema.Types.ObjectId,
       ref: 'Specialty',
-      required: false,
+      required: true,
     },
   },
   {
