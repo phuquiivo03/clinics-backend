@@ -5,11 +5,13 @@ import { userRepository } from '../repositories';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import { config } from '../config';
+import redisClient from '../db/redis_connection';
 // Extend Express Request type to include user
 declare global {
   namespace Express {
     interface Request {
       user?: any;
+      authenToken?: string;
     }
   }
 }
@@ -18,14 +20,18 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   const appExpress = new CustomExpress(req, res, next);
   try {
     const authHeader = req.headers.authorization?.split('Bearer ')[1];
-    // res.send('authMiddleware');
-    // console.log('middleware', req.signedCookies)
-    // const authHeader = req.signedCookies.authenToken || req.headers.authorization;
-
-    // const token = authHeader.split(' ')[0];
 
     if (!authHeader) {
       appExpress.response401(ErrorCode.UNAUTHORIZED, {});
+      return;
+    }
+
+    const isBlacklist = await redisClient.get(config.redis.key.authenToken(authHeader));
+
+    if (isBlacklist) {
+      appExpress.response401(ErrorCode.UNAUTHORIZED, {
+        message: 'Token is blacklisted',
+      });
       return;
     }
 
@@ -38,6 +44,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         appExpress.response401(ErrorCode.TOKEN_EXPIRED, {});
         return;
       }
+      req.authenToken = authHeader;
       req.user = await userRepository.findById(decoded.id, { selectFields: ['-password'] });
       next();
     } catch (error) {

@@ -7,6 +7,16 @@ export const config = {
     password: process.env.NOSQL_DB_PASSWORD,
     name: process.env.NOSQL_DB_NAME,
   },
+  jwt: {
+    authen: {
+      secret: process.env.JWT_SECRET || 'default_secret',
+      expiresIn: process.env.JWT_EXPIRED || '10m',
+    },
+    refresh: {
+      secret: process.env.JWT_REFRESH_SECRET || 'default_secret',
+      expiresIn: process.env.JWT_REFRESH_EXPIRED || '30d',
+    },
+  },
   cookie: {
     secret: process.env.COOKIE_SECRET || 'default_secret',
     maxAge: parseInt(process.env.COOKIE_MAX_AGE || '60000'),
@@ -20,10 +30,18 @@ export const config = {
     cache: {
       expireTime: 60,
       phoneNumberVerified: 60 * 5, // 5 minutes
+      refreshToken: 60 * 60 * 24 * 30, // 30 days
+      authenToken: 60 * 10, // 10 minutes
     },
     key: {
       phoneNumberVerified: (phoneNumber: string) => {
         return `verified_${phoneNumber}`;
+      },
+      refreshToken: (userId: string) => {
+        return `refresh_${userId}`;
+      },
+      authenToken: (authenToken: string) => {
+        return `blacklist_authen_${authenToken}`;
       },
     },
   },

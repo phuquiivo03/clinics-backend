@@ -80,9 +80,23 @@ const loginUser: RequestHandler = async (req, res, next) => {
 
     const result = await userService.login(phoneNumber, password);
     if (result._id) {
-      const authenToken = UtilsService.generateToken(result._id.toString());
-
-      appExpress.response200({ ...userService.userWithoutPassword(result), authenToken });
+      // remove old refresh token
+      const oldToken = await redisClient.get(config.redis.key.refreshToken(result._id.toString()));
+      await redisClient.del(config.redis.key.refreshToken(result._id.toString()));
+      console.log('LOGIN::OLD_REFRESH_TOKEN', oldToken);
+      // generate new token
+      const { authenToken, refreshToken } = UtilsService.generateToken(result._id.toString());
+      console.log('LOGIN::NEW_REFRESH_TOKEN', refreshToken);
+      await redisClient.set(
+        config.redis.key.refreshToken(result._id as unknown as string),
+        refreshToken,
+        { EX: config.redis.cache.refreshToken },
+      );
+      appExpress.response200({
+        ...userService.userWithoutPassword(result),
+        authenToken,
+        refreshToken,
+      });
       return;
     } else {
       appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
@@ -93,8 +107,50 @@ const loginUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+const logoutUser: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    // remove refresh token
+    await redisClient.del(config.redis.key.refreshToken(req.user._id.toString()));
+    // blacklist authen token
+    await redisClient.set(config.redis.key.authenToken(req.authenToken as string), `true`, {
+      EX: config.redis.cache.authenToken,
+    });
+    appExpress.response200({ message: 'Logout successfully' });
+  } catch (error) {
+    appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+      error: (error as Error).message,
+    });
+  }
+};
+
+const refreshToken: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const requestRefreshToken = req.body.refreshToken;
+    const token = await redisClient.get(config.redis.key.refreshToken(req.user._id.toString()));
+    if (token !== requestRefreshToken) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Invalid refresh token',
+      });
+      return;
+    }
+    const { authenToken, refreshToken } = UtilsService.generateToken(req.user._id.toString());
+    await redisClient.set(config.redis.key.refreshToken(req.user._id.toString()), refreshToken, {
+      EX: config.redis.cache.refreshToken,
+    });
+    appExpress.response200({ authenToken, refreshToken });
+  } catch (error) {
+    appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+      message: (error as Error).message,
+    });
+  }
+};
+
 export default {
   registerUser,
   verifyOTP,
   loginUser,
+  logoutUser,
+  refreshToken,
 };

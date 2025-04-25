@@ -48,12 +48,14 @@ const createUser: RequestHandler = async (req, res, next) => {
       appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
       return;
     }
-    // @ts-ignore
-    const authenToken = UtilsService.generateToken(result._id.toString());
+
+    const authenToken = UtilsService.generateAuthenToken(result._id.toString());
+    const refreshToken = UtilsService.generateRefreshToken(result._id.toString());
 
     appExpress.response201({
       user: userService.userWithoutPassword(result),
       authenToken,
+      refreshToken,
     });
   } catch (error) {
     res.status(400).json({
