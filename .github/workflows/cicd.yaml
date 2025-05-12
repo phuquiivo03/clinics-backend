@@ -64,7 +64,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
             sudo docker rm -f clinics-management-backend || true
             sudo docker rmi phuquivo03/clinics-management-backend:latest || true
-            sudo docker run -it -d -p 8081:8081 \
+            sudo docker run -it -d -p 80:8081 \
             --name clinics-management-backend \
             -e PORT='${PORT}' \
             -e SERVER_URL=\"https://devq-be0x7.site\" \
