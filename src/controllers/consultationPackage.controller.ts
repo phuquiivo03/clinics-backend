@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import { createConsultationPackageSchema, findConsultationPackageByIdSchema } from '../schemas';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -52,6 +52,38 @@ const createMany: RequestHandler = async (req, res, next) => {
       message: (error as Error).message,
     });
   }
+};
+
+const updateMany: RequestHandler = async (req, res, next) => {
+  // const appExpress = new CustomExpress(req, res, next);
+  // try {
+  //   const res = await Promise.all(
+  //     data.map(async (row) => {
+  //       const options: MongooseFindOneOptions = {
+  //         filter: {
+  //           icon: row.icon,
+  //         },
+  //       };
+  //       const pkg = await consultationPackageService.findOne(options);
+  //       if (pkg) {
+  //         consultationPackageService.update(
+  //           pkg._id as unknown as ObjectId,
+  //           {
+  //             subTitle: row.title,
+  //           },
+  //           {
+  //             new: true,
+  //           },
+  //         );
+  //       }
+  //       return null;
+  //     }),
+  //   );
+  // } catch (error) {
+  //   appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+  //     message: (error as Error).message,
+  //   });
+  // }
 };
 
 const findById: RequestHandler = async (req, res, next) => {
@@ -108,8 +140,9 @@ const findAll: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
     const consultationPackages = await consultationPackageService.findAll({
-      selectFields: ['title', 'icon'],
+      selectFields: ['subTitle', 'icon'],
     });
+
     appExpress.response200(consultationPackages);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
@@ -143,4 +176,5 @@ export default {
   findByIdWithFullDetails,
   findAll,
   findMany,
+  updateMany,
 };

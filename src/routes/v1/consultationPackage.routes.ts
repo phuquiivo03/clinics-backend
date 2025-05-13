@@ -9,4 +9,5 @@ router.get('/:id', consultationPackageController.findById);
 router.get('/:id/details', consultationPackageController.findByIdWithFullDetails);
 router.post('/', consultationPackageController.create);
 router.post('/many', consultationPackageController.createMany);
+router.patch('/many', consultationPackageController.updateMany);
 export default router;

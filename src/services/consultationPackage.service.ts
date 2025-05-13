@@ -3,7 +3,11 @@ import {
   type ConsultationPackageRepository,
   ConsultationPackageRepositoryImpl,
 } from '../repositories';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type {
+  MongooseFindManyOptions,
+  MongooseFindOneOptions,
+  MongooseUpdateOptions,
+} from '../repositories/type';
 import type { ConsultationPackage } from '../types';
 
 class ConsultationPackageService {
@@ -64,6 +68,25 @@ class ConsultationPackageService {
   async findMany(options?: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
     try {
       return this.consultationPackageRepository.findMany(options);
+    } catch (error) {
+      throw error;
+    }
+  }
+  async findOne(options: MongooseFindOneOptions): Promise<ConsultationPackage | null> {
+    try {
+      return this.consultationPackageRepository.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(
+    id: ObjectId,
+    data: Partial<ConsultationPackage>,
+    options: MongooseUpdateOptions,
+  ): Promise<ConsultationPackage | null> {
+    try {
+      return this.consultationPackageRepository.update(id, data, options);
     } catch (error) {
       throw error;
     }

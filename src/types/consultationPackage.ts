@@ -3,6 +3,7 @@ import type { ConsultationService } from './consultationService';
 
 export interface ConsultationPackage {
   _id?: ObjectId; // Unique identifier
+  subTitle?: string;
   icon: string; // Icon URL
   title: string; // Package name (e.g., "Viêm khớp")
   description: string; // Brief details about the package

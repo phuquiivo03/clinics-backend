@@ -9,6 +9,10 @@ const consultationPackageSchema = new Schema<ConsultationPackage>(
       type: String,
       required: true,
     },
+    subTitle: {
+      type: String,
+      required: false,
+    },
     icon: {
       type: String,
       required: true,
