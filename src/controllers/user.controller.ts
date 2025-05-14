@@ -93,17 +93,15 @@ const updateUserProfile: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const userRequest: IUpdateUserInfoRequest = validationResult.data;
+    const userRequest: Partial<IUpdateUserInfoRequest> = validationResult.data;
     const user = await userService.findById(req.user._id);
     if (!user) {
       appExpress.response404(ErrorCode.NOT_FOUND, {});
       return;
     }
-    const updatedUser = await userService.findAndUpdate(req.user._id, {
-      ...userRequest,
-      phoneNumber: req.user.phoneNumber,
-      role: req.user.role,
-    });
+    const updatedUser = await userService.findAndUpdate(req.user._id, userRequest
+    
+    );
     if (!updatedUser || createUser == null) {
       appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
       return;
