@@ -1,7 +1,7 @@
 import { type ClientSession, type ObjectId } from 'mongoose';
 import scheduleRepository from '../repositories/schedule';
 import type { Schedule } from '../types/schedules';
-import type { MongooseFindOneOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 
 class ScheduleService {
   async create(data: Partial<Schedule>, session?: ClientSession): Promise<Schedule | null> {
@@ -33,6 +33,14 @@ class ScheduleService {
       return scheduleRepository.findAll({
         filter: { userId },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(options?: MongooseFindManyOptions): Promise<Schedule[] | []> {
+    try {
+      return scheduleRepository.findAll(options);
     } catch (error) {
       throw error;
     }

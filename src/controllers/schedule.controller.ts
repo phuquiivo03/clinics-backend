@@ -5,7 +5,8 @@ import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
 import { createScheduleSchema, findScheduleByIdSchema } from '../schemas';
-
+import { ScheduleStatus } from '../types/schedules';
+import type { MongooseFindManyOptions } from '../repositories/type';
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
@@ -19,58 +20,63 @@ const create: RequestHandler = async (req, res, next) => {
     }
     // Add date conversion
     const scheduleData: any = validationResult.data;
-    scheduleData.date = new Date(scheduleData.date);
-    // create transaction
+    // scheduleData.date = new Date(scheduleData.date);
+    // // create transaction
 
     const session = await mongoose.startSession();
 
     try {
       // Start the transaction
-      session.startTransaction();
+      // session.startTransaction();
 
       // Create schedule
       const schedule = await scheduleService.create(
-        { ...scheduleData, userId: req.user.id },
-        session,
+        {
+          ...scheduleData,
+          userId: req.user.id,
+          status: ScheduleStatus.PENDING,
+          packageId: scheduleData.packageId as ObjectId,
+        },
+        // session,
       );
 
       if (!schedule) {
-        await session.abortTransaction();
+        // await session.abortTransaction();
         return appExpress.response404(ErrorCode.NOT_FOUND, {
           message: 'Schedule not found',
         });
       }
 
-      const periodPkgId: ObjectId = scheduleData.packagePeriodId as unknown as ObjectId;
-      const periodPkg = await periodPackageService.findById(periodPkgId, { session });
+      // const periodPkgId: ObjectId = scheduleData.packagePeriodId as unknown as ObjectId;
+      // const periodPkg = await periodPackageService.findById(periodPkgId, { session });
 
-      if (!periodPkg) {
-        await session.abortTransaction();
-        return appExpress.response404(ErrorCode.NOT_FOUND, {
-          message: 'Period package not found',
-        });
-      }
-      if (periodPkg.booked >= periodPkg.maxBook) {
-        await session.abortTransaction();
-        return appExpress.response400(ErrorCode.BAD_REQUEST, {
-          message: 'Period package is full',
-        });
-      }
+      // if (!periodPkg) {
+      //   await session.abortTransaction();
+      //   return appExpress.response404(ErrorCode.NOT_FOUND, {
+      //     message: 'Period package not found',
+      //   });
+      // }
+      // if (periodPkg.booked >= periodPkg.maxBook) {
+      //   await session.abortTransaction();
+      //   return appExpress.response400(ErrorCode.BAD_REQUEST, {
+      //     message: 'Period package is full',
+      //   });
+      // }
 
-      periodPkg.booked += 1;
-      const updatedPeriodPkg = await periodPackageService.update(periodPkgId, periodPkg, {
-        session,
-      });
+      // periodPkg.booked += 1;
+      // const updatedPeriodPkg = await periodPackageService.update(periodPkgId, periodPkg, {
+      //   session,
+      // });
 
-      if (!updatedPeriodPkg) {
-        await session.abortTransaction();
-        return appExpress.response400(ErrorCode.BAD_REQUEST, {
-          message: 'Failed to update period package',
-        });
-      }
+      // if (!updatedPeriodPkg) {
+      //   await session.abortTransaction();
+      //   return appExpress.response400(ErrorCode.BAD_REQUEST, {
+      //     message: 'Failed to update period package',
+      //   });
+      // }
 
       // If we get here, everything succeeded
-      await session.commitTransaction();
+      // await session.commitTransaction();
       return appExpress.response201(schedule);
     } catch (error: any) {
       // If there's an error, abort the transaction
@@ -142,7 +148,90 @@ const findById: RequestHandler = async (req, res, next) => {
     if (schedule) {
       return appExpress.response200(schedule);
     }
-    appExpress.response404(ErrorCode.NOT_FOUND, {});
+    console.log('id', id);
+    console.log('schedule', schedule);
+    appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
+
+const findMany: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const schedules = await scheduleService.findMany();
+    return appExpress.response200(schedules);
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
+
+const getCurrentWeek: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const currentWeek = new Date();
+    const startOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 1),
+    );
+    const endOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 8),
+    );
+
+    // format to vietnam time
+    startOfWeek.setHours(7, 0, 0, 0);
+
+    endOfWeek.setHours(6, 59, 59, 999);
+
+    // find all schedules that are in the current week
+    const options: MongooseFindManyOptions = {
+      filter: {
+        'weekPeriod.from': {
+          $gte: startOfWeek,
+        },
+        'weekPeriod.to': {
+          $lte: endOfWeek,
+        },
+      },
+    };
+    const schedules = await scheduleService.findMany(options);
+    // const groupedByDay = new Map<number, Array<{ timeOffset: number; data: any }>>();
+
+    // for (const schedule of schedules) {
+    //   if (!groupedByDay.has(schedule.dayOffset)) {
+    //     groupedByDay.set(schedule.dayOffset, []);
+    //   }
+    //   // Assuming schedule objects have dayOffset and timeOffset properties
+    //   groupedByDay.get(schedule.dayOffset)!.push({
+    //     timeOffset: schedule.timeOffset,
+    //     data: schedule,
+    //   });
+    // }
+
+    // const formattedSchedules = Array.from(groupedByDay.entries())
+    //   .map(([dayOffset, times]) => ({
+    //     dayOffset,
+    //     time: times.sort((a, b) => a.timeOffset - b.timeOffset), // Sort by timeOffset
+    //   }))
+    //   .sort((a, b) => a.dayOffset - b.dayOffset); // Sort by dayOffset
+
+    const formattedSchedulesNew = [0, 1, 2, 3, 4, 5, 6].map((dayOffset) => {
+      const times = schedules.filter((schedule) => schedule.dayOffset === dayOffset);
+      const timesFormated = [0, 1, 2, 3, 4, 5, 6].map((time) => {
+        return {
+          timeOffset: time,
+          data: times.filter((t) => t.timeOffset === time),
+        };
+      });
+      return {
+        dayOffset,
+        data: timesFormated || [],
+      };
+    });
+    return appExpress.response200(formattedSchedulesNew);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
@@ -154,4 +243,6 @@ export default {
   create,
   findById,
   findByUserId,
+  findMany,
+  getCurrentWeek,
 };

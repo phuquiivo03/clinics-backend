@@ -1,9 +1,19 @@
 import { model, Schema } from 'mongoose';
-import type { Schedule } from '../types/schedules';
+import { ScheduleStatus, type Schedule, type CDateRange } from '../types/schedules';
 
 const DOCUMENT = 'Schedule';
 const COLLECTION = 'Schedules';
 
+const DateRangeSchema = new Schema<CDateRange>({
+  from: {
+    type: Date,
+    required: true,
+  },
+  to: {
+    type: Date,
+    required: true,
+  },
+});
 const scheduleSchema = new Schema<Schedule>(
   {
     userId: {
@@ -11,22 +21,24 @@ const scheduleSchema = new Schema<Schedule>(
       ref: 'User',
       required: true,
     },
-    date: {
-      type: Date,
+    weekPeriod: {
+      type: DateRangeSchema,
       required: true,
     },
-    startTime: {
-      type: String,
+    dayOffset: {
+      type: Number,
       required: true,
     },
-    endTime: {
-      type: String,
+    timeOffset: {
+      type: Number,
       required: true,
     },
     status: {
       type: String,
+      enum: ScheduleStatus,
       required: true,
     },
+
     packageId: {
       type: Schema.Types.ObjectId,
       ref: 'ConsultationPackage',

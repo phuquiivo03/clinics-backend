@@ -81,6 +81,9 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
       if (options?.populateOptions) {
         query.populate(options.populateOptions);
       }
+      if (options?.filter) {
+        query.find(options.filter);
+      }
       return query.exec();
     } catch (error) {
       throw error;

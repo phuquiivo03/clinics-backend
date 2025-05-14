@@ -1,24 +1,17 @@
 import { z } from 'zod';
 
-// Status validation - assuming valid status values
-const scheduleStatusEnum = ['pending', 'confirmed', 'cancelled', 'completed'] as const;
+// Status validation - using corrected values from ScheduleStatus enum
+const scheduleStatusEnum = ['pending', 'confirmed', 'checkedin'] as const;
 
 // Schema for creating a schedule
 export const createScheduleSchema = z.object({
-  date: z.string().refine((value) => !isNaN(Date.parse(value)), {
-    message: 'Date must be a valid date string',
+  dayOffset: z.number().int().min(0, 'Day offset must be a non-negative integer'),
+  timeOffset: z.number().int().min(0, 'Time offset must be a non-negative integer'),
+  packageId: z.string().min(1, 'Package ID is required'),
+  weekPeriod: z.object({
+    from: z.string().min(1, 'From date is required'),
+    to: z.string().min(1, 'To date is required'),
   }),
-  startTime: z
-    .string()
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time must be in HH:MM format'),
-  endTime: z
-    .string()
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'End time must be in HH:MM format'),
-  status: z.enum(scheduleStatusEnum, {
-    errorMap: () => ({ message: `Status must be one of: ${scheduleStatusEnum.join(', ')}` }),
-  }),
-  packageId: z.string().min(1, 'Package ID is required').optional(),
-  packagePeriodId: z.string().min(1, 'Package Week ID is required'),
 });
 
 // Schema for updating a schedule
