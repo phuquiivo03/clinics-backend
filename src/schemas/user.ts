@@ -2,17 +2,17 @@ import { z } from 'zod';
 import { GENDER } from '../types';
 
 export const updateUserInfoSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters').optional(),
   email: z.string().email('Invalid email format').optional(),
   dateOfBirth: z
     .string()
     .or(z.date())
     .pipe(z.coerce.date())
-    .refine((date) => date <= new Date(), 'Date of birth cannot be in the future'),
+    .refine((date) => date <= new Date(), 'Date of birth cannot be in the future').optional(),
   gender: z.enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER], {
     errorMap: () => ({ message: 'Gender must be a valid GENDER enum value' }),
-  }),
-  address: z.string().min(5, 'Address must be at least 5 characters'),
+  }).optional(),
+  address: z.string().min(5, 'Address must be at least 5 characters').optional(),
 });
 
 export const createUserSchema = z.object({
