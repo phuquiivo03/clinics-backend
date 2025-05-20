@@ -73,6 +73,7 @@ class UserService {
       name: user.name,
       email: user.email,
       role: user.role,
+      avatar: user.avatar,
       phoneNumber: user.phoneNumber,
       occupation: user.occupation,
       address: user.address,

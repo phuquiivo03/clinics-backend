@@ -5,21 +5,39 @@ import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import { Schema, type ObjectId } from 'mongoose';
 import redisClient from '../db/redis_connection';
-
+import pinataService from '../services/pinata.service';
+import fs from 'fs';
+import { config } from '../config';
 export class BlogController {
   constructor() {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
+      if (!req.file) {
+        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, { error: 'No file uploaded' });
+        return;
+      }
+
+      // Create a File object from the uploaded file
+      const file = new File([fs.readFileSync(req.file.path)], req.file.originalname, {
+        type: req.file.mimetype,
+      });
+
+      // Upload to Pinata
+      const imageUrl = await pinataService.uploadFile(file);
+
+      // Clean up the temporary file
+      fs.unlinkSync(req.file.path);
       const blogData: Omit<Blog, '_id'> = {
         ...req.body,
         author: req.user?._id,
+        coverImage: `${config.pinata.viewUrl}${imageUrl.cid}`,
       };
       const blog = await blogService.create(blogData);
       appExpress.response201(blog);
     } catch (error) {
-      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error: (error as Error).message });
     }
   }
 

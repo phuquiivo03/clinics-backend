@@ -36,6 +36,9 @@ const userSchema = new Schema<User>(
     address: {
       type: String || null,
     },
+    avatar: {
+      type: String || null,
+    },
     dateOfBirth: {
       type: Date || null,
     },

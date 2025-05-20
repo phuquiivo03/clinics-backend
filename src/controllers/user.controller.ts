@@ -10,6 +10,8 @@ import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import { config } from '../config';
 import redisClient from '../db/redis_connection';
+import pinataService from '../services/pinata.service';
+import fs from 'fs';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -92,16 +94,28 @@ const updateUserProfile: RequestHandler = async (req, res, next) => {
       });
       return;
     }
+    let avatarUrl: string = '';
+    if (req.file) {
+      const file = new File([fs.readFileSync(req.file.path)], req.file.originalname, {
+        type: req.file.mimetype,
+      });
+      // Upload to Pinata
+      const imageUrl = await pinataService.uploadFile(file);
+      // Clean up the temporary file
+      fs.unlinkSync(req.file.path);
+      avatarUrl = `${config.pinata.viewUrl}${imageUrl.cid}`;
+    }
 
-    const userRequest: Partial<IUpdateUserInfoRequest> = validationResult.data;
+    const userRequest: Partial<IUpdateUserInfoRequest> = {
+      avatar: avatarUrl || '',
+      ...validationResult.data,
+    };
     const user = await userService.findById(req.user._id);
     if (!user) {
       appExpress.response404(ErrorCode.NOT_FOUND, {});
       return;
     }
-    const updatedUser = await userService.findAndUpdate(req.user._id, userRequest
-    
-    );
+    const updatedUser = await userService.findAndUpdate(req.user._id, userRequest);
     if (!updatedUser || createUser == null) {
       appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
       return;

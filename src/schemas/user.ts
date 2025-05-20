@@ -8,10 +8,13 @@ export const updateUserInfoSchema = z.object({
     .string()
     .or(z.date())
     .pipe(z.coerce.date())
-    .refine((date) => date <= new Date(), 'Date of birth cannot be in the future').optional(),
-  gender: z.enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER], {
-    errorMap: () => ({ message: 'Gender must be a valid GENDER enum value' }),
-  }).optional(),
+    .refine((date) => date <= new Date(), 'Date of birth cannot be in the future')
+    .optional(),
+  gender: z
+    .enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER], {
+      errorMap: () => ({ message: 'Gender must be a valid GENDER enum value' }),
+    })
+    .optional(),
   address: z.string().min(5, 'Address must be at least 5 characters').optional(),
 });
 

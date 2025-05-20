@@ -1,4 +1,6 @@
-export const config = {
+import type { Config } from './types';
+
+export const config: Config = {
   nosqlDb: {
     type: process.env.NOSQL_DB_TYPE,
     port: process.env.NOSQL_DB_PORT,
@@ -50,5 +52,11 @@ export const config = {
       defaultPage: parseInt(process.env.PAGINATION_DEFAULT_PAGE || '1'),
       defaultLimit: parseInt(process.env.PAGINATION_DEFAULT_LIMIT || '10'),
     },
+  },
+
+  pinata: {
+    jwt: process.env.PINATA_JWT || '',
+    gateway: process.env.GATEWAY_URL || '',
+    viewUrl: 'https://turquoise-dear-mole-333.mypinata.cloud/ipfs/',
   },
 };

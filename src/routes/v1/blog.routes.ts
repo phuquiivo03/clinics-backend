@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { BlogController } from '../../controllers/blog.controller';
+import multer from 'multer';
 import { authMiddleware } from '../../middleware/auth';
-
+const upload = multer({ dest: 'uploads/' });
 const router = Router();
 const blogController = new BlogController();
 
@@ -11,7 +12,12 @@ router.get('/active', blogController.findActive.bind(blogController));
 router.get('/:id', blogController.findById.bind(blogController));
 
 // Protected routes
-router.post('/', authMiddleware, blogController.create.bind(blogController));
+router.post(
+  '/',
+  authMiddleware,
+  upload.single('coverImage'),
+  blogController.create.bind(blogController),
+);
 router.post('/createMany', authMiddleware, blogController.createMany.bind(blogController));
 
 router.put('/:id', authMiddleware, blogController.update.bind(blogController));

@@ -11,4 +11,5 @@ export type IUpdateUserInfoRequest = {
   dateOfBirth: Date;
   gender: GENDER;
   address: string;
+  avatar: string;
 };

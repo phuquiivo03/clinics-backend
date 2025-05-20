@@ -198,25 +198,6 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
       },
     };
     const schedules = await scheduleService.findMany(options);
-    // const groupedByDay = new Map<number, Array<{ timeOffset: number; data: any }>>();
-
-    // for (const schedule of schedules) {
-    //   if (!groupedByDay.has(schedule.dayOffset)) {
-    //     groupedByDay.set(schedule.dayOffset, []);
-    //   }
-    //   // Assuming schedule objects have dayOffset and timeOffset properties
-    //   groupedByDay.get(schedule.dayOffset)!.push({
-    //     timeOffset: schedule.timeOffset,
-    //     data: schedule,
-    //   });
-    // }
-
-    // const formattedSchedules = Array.from(groupedByDay.entries())
-    //   .map(([dayOffset, times]) => ({
-    //     dayOffset,
-    //     time: times.sort((a, b) => a.timeOffset - b.timeOffset), // Sort by timeOffset
-    //   }))
-    //   .sort((a, b) => a.dayOffset - b.dayOffset); // Sort by dayOffset
 
     const formattedSchedulesNew = [0, 1, 2, 3, 4, 5, 6].map((dayOffset) => {
       const times = schedules.filter((schedule) => schedule.dayOffset === dayOffset);

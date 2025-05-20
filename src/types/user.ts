@@ -2,6 +2,7 @@ import type { ObjectId } from 'mongoose';
 
 export interface User {
   _id?: ObjectId;
+  avatar?: string;
   name: string | null;
   email: string | null;
   password?: string;

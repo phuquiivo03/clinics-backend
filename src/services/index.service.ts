@@ -10,6 +10,7 @@ import dayPackageService from './dayPackage.service';
 import packageWeekService from './packageWeek.service';
 import specialtyService from './specialty.service';
 import blogService from './blog.service';
+import pinataService from './pinata.service';
 export {
   userService,
   doctorService,
@@ -23,4 +24,5 @@ export {
   packageWeekService,
   specialtyService,
   blogService,
+  pinataService,
 };
