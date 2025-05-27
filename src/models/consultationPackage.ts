@@ -5,15 +5,15 @@ const DOCUMENT = 'ConsultationPackage';
 const COLLECTION = 'ConsultationPackages';
 const consultationPackageSchema = new Schema<ConsultationPackage>(
   {
-    title: {
+    category: {
       type: String,
       required: true,
     },
-    subTitle: {
+    titleImage: {
       type: String,
-      required: false,
+      required: true,
     },
-    icon: {
+    title: {
       type: String,
       required: true,
     },
@@ -21,34 +21,24 @@ const consultationPackageSchema = new Schema<ConsultationPackage>(
       type: String,
       required: true,
     },
-    features: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    priceOptions: [
-      {
-        tier: {
-          type: String,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        testsIncluded: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    content: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
     tests: [
       {
         type: Schema.Types.ObjectId,
         ref: 'ConsultationService',
       },
     ],
+    condition: {
+      type: String,
+      required: true,
+    },
     maxSlotPerPeriod: {
       type: Number,
       required: true,
@@ -65,23 +55,10 @@ const consultationPackageSchema = new Schema<ConsultationPackage>(
         },
       },
     ],
-    bookingOptions: [
-      {
-        type: {
-          type: String,
-          enum: ['Branch', 'Home Sample Collection'],
-          required: true,
-        },
-        description: {
-          type: String,
-          required: true,
-        },
-        actionUrl: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    bookingOption: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

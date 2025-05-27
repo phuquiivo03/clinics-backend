@@ -3,16 +3,17 @@ import type { ConsultationService } from './consultationService';
 
 export interface ConsultationPackage {
   _id?: ObjectId; // Unique identifier
-  subTitle?: string;
-  icon: string; // Icon URL
+  category: string;
+  titleImage: string; // Icon URL
   title: string; // Package name (e.g., "Viêm khớp")
   description: string; // Brief details about the package
-  features: string[]; // List of benefits (e.g., early detection, progress tracking)
-  priceOptions: PriceOption[]; // Different package tiers (Basic, Advanced)
+  content: string;
+  price: number;
   tests: ConsultationService[] | ObjectId[]; // List of test categories and individual tests
+  condition: string;
   maxSlotPerPeriod: number;
   faq?: FAQItem[]; // Frequently asked questions
-  bookingOptions?: BookingOption[]; // Methods to book the package
+  bookingOption: string; // Methods to book the package
 }
 
 export interface PriceOption {

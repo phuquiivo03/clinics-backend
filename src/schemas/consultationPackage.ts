@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-// Schema for pricing options
-const priceOptionSchema = z.object({
-  tier: z.string().min(1, 'Tier name is required'),
-  price: z.number().positive('Price must be a positive number'),
-  testsIncluded: z.number().int().min(0, 'Tests included must be a non-negative integer'),
-});
-
 // Schema for FAQ items
 const faqItemSchema = z.object({
   question: z.string().min(1, 'Question is required'),
@@ -24,15 +17,17 @@ const bookingOptionSchema = z.object({
 
 // Schema for creating a consultation package
 export const createConsultationPackageSchema = z.object({
+  category: z.string().min(1, 'Category is required'),
+  titleImage: z.string().url('titleImage must be a valid URL'),
   title: z.string().min(1, 'Title is required'),
-  icon: z.string().url('Icon must be a valid URL'),
   description: z.string().min(1, 'Description is required'),
-  features: z.array(z.string()).min(1, 'At least one feature is required'),
-  priceOptions: z.array(priceOptionSchema).min(1, 'At least one price option is required'),
+  content: z.string().min(1, 'Content is required'),
+  price: z.number(),
+  tests: z.array(z.string().min(1, 'Test ID is required')),
+  condition: z.string().min(0, 'Condition is required'),
   maxSlotPerPeriod: z.number().int().positive('Max slot per period must be a positive integer'),
-  tests: z.array(z.string().min(1, 'Test ID is required')).min(1, 'At least one test is required'),
   faq: z.array(faqItemSchema).optional(),
-  bookingOptions: z.array(bookingOptionSchema).optional(),
+  bookingOption: z.string(),
 });
 
 // Schema for updating a consultation package

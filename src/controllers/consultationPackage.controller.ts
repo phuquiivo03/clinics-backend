@@ -20,7 +20,7 @@ const create: RequestHandler = async (req, res, next) => {
     }
 
     const validatedData = validationResult.data;
-
+    console.log(validatedData);
     // Convert test IDs to ObjectIds
     const packageData: any = {
       ...validatedData,
@@ -140,7 +140,7 @@ const findAll: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
     const consultationPackages = await consultationPackageService.findAll({
-      selectFields: ['subTitle', 'icon'],
+      selectFields: ['title', 'titleImage', 'category', 'price', 'description'],
     });
 
     appExpress.response200(consultationPackages);
@@ -157,7 +157,7 @@ const findMany: RequestHandler = async (req, res, next) => {
       page: parseInt(page as string),
       limit: parseInt(limit as string),
     },
-    selectFields: ['title', 'icon'],
+    selectFields: ['title', 'titleImage', 'category', 'price', 'description'],
   };
   try {
     const consultationPackages = await consultationPackageService.findMany(options);
