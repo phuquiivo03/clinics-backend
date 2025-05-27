@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { PromotionController } from '../../controllers/promotion.controller';
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, checkRole } from '../../middleware/auth';
+import { ROLE } from '../../types/user';
 
 const router = Router();
 const promotionController = new PromotionController();
@@ -11,6 +12,7 @@ router.get('/active', promotionController.getActivePromotions.bind(promotionCont
 router.get('/:id', promotionController.getPromotionById.bind(promotionController));
 
 // Protected routes
+router.use(authMiddleware, checkRole([ROLE.ADMIN]));
 router.post('/', authMiddleware, promotionController.createPromotion.bind(promotionController));
 router.post(
   '/createMany',

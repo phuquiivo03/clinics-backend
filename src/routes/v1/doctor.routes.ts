@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', doctorController.getAllDoctors);
 router.get('/specialization/:specialization', doctorController.findBySpecialization);
-
-router.post('/', authMiddleware, checkRole([ROLE.ADMIN]), doctorController.createDoctorProfile);
+router.use(authMiddleware, checkRole([ROLE.ADMIN]));
+router.post('/', doctorController.createDoctorProfile);
 
 export default router;
