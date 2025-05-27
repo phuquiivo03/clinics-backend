@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { roomController } from '../../controllers/index.controller';
-import { adminMiddleware, authMiddleware } from '../../middleware/auth';
+import { checkRole, authMiddleware } from '../../middleware/auth';
+import { ROLE } from '../../types/user';
 
 const router = Router();
 
@@ -8,7 +9,7 @@ const router = Router();
 router.get('/', roomController.findAll);
 router.get('/:id', roomController.findById);
 
-router.use(authMiddleware, adminMiddleware);
+router.use(authMiddleware, checkRole([ROLE.ADMIN]));
 // POST endpoints
 router.post('/', roomController.create);
 router.post('/createMany', roomController.createMany);

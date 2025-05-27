@@ -56,13 +56,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const checkRole = (roles: ROLE[]) => (req: Request, res: Response, next: NextFunction) => {
   const appExpress = new CustomExpress(req, res, next);
-  if (req.user && req.user.role === ROLE.ADMIN) {
+  if (req.user && roles.includes(req.user.role)) {
     next();
   } else {
     appExpress.response403(ErrorCode.FORBIDDEN, {
-      message: 'Require admin role',
+      message: `Require ${roles.join(', ')} role`,
     });
   }
 };

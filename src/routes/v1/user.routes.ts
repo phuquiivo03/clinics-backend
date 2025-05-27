@@ -1,9 +1,6 @@
 import express from 'express';
 import { userController } from '../../controllers/index.controller';
-import { authMiddleware, adminMiddleware } from '../../middleware/auth';
-import { validateBody } from '../../middleware/validateBody';
-import { createUserSchema } from '../../schemas';
-import type { ICreateUserRequest } from '../../dto/user';
+import { authMiddleware } from '../../middleware/auth';
 import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
 const router = express.Router();

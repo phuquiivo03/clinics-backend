@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { BlogController } from '../../controllers/blog.controller';
 import multer from 'multer';
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, checkRole } from '../../middleware/auth';
+import { ROLE } from '../../types/user';
 const upload = multer({ dest: 'uploads/' });
 const router = Router();
 const blogController = new BlogController();
@@ -12,6 +13,7 @@ router.get('/active', blogController.findActive.bind(blogController));
 router.get('/:id', blogController.findById.bind(blogController));
 
 // Protected routes
+router.use(authMiddleware, checkRole([ROLE.ADMIN, ROLE.DOCTOR]));
 router.post(
   '/',
   authMiddleware,

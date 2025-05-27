@@ -34,7 +34,7 @@ app.use(
 
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
