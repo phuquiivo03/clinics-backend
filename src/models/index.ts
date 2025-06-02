@@ -9,6 +9,7 @@ import periodPackageModel from './periodPackage';
 import dayPackageModel from './dayPackage';
 import packageWeekModel from './packageWeek';
 import specialtyModel from './specialty';
+import imageModel from './image';
 
 export {
   userModel,
@@ -22,4 +23,5 @@ export {
   dayPackageModel,
   packageWeekModel,
   specialtyModel,
+  imageModel,
 };

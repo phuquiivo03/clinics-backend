@@ -11,6 +11,7 @@ import packageWeekService from './packageWeek.service';
 import specialtyService from './specialty.service';
 import blogService from './blog.service';
 import pinataService from './pinata.service';
+import imageService from './image.service';
 export {
   userService,
   doctorService,
@@ -25,4 +26,5 @@ export {
   specialtyService,
   blogService,
   pinataService,
+  imageService,
 };

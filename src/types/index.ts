@@ -6,3 +6,4 @@ export type * from './consultationService';
 export type * from './otp';
 export * from './blogs';
 export * from './specialty';
+export * from './image';

@@ -30,6 +30,12 @@ export interface MongooseFindManyOptions {
   };
 }
 
+export interface MongooseFindOneOptions {
+  populateOptions?: PopulateOptions;
+  selectFields?: MongooseSelectFields;
+  filter?: Record<string, any>;
+}
+
 export interface MongooseFindPageOptions {
   populateOptions?: PopulateOptions;
   selectFields?: MongooseSelectFields;

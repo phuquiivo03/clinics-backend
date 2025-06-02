@@ -9,7 +9,7 @@ import scheduleController from './schedule.controller';
 import periodPackageController from './periodPackage.controller';
 import dayPackageController from './dayPackage.controller';
 import packageWeekController from './packageWeek.controller';
-
+import imageController from './image.controller';
 export {
   // appoinmentController,
   userController,
@@ -22,4 +22,5 @@ export {
   periodPackageController,
   dayPackageController,
   packageWeekController,
+  imageController,
 };
