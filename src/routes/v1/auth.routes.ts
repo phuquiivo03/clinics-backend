@@ -9,9 +9,9 @@ router.post('/register', authController.registerUser);
 router.post('/verify-otp', authController.verifyOTP);
 
 router.post('/login', authController.loginUser);
+router.post('/refresh-token', authController.refreshToken);
 router.use(authMiddleware);
 router.post('/logout', authController.logoutUser);
 
-router.post('/refresh-token', authController.refreshToken);
 
 export default router;

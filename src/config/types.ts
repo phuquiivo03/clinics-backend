@@ -32,11 +32,13 @@ export interface RedisCacheConfig {
   phoneNumberVerified: number;
   refreshToken: number;
   authenToken: number;
+  usedRefreshTokenTTL: number; // Added for the TTL of the used refresh token set
 }
 
 export interface RedisKeyConfig {
   phoneNumberVerified: (phoneNumber: string) => string;
   refreshToken: (userId: string) => string;
+  usedRefreshTokensSet: (userId: string) => string; // Added for the set of used refresh tokens
   authenToken: (authenToken: string) => string;
 }
 

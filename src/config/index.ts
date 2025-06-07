@@ -34,6 +34,7 @@ export const config: Config = {
       phoneNumberVerified: 60 * 5, // 5 minutes
       refreshToken: 60 * 60 * 24 * 30, // 30 days
       authenToken: 60 * 10, // 10 minutes
+      usedRefreshTokenTTL: 60 * 5, // 5 minutes, for the set of used tokens
     },
     key: {
       phoneNumberVerified: (phoneNumber: string) => {
@@ -41,6 +42,9 @@ export const config: Config = {
       },
       refreshToken: (userId: string) => {
         return `refresh_${userId}`;
+      },
+      usedRefreshTokensSet: (userId: string) => { // New key for the set of used refresh tokens
+        return `used_rt_set:${userId}`;
       },
       authenToken: (authenToken: string) => {
         return `blacklist_authen_${authenToken}`;

@@ -127,22 +127,72 @@ const logoutUser: RequestHandler = async (req, res, next) => {
 const refreshToken: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const requestRefreshToken = req.body.refreshToken;
-    const token = await redisClient.get(config.redis.key.refreshToken(req.user._id.toString()));
-    if (token !== requestRefreshToken) {
-      appExpress.response400(ErrorCode.BAD_REQUEST, {
-        message: 'Invalid refresh token',
+    const requestRefreshToken: string | undefined = req.body.refreshToken;
+    // Assuming req.user and req.user._id are populated by upstream authentication middleware
+    // If not, this will throw an error. Robust code would check req.user.
+    const userId = req.user._id.toString();
+
+    if (!requestRefreshToken) {
+      appExpress.response400(ErrorCode.MISSING_REFRESH_TOKEN, { 
+        message: 'Refresh token is required in the request body.',
       });
       return;
     }
-    const { authenToken, refreshToken } = UtilsService.generateToken(req.user._id.toString());
-    await redisClient.set(config.redis.key.refreshToken(req.user._id.toString()), refreshToken, {
-      EX: config.redis.cache.refreshToken,
+
+    const activeRefreshTokenKey = config.redis.key.refreshToken(userId);
+    const usedRefreshTokensSetKey = config.redis.key.usedRefreshTokensSet(userId);
+    const usedTokenTTL = config.redis.cache.usedRefreshTokenTTL;
+
+
+    // 1. Check for refresh token reuse (replay attack detection)
+    const isTokenReused = await redisClient.sIsMember(usedRefreshTokensSetKey, requestRefreshToken);
+    if (isTokenReused) {
+      console.warn(`SECURITY_ALERT: Replay of used refresh token detected for user ${userId}. Invalidating all sessions.`);
+      // Invalidate all refresh tokens for this user by deleting the active one and the used set
+      await redisClient.del(activeRefreshTokenKey);
+      await redisClient.del(usedRefreshTokensSetKey);
+      // Respond with an error indicating session invalidation. Client must re-authenticate.
+      appExpress.response401(ErrorCode.SESSION_INVALIDATED, { 
+        message: 'Your session has been invalidated due to suspicious activity. Please log in again.',
+      });
+      return;
+    }
+
+    // 2. Get the currently stored active refresh token for the user
+    const storedActiveToken = await redisClient.get(activeRefreshTokenKey);
+
+    // 3. Validate the presented token against the active one
+    if (!storedActiveToken || storedActiveToken !== requestRefreshToken) {
+      // This means the token is invalid, expired (and removed from Redis), or doesn't match.
+      // It could also happen if an attacker used the valid token, it got rotated,
+      // and the legitimate user is now presenting the (now old) token.
+      // The `isTokenReused` check above handles the more direct replay.
+      appExpress.response401(ErrorCode.INVALID_REFRESH_TOKEN, { 
+        message: 'Invalid or expired refresh token. Please log in again.',
+      });
+      return;
+    }
+
+    // 4. Token is valid and active. Proceed with rotation.
+    // Add the current token (requestRefreshToken) to the "used" list with a short TTL.
+    await redisClient.sAdd(usedRefreshTokensSetKey, requestRefreshToken);
+    await redisClient.expire(usedRefreshTokensSetKey, usedTokenTTL); // Set/update TTL on the set
+
+    // 5. Generate new authentication and refresh tokens
+    const { authenToken: newAuthenToken, refreshToken: newRefreshToken } = UtilsService.generateToken(userId);
+
+    // 6. Store the new refresh token as the active one, with its standard expiry
+    await redisClient.set(activeRefreshTokenKey, newRefreshToken, {
+      EX: config.redis.cache.refreshToken, // Standard expiry for the new active refresh token
     });
-    appExpress.response200({ authenToken, refreshToken });
+
+    // 7. Send the new tokens to the client
+    appExpress.response200({ authenToken: newAuthenToken, refreshToken: newRefreshToken });
+
   } catch (error) {
+    console.error('Error in refreshToken handler:', error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
-      message: (error as Error).message,
+      message: (error as Error).message || 'An unexpected error occurred while refreshing token.',
     });
   }
 };
