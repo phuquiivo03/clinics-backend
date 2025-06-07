@@ -55,18 +55,19 @@ const userSchema = new Schema<User>(
 // Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
 
   if (this.password) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
+  next();
 });
-
 // Compare password method
 userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
 
 export default model<User>(DOCUMENT, userSchema, COLLECTION);

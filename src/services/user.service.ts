@@ -25,7 +25,7 @@ class UserService {
       if (!user) {
         throw new Error('User not found');
       }
-      if (!user.comparePassword(password)) {
+      if (!(await user.comparePassword(password))) {
         throw new Error('Invalid password');
       }
       return user;
@@ -97,6 +97,11 @@ class UserService {
     } catch (error) {
       throw error;
     }
+  }
+
+
+  async verifyPassword(user: User, password: string): Promise<boolean> {
+    return await user.comparePassword(password);
   }
 }
 

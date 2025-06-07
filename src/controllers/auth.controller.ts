@@ -7,6 +7,7 @@ import redisClient from '../db/redis_connection';
 import { config } from '../config';
 import { registerSchema, verifyOTPSchema } from '../schemas/authen';
 import { ZodError } from 'zod';
+import bcrypt from 'bcryptjs';
 
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
@@ -124,6 +125,48 @@ const logoutUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+const changePassword: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Old password and new password are required.',
+      });
+      return;
+    }
+    const userId = req.user._id.toString();
+    const user = await userService.findById(userId);
+    if (!user) {
+      appExpress.response404(ErrorCode.NOT_FOUND, {
+        message: 'User not found.',
+      });
+      return;
+    }
+    const isPasswordValid = await userService.verifyPassword(user, oldPassword);
+    if (!isPasswordValid) {
+      appExpress.response401(ErrorCode.UNAUTHORIZED, {
+        message: 'Old password is incorrect.',
+      });
+      return;
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const updatedUser = await userService.findAndUpdate(userId, {password: hashedPassword});
+    if (!updatedUser) {
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+        message: 'Failed to update password.',
+      });
+      return;
+    }
+    appExpress.response200({ message: 'Password changed successfully.' });    
+  }catch (error) {
+    appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+      error: (error as Error).message,
+    });
+  }
+};
+
 const refreshToken: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
@@ -203,4 +246,5 @@ export default {
   loginUser,
   logoutUser,
   refreshToken,
+  changePassword,
 };
