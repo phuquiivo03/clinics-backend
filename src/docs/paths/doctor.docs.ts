@@ -31,7 +31,8 @@
  *   post:
  *     summary: Create a new doctor
  *     tags: [Doctors]
- *     security: []
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -50,9 +51,58 @@
  *               consultationFee:
  *                 type: number
  *                 minimum: 0
- *
- *
- *
+ *     responses:
+ *       201:
+ *         description: Doctor profile created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   $ref: '#/components/schemas/Doctor'
+ *       400:
+ *         description: Invalid input data or doctor profile already exists
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ */
+
+/**
+ * @swagger
+ * /api/v1/doctor/specialization/{specialization}:
+ *   get:
+ *     summary: Get doctors by specialization
+ *     tags: [Doctors]
+ *     security: []  # No authentication required to view doctors
+ *     parameters:
+ *       - in: path
+ *         name: specialization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The specialization to filter doctors by
+ *         example: "cardiology"
+ *     responses:
+ *       200:
+ *         description: List of doctors with the specified specialization retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Doctor'
+ *       404:
+ *         description: No doctors found with the specified specialization
+ *       500:
+ *         description: Internal server error
  */
 
 /**
