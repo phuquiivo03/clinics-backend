@@ -182,4 +182,4 @@ For a complete test flow, follow these steps in order:
 8. Test the update endpoints
 9. Test the increment-booked endpoint for period packages
 
-This will ensure that all relationships between the entities are properly established and maintained. 
+This will ensure that all relationships between the entities are properly established and maintained.

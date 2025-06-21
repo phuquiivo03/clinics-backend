@@ -67,6 +67,7 @@ export interface Config {
   redis: RedisConfig;
   app: AppConfig;
   pinata: PinataConfig;
+  customPackage: string;
 }
 
 export interface PinataConfig {

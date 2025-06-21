@@ -99,7 +99,6 @@ class UserService {
     }
   }
 
-
   async verifyPassword(user: User, password: string): Promise<boolean> {
     return await user.comparePassword(password);
   }

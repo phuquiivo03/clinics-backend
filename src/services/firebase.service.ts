@@ -4,18 +4,18 @@
 // let recaptchaVerifier: ApplicationVerifier | null = null;
 // class FirebaseService {
 //     private static instance: FirebaseService;
-    
+
 //     private constructor() {
 //         // Initialize Firebase here
 //     }
-    
+
 //     public static getInstance(): FirebaseService {
 //         if (!FirebaseService.instance) {
 //         FirebaseService.instance = new FirebaseService();
 //         }
 //         return FirebaseService.instance;
 //     }
-    
+
 //     async setupRecaptcha(containerId: string): Promise<void> {
 //   // Đảm bảo chỉ khởi tạo một lần hoặc reset nếu cần
 //   if (recaptchaVerifier && typeof (recaptchaVerifier as any).clear === 'function') {

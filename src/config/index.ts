@@ -43,7 +43,8 @@ export const config: Config = {
       refreshToken: (userId: string) => {
         return `refresh_${userId}`;
       },
-      usedRefreshTokensSet: (userId: string) => { // New key for the set of used refresh tokens
+      usedRefreshTokensSet: (userId: string) => {
+        // New key for the set of used refresh tokens
         return `used_rt_set:${userId}`;
       },
       authenToken: (authenToken: string) => {
@@ -63,4 +64,5 @@ export const config: Config = {
     gateway: process.env.GATEWAY_URL || '',
     viewUrl: 'https://turquoise-dear-mole-333.mypinata.cloud/ipfs/',
   },
+  customPackage: process.env.CUSTOM_PACKAGE || '68564f4d14037ab8fa3e2ddc',
 };
