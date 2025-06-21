@@ -1,5 +1,10 @@
 import { model, Schema } from 'mongoose';
-import { ScheduleStatus, type Schedule, type CDateRange } from '../types/schedules';
+import {
+  ScheduleStatus,
+  type Schedule,
+  type CDateRange,
+  ScheduleServiceStatus,
+} from '../types/schedules';
 
 const DOCUMENT = 'Schedule';
 const COLLECTION = 'Schedules';
@@ -29,8 +34,14 @@ const scheduleSchema = new Schema<Schedule>(
       type: Number,
       required: true,
     },
+    type: {
+      type: String,
+      enum: ['package', 'services'],
+      required: true,
+    },
     timeOffset: {
       type: Number,
+      enum: [0, 1], // 0 for morning, 1 for afternoon
       required: true,
     },
     status: {
@@ -38,8 +49,22 @@ const scheduleSchema = new Schema<Schedule>(
       enum: ScheduleStatus,
       required: true,
     },
+    services: [
+      {
+        service: {
+          type: Schema.Types.ObjectId,
+          ref: 'ConsultationService',
+          required: true,
+        },
+        status: {
+          type: String,
+          enum: ScheduleServiceStatus,
+          default: 'pending',
+        },
+      },
+    ],
 
-    packageId: {
+    packageInfo: {
       type: Schema.Types.ObjectId,
       ref: 'ConsultationPackage',
     },

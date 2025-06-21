@@ -10,6 +10,7 @@ router.use(authMiddleware);
 router.get('/many', checkRole([ROLE.ADMIN, ROLE.DOCTOR]), scheduleController.findMany);
 router.get('/user/:userId', scheduleController.findByUserId);
 router.get('/current-week', scheduleController.getCurrentWeek);
+router.get('/by-specialization', scheduleController.findBySpecialization);
 router.get('/:id', scheduleController.findById);
 // POST endpoints
 router.post('/', scheduleController.create);

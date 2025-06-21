@@ -152,15 +152,15 @@ const changePassword: RequestHandler = async (req, res, next) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const updatedUser = await userService.findAndUpdate(userId, {password: hashedPassword});
+    const updatedUser = await userService.findAndUpdate(userId, { password: hashedPassword });
     if (!updatedUser) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
         message: 'Failed to update password.',
       });
       return;
     }
-    appExpress.response200({ message: 'Password changed successfully.' });    
-  }catch (error) {
+    appExpress.response200({ message: 'Password changed successfully.' });
+  } catch (error) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
       error: (error as Error).message,
     });
@@ -176,7 +176,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     const userId = req.user._id.toString();
 
     if (!requestRefreshToken) {
-      appExpress.response400(ErrorCode.MISSING_REFRESH_TOKEN, { 
+      appExpress.response400(ErrorCode.MISSING_REFRESH_TOKEN, {
         message: 'Refresh token is required in the request body.',
       });
       return;
@@ -186,17 +186,19 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     const usedRefreshTokensSetKey = config.redis.key.usedRefreshTokensSet(userId);
     const usedTokenTTL = config.redis.cache.usedRefreshTokenTTL;
 
-
     // 1. Check for refresh token reuse (replay attack detection)
     const isTokenReused = await redisClient.sIsMember(usedRefreshTokensSetKey, requestRefreshToken);
     if (isTokenReused) {
-      console.warn(`SECURITY_ALERT: Replay of used refresh token detected for user ${userId}. Invalidating all sessions.`);
+      console.warn(
+        `SECURITY_ALERT: Replay of used refresh token detected for user ${userId}. Invalidating all sessions.`,
+      );
       // Invalidate all refresh tokens for this user by deleting the active one and the used set
       await redisClient.del(activeRefreshTokenKey);
       await redisClient.del(usedRefreshTokensSetKey);
       // Respond with an error indicating session invalidation. Client must re-authenticate.
-      appExpress.response401(ErrorCode.SESSION_INVALIDATED, { 
-        message: 'Your session has been invalidated due to suspicious activity. Please log in again.',
+      appExpress.response401(ErrorCode.SESSION_INVALIDATED, {
+        message:
+          'Your session has been invalidated due to suspicious activity. Please log in again.',
       });
       return;
     }
@@ -210,7 +212,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
       // It could also happen if an attacker used the valid token, it got rotated,
       // and the legitimate user is now presenting the (now old) token.
       // The `isTokenReused` check above handles the more direct replay.
-      appExpress.response401(ErrorCode.INVALID_REFRESH_TOKEN, { 
+      appExpress.response401(ErrorCode.INVALID_REFRESH_TOKEN, {
         message: 'Invalid or expired refresh token. Please log in again.',
       });
       return;
@@ -222,7 +224,8 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     await redisClient.expire(usedRefreshTokensSetKey, usedTokenTTL); // Set/update TTL on the set
 
     // 5. Generate new authentication and refresh tokens
-    const { authenToken: newAuthenToken, refreshToken: newRefreshToken } = UtilsService.generateToken(userId);
+    const { authenToken: newAuthenToken, refreshToken: newRefreshToken } =
+      UtilsService.generateToken(userId);
 
     // 6. Store the new refresh token as the active one, with its standard expiry
     await redisClient.set(activeRefreshTokenKey, newRefreshToken, {
@@ -231,7 +234,6 @@ const refreshToken: RequestHandler = async (req, res, next) => {
 
     // 7. Send the new tokens to the client
     appExpress.response200({ authenToken: newAuthenToken, refreshToken: newRefreshToken });
-
   } catch (error) {
     console.error('Error in refreshToken handler:', error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {

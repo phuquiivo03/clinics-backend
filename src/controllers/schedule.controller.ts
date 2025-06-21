@@ -1,12 +1,23 @@
 import type { RequestHandler } from 'express';
-import { periodPackageService, scheduleService } from '../services/index.service';
+import {
+  consultationPackageService,
+  periodPackageService,
+  scheduleService,
+} from '../services/index.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
-import { createScheduleSchema, findScheduleByIdSchema } from '../schemas';
-import { ScheduleStatus } from '../types/schedules';
+import { createScheduleSchema, findBySpecializationSchema, findScheduleByIdSchema } from '../schemas';
+import {
+  ScheduleServiceStatus,
+  ScheduleStatus,
+  type Schedule,
+  type ScheduleService,
+} from '../types/schedules';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import type { ConsultationService } from '../types';
+import { config } from '../config';
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
@@ -22,58 +33,69 @@ const create: RequestHandler = async (req, res, next) => {
     const scheduleData: any = validationResult.data;
     // scheduleData.date = new Date(scheduleData.date);
     // // create transaction
-
     const session = await mongoose.startSession();
 
     try {
       // Start the transaction
-      // session.startTransaction();
+      session.startTransaction();
 
       // Create schedule
-      const schedule = await scheduleService.create(
-        {
-          ...scheduleData,
-          userId: req.user.id,
-          status: ScheduleStatus.PENDING,
-          packageId: scheduleData.packageId as ObjectId,
-        },
-        // session,
-      );
 
+      const getScheduleData: () => Promise<Schedule> =
+        scheduleData.type === 'package'
+          ? async (): Promise<Schedule> => {
+              const selectedPackage = await consultationPackageService.findOne({
+                filter: { _id: scheduleData.packageId as ObjectId },
+                populateOptions: {
+                  path: 'tests',
+                },
+              });
+              if (selectedPackage == null) {
+                throw new Error('Period package not found');
+              }
+
+              const services: ScheduleService[] =
+                selectedPackage.tests.length > 0
+                  ? selectedPackage.tests.map((service) => ({
+                      service: (service as ConsultationService)._id as ObjectId,
+                      status: ScheduleServiceStatus.PENDING,
+                    }))
+                  : [];
+
+              return {
+                ...scheduleData,
+                services,
+                userId: req.user.id,
+                status: ScheduleStatus.CONFIRMED,
+              };
+            }
+          : async (): Promise<Schedule> => {
+              return {
+                ...scheduleData,
+                services: scheduleData.services.map((svc: string) => {
+                  return {
+                    service: svc as unknown as ObjectId,
+                    status: ScheduleServiceStatus.PENDING,
+                  } as ScheduleService;
+                }),
+                userId: req.user.id,
+                status: ScheduleStatus.CONFIRMED,
+                packageInfo: config.customPackage as unknown as ObjectId,
+              };
+            };
+      const scheduleDataToCreate = await getScheduleData();
+      console.log('scheduleDataToCreate', scheduleDataToCreate);
+      const schedule = await scheduleService.create(scheduleDataToCreate, session);
+      
       if (!schedule) {
-        // await session.abortTransaction();
+        await session.abortTransaction();
         return appExpress.response404(ErrorCode.NOT_FOUND, {
           message: 'Schedule not found',
         });
       }
 
-      // const periodPkgId: ObjectId = scheduleData.packagePeriodId as unknown as ObjectId;
-      // const periodPkg = await periodPackageService.findById(periodPkgId, { session });
-
-      // if (!periodPkg) {
-      //   await session.abortTransaction();
-      //   return appExpress.response404(ErrorCode.NOT_FOUND, {
-      //     message: 'Period package not found',
-      //   });
-      // }
-      // if (periodPkg.booked >= periodPkg.maxBook) {
-      //   await session.abortTransaction();
-      //   return appExpress.response400(ErrorCode.BAD_REQUEST, {
-      //     message: 'Period package is full',
-      //   });
-      // }
-
-      // periodPkg.booked += 1;
-      // const updatedPeriodPkg = await periodPackageService.update(periodPkgId, periodPkg, {
-      //   session,
-      // });
-
-      // if (!updatedPeriodPkg) {
-      //   await session.abortTransaction();
-      //   return appExpress.response400(ErrorCode.BAD_REQUEST, {
-      //     message: 'Failed to update period package',
-      //   });
-      // }
+      session.commitTransaction();
+  
 
       // If we get here, everything succeeded
       // await session.commitTransaction();
@@ -111,6 +133,8 @@ const create: RequestHandler = async (req, res, next) => {
     });
   }
 };
+
+  
 
 // Add a method to find schedules by user ID
 const findByUserId: RequestHandler = async (req, res, next) => {
@@ -220,10 +244,62 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
   }
 };
 
+const findBySpecialization: RequestHandler = async (req, res, next) => {
+      const appExpress = new CustomExpress(req, res, next);
+      try {
+        const validationResult = findBySpecializationSchema.safeParse(req.query);
+
+        if (!validationResult.success) {
+          return appExpress.response400(
+            ErrorCode.INVALID_REQUEST_BODY,
+            validationResult.error.format(),
+          );
+        }
+        const { specialization, dateRange, timeOffset: timeOffsetStr, dayOffset: dayOffsetStr } = validationResult.data;
+
+        const timeOffset = parseInt(timeOffsetStr, 10);
+        const dayOffset = parseInt(dayOffsetStr, 10);
+        const extractedDateRange = JSON.parse(dateRange) as [string, string];
+        console.log('dateRange', extractedDateRange);
+        // Validate dateRange
+        const schedules = await scheduleService.findMany({
+          filter: {
+            'weekPeriod.from': {
+              $gte: new Date(extractedDateRange[0] || Date.now()),
+            },
+            'weekPeriod.to': {
+              $lte: new Date(extractedDateRange[1] || Date.now()),
+            },
+            dayOffset,
+            timeOffset,
+          },
+          populateOptions: {
+            path: 'services.service',
+          }
+        })
+
+        appExpress.response200(
+          schedules.filter((schedule) => {
+            return schedule.services.some((service) => {
+              return (
+                (service.service as ConsultationService).specialization as ObjectId
+              ).toString() === specialization;
+            });
+          }),
+        );
+      } catch (error) {
+        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+          message: (error as Error).message,
+        });
+      }
+   
+  }
+
 export default {
   create,
   findById,
   findByUserId,
   findMany,
   getCurrentWeek,
+  findBySpecialization,
 };

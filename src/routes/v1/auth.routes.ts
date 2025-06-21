@@ -14,5 +14,4 @@ router.use(authMiddleware);
 router.post('/logout', authController.logoutUser);
 router.post('/change-password', authController.changePassword);
 
-
 export default router;
