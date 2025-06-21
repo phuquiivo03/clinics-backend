@@ -26,7 +26,7 @@ export enum ScheduleServiceStatus {
 }
 
 export enum ScheduleStatus {
-  CONFIRMED = 'pending',
+  CONFIRMED = 'confirmed',
   CHECKEDIN = 'checkedIn',
   SERVING = 'serving',
   COMPLETED = 'completed',

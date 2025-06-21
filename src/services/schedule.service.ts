@@ -28,20 +28,19 @@ class ScheduleService {
     }
   }
 
-  async findByUserId(userId: ObjectId): Promise<Schedule[] | []> {
-    try {
-      return scheduleRepository.findAll({
-        filter: { userId },
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
 
   async findMany(options?: MongooseFindManyOptions): Promise<Schedule[] | []> {
     try {
       return scheduleRepository.findAll(options);
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(id: ObjectId, schedule: Partial<Schedule>): Promise<Schedule | null> {
+    try {
+      return scheduleRepository.update(id, schedule)
+    }catch (error) {
       throw error;
     }
   }

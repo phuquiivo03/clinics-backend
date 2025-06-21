@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ScheduleStatus } from '../types/schedules';
 
 // Status validation - using corrected values from ScheduleStatus enum
 const scheduleStatusEnum = ['pending', 'confirmed', 'checkedin'] as const;
@@ -24,7 +25,8 @@ export const createScheduleSchema = z.object({
 
 // Schema for updating a schedule
 export const updateScheduleSchema = createScheduleSchema.partial().extend({
-  id: z.string().min(1, 'Schedule ID is required'),
+  status: z.enum([ScheduleStatus.CANCELLED, ScheduleStatus.CHECKEDIN, ScheduleStatus.COMPLETED], {message: 'Invalid status provided'}),
+  userId: z.string().optional(),
 });
 
 // Schema for finding a schedule by ID
@@ -41,4 +43,7 @@ export const findBySpecializationSchema = z.object({
     .min(0, 'Time offset must be a non-negative integer')
     .max(1, 'Time offset must be 0 or 1'),
   dayOffset: z.string().min(0, 'Day offset must be a non-negative integer'),
+  status: z.string()
 });
+
+

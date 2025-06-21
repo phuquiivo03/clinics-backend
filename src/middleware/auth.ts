@@ -56,6 +56,21 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+export const checkRoleOrOwnerData = (roles: ROLE[]) => async (req: Request, res: Response, next: NextFunction) => {
+  const appExpress = new CustomExpress(req, res, next);
+  if (req.user && roles.includes(req.user.role)) {
+    next();
+  }
+  else if (req.user && req.params.id && req.user._id.toString() === req.params.id) {
+    next();
+  }
+  else {
+    appExpress.response403(ErrorCode.FORBIDDEN, {
+      message: `Require ${roles.join(', ')} role or owner data`,
+    });
+  }
+}
+
 export const checkRole = (roles: ROLE[]) => (req: Request, res: Response, next: NextFunction) => {
   const appExpress = new CustomExpress(req, res, next);
   if (req.user && roles.includes(req.user.role)) {
