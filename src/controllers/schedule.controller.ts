@@ -274,7 +274,8 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
             timeOffset,
           },
           populateOptions: {
-            path: 'services.service',
+            path: 'services.service packageInfo',
+            
           }
         })
 
