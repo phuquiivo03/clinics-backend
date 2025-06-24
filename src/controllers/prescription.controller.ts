@@ -1,0 +1,244 @@
+import type { RequestHandler } from 'express';
+import { z } from 'zod';
+
+import { Types, type ObjectId } from 'mongoose';
+import doctorService from '../services/doctor.service';
+import prescriptionService from '../services/prescription.service';
+
+// Create prescription
+const createPrescription: RequestHandler = async (req, res) => {
+  try {
+    const prescriptionSchema = z.object({
+      patient: z.string(),
+      diagnosis: z.string().min(1),
+      notes: z.string().optional(),
+      medications: z.array(z.string()).min(1),
+      totalCost: z.number().min(0),
+    });
+
+    const validatedData = prescriptionSchema.parse(req.body);
+
+    // Find doctor by user ID
+    const doctor = await doctorService.findOne({ filter: { user: req.user._id } });
+    if (!doctor) {
+      res.status(403).json({ message: 'Not authorized as doctor' });
+      return;
+    }
+
+    const prescriptionData = {
+      ...validatedData,
+      patient: validatedData.patient as unknown as ObjectId,
+      medications: validatedData.medications.map((med) => med as unknown as ObjectId),
+      doctor: doctor._id as ObjectId,
+      dateIssued: new Date().toISOString(),
+      isPaid: false,
+      _id: new Types.ObjectId().toString(),
+    };
+
+    const prescription = await prescriptionService.create(prescriptionData);
+    res.status(201).json(prescription);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ message: error.errors });
+    } else {
+      console.error(error);
+      res.status(500).json({ message: (error as Error).message });
+    }
+  }
+};
+
+// Get prescription by ID
+const getPrescriptionById: RequestHandler = async (req, res) => {
+  try {
+    const prescriptionId = req.params.id as unknown as ObjectId;
+    const prescription = await prescriptionService.getById(prescriptionId);
+
+    if (!prescription) {
+      res.status(404).json({ message: 'Prescription not found' });
+      return;
+    }
+
+    res.json(prescription);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Get patient prescriptions
+const getPatientPrescriptions: RequestHandler = async (req, res) => {
+  try {
+    const patientId = req.user._id as unknown as ObjectId;
+    const prescriptions = await prescriptionService.getByPatientId(patientId);
+    res.json(prescriptions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Get doctor prescriptions
+const getDoctorPrescriptions: RequestHandler = async (req, res) => {
+  try {
+    const doctor = await doctorService.findOne({ filter: { user: req.user._id } });
+    if (!doctor) {
+      res.status(403).json({ message: 'Not authorized as doctor' });
+      return;
+    }
+
+    const prescriptions = await prescriptionService.getByDoctorId(
+      doctor._id as unknown as ObjectId,
+    );
+    res.json(prescriptions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Update prescription
+const updatePrescription: RequestHandler = async (req, res) => {
+  try {
+    const updateSchema = z.object({
+      diagnosis: z.string().optional(),
+      notes: z.string().optional(),
+      medications: z.array(z.string()).optional(),
+      totalCost: z.number().min(0).optional(),
+    });
+
+    const validatedData = updateSchema.parse(req.body);
+    const prescriptionId = req.params.id as unknown as ObjectId;
+
+    // Find doctor by user ID
+    const doctor = await doctorService.findOne({ filter: { user: req.user._id } });
+    if (!doctor) {
+      res.status(403).json({ message: 'Not authorized as doctor' });
+      return;
+    }
+
+    // Check if prescription exists and belongs to this doctor
+    const prescription = await prescriptionService.getById(prescriptionId);
+    if (!prescription) {
+      res.status(404).json({ message: 'Prescription not found' });
+      return;
+    }
+
+    if ((prescription.doctor as unknown as string) !== (doctor._id as unknown as string)) {
+      res.status(403).json({ message: 'Not authorized to update this prescription' });
+      return;
+    }
+
+    const updateData = {
+      ...validatedData,
+      medications: validatedData.medications?.map((med) => med as unknown as ObjectId),
+    };
+
+    const updatedPrescription = await prescriptionService.update(prescriptionId, updateData);
+    res.json(updatedPrescription);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ message: error.errors });
+    } else {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+};
+
+// Update payment status
+const updatePaymentStatus: RequestHandler = async (req, res) => {
+  try {
+    const paymentSchema = z.object({
+      isPaid: z.boolean(),
+    });
+
+    const { isPaid } = paymentSchema.parse(req.body);
+    const prescriptionId = req.params.id as unknown as ObjectId;
+
+    const updatedPrescription = await prescriptionService.updatePaymentStatus(
+      prescriptionId,
+      isPaid,
+    );
+
+    if (!updatedPrescription) {
+      res.status(404).json({ message: 'Prescription not found' });
+      return;
+    }
+
+    res.json(updatedPrescription);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ message: error.errors });
+    } else {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+};
+
+// Get all prescriptions (admin only)
+const getAllPrescriptions: RequestHandler = async (req, res) => {
+  try {
+    const { isPaid, startDate, endDate } = req.query;
+
+    const filters: any = {};
+    if (isPaid !== undefined) {
+      filters.isPaid = isPaid === 'true';
+    }
+    if (startDate) {
+      filters.startDate = startDate as string;
+    }
+    if (endDate) {
+      filters.endDate = endDate as string;
+    }
+
+    const prescriptions = await prescriptionService.getAll(filters);
+    res.json(prescriptions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Delete prescription
+const deletePrescription: RequestHandler = async (req, res) => {
+  try {
+    const prescriptionId = req.params.id as unknown as ObjectId;
+
+    // Find doctor by user ID
+    const doctor = await doctorService.findOne({ filter: { user: req.user._id } });
+    if (!doctor) {
+      res.status(403).json({ message: 'Not authorized as doctor' });
+      return;
+    }
+
+    // Check if prescription exists and belongs to this doctor
+    const prescription = await prescriptionService.getById(prescriptionId);
+    if (!prescription) {
+      res.status(404).json({ message: 'Prescription not found' });
+      return;
+    }
+
+    if ((prescription.doctor as unknown as string) !== (doctor._id as unknown as string)) {
+      res.status(403).json({ message: 'Not authorized to delete this prescription' });
+      return;
+    }
+
+    await prescriptionService.delete(prescriptionId);
+    res.json({ message: 'Prescription deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export default {
+  createPrescription,
+  getPrescriptionById,
+  getPatientPrescriptions,
+  getDoctorPrescriptions,
+  updatePrescription,
+  updatePaymentStatus,
+  getAllPrescriptions,
+  deletePrescription,
+};

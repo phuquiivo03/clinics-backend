@@ -28,7 +28,6 @@ class ScheduleService {
     }
   }
 
-
   async findMany(options?: MongooseFindManyOptions): Promise<Schedule[] | []> {
     try {
       return scheduleRepository.findAll(options);
@@ -39,8 +38,8 @@ class ScheduleService {
 
   async update(id: ObjectId, schedule: Partial<Schedule>): Promise<Schedule | null> {
     try {
-      return scheduleRepository.update(id, schedule)
-    }catch (error) {
+      return scheduleRepository.update(id, schedule);
+    } catch (error) {
       throw error;
     }
   }
