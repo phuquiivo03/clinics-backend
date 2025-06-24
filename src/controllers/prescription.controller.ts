@@ -4,18 +4,13 @@ import { z } from 'zod';
 import { Types, type ObjectId } from 'mongoose';
 import doctorService from '../services/doctor.service';
 import prescriptionService from '../services/prescription.service';
+import { prescriptionSchema, updatePrescriptionSchema } from '../schemas';
+import type { Medication } from '../types/medication';
+import type { Prescription } from '../types';
 
 // Create prescription
-const createPrescription: RequestHandler = async (req, res) => {
+const create: RequestHandler = async (req, res) => {
   try {
-    const prescriptionSchema = z.object({
-      patient: z.string(),
-      diagnosis: z.string().min(1),
-      notes: z.string().optional(),
-      medications: z.array(z.string()).min(1),
-      totalCost: z.number().min(0),
-    });
-
     const validatedData = prescriptionSchema.parse(req.body);
 
     // Find doctor by user ID
@@ -25,14 +20,30 @@ const createPrescription: RequestHandler = async (req, res) => {
       return;
     }
 
-    const prescriptionData = {
+    // Process medications - they can be ObjectIds or full Medication objects
+    const medications: Array<Medication | ObjectId> = validatedData.medications.map(med => {
+      if (typeof med === 'string') {
+        return new Types.ObjectId(med) as unknown as ObjectId;
+      } else {
+        // It's a Medication object, convert medicine field to ObjectId if it's a string
+        const medication: Medication = {
+          ...med,
+          medicine: typeof med.medicine === 'string' 
+            ? new Types.ObjectId(med.medicine) as unknown as ObjectId 
+            : med.medicine
+        };
+        return medication;
+      }
+    });
+
+    const prescriptionData: Prescription = {
       ...validatedData,
+      _id: new Types.ObjectId().toString(),
       patient: validatedData.patient as unknown as ObjectId,
-      medications: validatedData.medications.map((med) => med as unknown as ObjectId),
+      medications,
       doctor: doctor._id as ObjectId,
       dateIssued: new Date().toISOString(),
       isPaid: false,
-      _id: new Types.ObjectId().toString(),
     };
 
     const prescription = await prescriptionService.create(prescriptionData);
@@ -99,14 +110,7 @@ const getDoctorPrescriptions: RequestHandler = async (req, res) => {
 // Update prescription
 const updatePrescription: RequestHandler = async (req, res) => {
   try {
-    const updateSchema = z.object({
-      diagnosis: z.string().optional(),
-      notes: z.string().optional(),
-      medications: z.array(z.string()).optional(),
-      totalCost: z.number().min(0).optional(),
-    });
-
-    const validatedData = updateSchema.parse(req.body);
+    const validatedData = updatePrescriptionSchema.parse(req.body);
     const prescriptionId = req.params.id as unknown as ObjectId;
 
     // Find doctor by user ID
@@ -128,9 +132,28 @@ const updatePrescription: RequestHandler = async (req, res) => {
       return;
     }
 
-    const updateData = {
+    // Process medications if provided
+    let medications: Array<Medication | ObjectId> | undefined;
+    if (validatedData.medications) {
+      medications = validatedData.medications.map(med => {
+        if (typeof med === 'string') {
+          return new Types.ObjectId(med) as unknown as ObjectId;
+        } else {
+          // It's a Medication object, convert medicine field to ObjectId if it's a string
+          const medication: Medication = {
+            ...med,
+            medicine: typeof med.medicine === 'string' 
+              ? new Types.ObjectId(med.medicine) as unknown as ObjectId 
+              : med.medicine
+          };
+          return medication;
+        }
+      });
+    }
+
+    const updateData: Partial<Prescription> = {
       ...validatedData,
-      medications: validatedData.medications?.map((med) => med as unknown as ObjectId),
+      medications,
     };
 
     const updatedPrescription = await prescriptionService.update(prescriptionId, updateData);
@@ -233,7 +256,7 @@ const deletePrescription: RequestHandler = async (req, res) => {
 };
 
 export default {
-  createPrescription,
+  create,
   getPrescriptionById,
   getPatientPrescriptions,
   getDoctorPrescriptions,

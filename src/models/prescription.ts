@@ -28,9 +28,16 @@ const prescriptionSchema = new Schema<Prescription>(
     },
     medications: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Medication',
+        type: Schema.Types.Mixed,
         required: true,
+        validate: {
+          validator: function(v: any) {
+            // Either an ObjectId or a Medication object with required fields
+            return mongoose.Types.ObjectId.isValid(v) || 
+              (v.medicine && v.quantity && v.frequency && v.duration);
+          },
+          message: 'Medications must be valid ObjectIds or Medication objects'
+        }
       },
     ],
     totalCost: {

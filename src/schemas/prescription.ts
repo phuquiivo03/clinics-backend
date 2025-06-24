@@ -1,19 +1,28 @@
 import { z } from 'zod';
+import { medicationSchema } from './medication';
 
-export const createPrescriptionSchema = z.object({
-  patient: z.string().min(1, 'Patient ID is required'),
-  diagnosis: z.string().min(1, 'Diagnosis is required'),
+export const prescriptionSchema = z.object({
+  patient: z.string(),
+  diagnosis: z.string().min(1),
   notes: z.string().optional(),
-  medications: z
-    .array(z.string().min(1, 'Medication ID is required'))
-    .min(1, 'At least one medication is required'),
-  totalCost: z.number().min(0, 'Total cost must be non-negative'),
+  medications: z.array(
+    z.union([
+      z.string(), // ObjectId as string
+      medicationSchema // Full medication object
+    ])
+  ).min(1),
+  totalCost: z.number().min(0),
 });
 
 export const updatePrescriptionSchema = z.object({
   diagnosis: z.string().min(1).optional(),
   notes: z.string().optional(),
-  medications: z.array(z.string().min(1)).optional(),
+  medications: z.array(
+    z.union([
+      z.string(), // ObjectId as string
+      medicationSchema // Full medication object
+    ])
+  ).min(1).optional(),
   totalCost: z.number().min(0).optional(),
 });
 

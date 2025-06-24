@@ -10,7 +10,7 @@ export interface Prescription {
   patient: User | ObjectId;
   diagnosis: string;
   notes?: string;
-  medications: Medication[] | ObjectId[]; // Array of medications prescribed
+  medications: (Medication | ObjectId)[]; // Array of medications prescribed, can be a mix of both
   totalCost: number;
   isPaid: boolean;
 }

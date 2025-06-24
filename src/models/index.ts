@@ -11,6 +11,9 @@ import packageWeekModel from './packageWeek';
 import specialtyModel from './specialty';
 import imageModel from './image';
 import prescriptionModel from './prescription';
+import medicineModel from './medicine';
+import medicationModel from './medication';
+
 export {
   userModel,
   doctorModel,
@@ -25,4 +28,6 @@ export {
   specialtyModel,
   imageModel,
   prescriptionModel,
+  medicineModel,
+  medicationModel,
 };
