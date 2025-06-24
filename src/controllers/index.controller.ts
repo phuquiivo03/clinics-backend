@@ -10,6 +10,7 @@ import periodPackageController from './periodPackage.controller';
 import dayPackageController from './dayPackage.controller';
 import packageWeekController from './packageWeek.controller';
 import imageController from './image.controller';
+import prescriptionController from './prescription.controller';
 export {
   // appoinmentController,
   userController,
@@ -23,4 +24,5 @@ export {
   dayPackageController,
   packageWeekController,
   imageController,
+  prescriptionController,
 };

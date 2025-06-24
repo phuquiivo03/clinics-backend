@@ -13,7 +13,11 @@ router.get('/user', scheduleController.findByUserId);
 router.get('/current-week', scheduleController.getCurrentWeek);
 router.get('/by-specialization', scheduleController.findBySpecialization);
 router.get('/:id', scheduleController.findById);
-router.patch('/:id', checkOwnerOrRole(ModelRelate.SCHEDULE, 'id','userId', [ROLE.ADMIN, ROLE.DOCTOR]),scheduleController.update);
+router.patch(
+  '/:id',
+  checkOwnerOrRole(ModelRelate.SCHEDULE, 'id', 'userId', [ROLE.ADMIN, ROLE.DOCTOR]),
+  scheduleController.update,
+);
 // POST endpoints
 router.post('/', scheduleController.create);
 

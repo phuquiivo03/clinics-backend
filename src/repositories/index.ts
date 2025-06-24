@@ -16,6 +16,7 @@ import periodPackageRepository from './periodPackage';
 import dayPackageRepository from './dayPackage';
 import packageWeekRepository from './packageWeek';
 export * from './specialty';
+export * from './prescription';
 
 export {
   scheduleRepository,

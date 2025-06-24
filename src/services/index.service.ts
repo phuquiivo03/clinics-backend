@@ -12,6 +12,7 @@ import specialtyService from './specialty.service';
 import blogService from './blog.service';
 import pinataService from './pinata.service';
 import imageService from './image.service';
+import prescriptionService from './prescription.service';
 export {
   userService,
   doctorService,
@@ -27,4 +28,5 @@ export {
   blogService,
   pinataService,
   imageService,
+  prescriptionService,
 };

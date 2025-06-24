@@ -25,7 +25,9 @@ export const createScheduleSchema = z.object({
 
 // Schema for updating a schedule
 export const updateScheduleSchema = createScheduleSchema.partial().extend({
-  status: z.enum([ScheduleStatus.CANCELLED, ScheduleStatus.CHECKEDIN, ScheduleStatus.COMPLETED], {message: 'Invalid status provided'}),
+  status: z.enum([ScheduleStatus.CANCELLED, ScheduleStatus.CHECKEDIN, ScheduleStatus.COMPLETED], {
+    message: 'Invalid status provided',
+  }),
   userId: z.string().optional(),
 });
 
@@ -36,14 +38,11 @@ export const findScheduleByIdSchema = z.object({
 
 export const findBySpecializationSchema = z.object({
   specialization: z.string().min(1, 'Specialization ID is required'),
-  dateRange: z
-    .string(),
+  dateRange: z.string(),
   timeOffset: z
     .string()
     .min(0, 'Time offset must be a non-negative integer')
     .max(1, 'Time offset must be 0 or 1'),
   dayOffset: z.string().min(0, 'Day offset must be a non-negative integer'),
-  status: z.string()
+  status: z.string(),
 });
-
-

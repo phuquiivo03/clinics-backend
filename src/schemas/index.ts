@@ -7,3 +7,6 @@ export * from './consultationPackage';
 export * from './periodPackage';
 export * from './dayPackage';
 export * from './packageWeek';
+export * from './prescription';
+export * from './medicine';
+export * from './medication';

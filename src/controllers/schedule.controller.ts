@@ -8,7 +8,12 @@ import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId } from 'mongoose';
 import mongoose from 'mongoose';
-import { createScheduleSchema, findBySpecializationSchema, findScheduleByIdSchema, updateScheduleSchema } from '../schemas';
+import {
+  createScheduleSchema,
+  findBySpecializationSchema,
+  findScheduleByIdSchema,
+  updateScheduleSchema,
+} from '../schemas';
 import {
   ScheduleServiceStatus,
   ScheduleStatus,
@@ -38,7 +43,7 @@ const create: RequestHandler = async (req, res, next) => {
     try {
       // Start the transaction
       session.startTransaction();
-      
+
       // Create schedule
 
       const getScheduleData: () => Promise<Schedule> =
@@ -85,7 +90,7 @@ const create: RequestHandler = async (req, res, next) => {
             };
       const scheduleDataToCreate = await getScheduleData();
       const schedule = await scheduleService.create(scheduleDataToCreate, session);
-      
+
       if (!schedule) {
         await session.abortTransaction();
         return appExpress.response404(ErrorCode.NOT_FOUND, {
@@ -94,7 +99,6 @@ const create: RequestHandler = async (req, res, next) => {
       }
 
       await session.commitTransaction();
-  
 
       // If we get here, everything succeeded
       // await session.commitTransaction();
@@ -133,8 +137,6 @@ const create: RequestHandler = async (req, res, next) => {
   }
 };
 
-  
-
 // Add a method to find schedules by user ID
 const findByUserId: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -145,8 +147,8 @@ const findByUserId: RequestHandler = async (req, res, next) => {
     }
 
     const schedules = await scheduleService.findMany({
-        filter: { userId },
-      });
+      filter: { userId },
+    });
     return appExpress.response200(schedules);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
@@ -184,7 +186,9 @@ const findById: RequestHandler = async (req, res, next) => {
 
 const findMany: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const options: MongooseFindManyOptions = JSON.parse(req.query.options as string||'{}') as MongooseFindManyOptions;
+  const options: MongooseFindManyOptions = JSON.parse(
+    (req.query.options as string) || '{}',
+  ) as MongooseFindManyOptions;
   console.log('options', options);
   try {
     const schedules = await scheduleService.findMany(options);
@@ -247,86 +251,90 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
 };
 
 const findBySpecialization: RequestHandler = async (req, res, next) => {
-      const appExpress = new CustomExpress(req, res, next);
-      try {
-        const validationResult = findBySpecializationSchema.safeParse(req.query);
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    const validationResult = findBySpecializationSchema.safeParse(req.query);
 
-        if (!validationResult.success) {
-          return appExpress.response400(
-            ErrorCode.INVALID_REQUEST_BODY,
-            validationResult.error.format(),
-          );
-        }
-        const { specialization, dateRange, timeOffset: timeOffsetStr, dayOffset: dayOffsetStr, status } = validationResult.data;
-
-        const timeOffset = parseInt(timeOffsetStr, 10);
-        const dayOffset = parseInt(dayOffsetStr, 10);
-        const extractedDateRange = JSON.parse(dateRange) as [string, string];
-        console.log('dateRange', extractedDateRange);
-        // Validate dateRange
-        const schedules = await scheduleService.findMany({
-          filter: {
-            'weekPeriod.from': {
-              $gte: new Date(extractedDateRange[0] || Date.now()),
-            },
-            'weekPeriod.to': {
-              $lte: new Date(extractedDateRange[1] || Date.now()),
-            },
-            dayOffset,
-            timeOffset,
-            status
-          },
-          populateOptions: {
-            path: 'services.service packageInfo',
-            
-          }
-        })
-
-        appExpress.response200(
-          schedules.filter((schedule) => {
-            return schedule.services.some((service) => {
-              return (
-                (service.service as ConsultationService).specialization as ObjectId
-              ).toString() === specialization;
-            });
-          }),
-        );
-      } catch (error) {
-        appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
-          message: (error as Error).message,
-        });
-      }
-   
-  }
-
-
-  const update: RequestHandler = async (req, res, next) => {
-    const appExpress = new CustomExpress(req, res, next);
-    try {
-      // Validate the request body against schema
-      const validationResult = updateScheduleSchema.safeParse(req.body);
-      if (!validationResult.success) {
-        return appExpress.response400(
-          ErrorCode.INVALID_REQUEST_BODY,
-          validationResult.error.format(),
-        );
-      }
-      const scheduleData: any = validationResult;
-      const id = req.params.id as unknown as ObjectId;
-
-      // Update schedule
-      const updatedSchedule = await scheduleService.update(id, scheduleData);
-      if (updatedSchedule) {
-        return appExpress.response200(updatedSchedule);
-      } else {
-        return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
-      }
-    } catch (error) {
-      appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
-        message: (error as Error).message,
-      });
+    if (!validationResult.success) {
+      return appExpress.response400(
+        ErrorCode.INVALID_REQUEST_BODY,
+        validationResult.error.format(),
+      );
     }
+    const {
+      specialization,
+      dateRange,
+      timeOffset: timeOffsetStr,
+      dayOffset: dayOffsetStr,
+      status,
+    } = validationResult.data;
+
+    const timeOffset = parseInt(timeOffsetStr, 10);
+    const dayOffset = parseInt(dayOffsetStr, 10);
+    const extractedDateRange = JSON.parse(dateRange) as [string, string];
+    console.log('dateRange', extractedDateRange);
+    // Validate dateRange
+    const schedules = await scheduleService.findMany({
+      filter: {
+        'weekPeriod.from': {
+          $gte: new Date(extractedDateRange[0] || Date.now()),
+        },
+        'weekPeriod.to': {
+          $lte: new Date(extractedDateRange[1] || Date.now()),
+        },
+        dayOffset,
+        timeOffset,
+        status,
+      },
+      populateOptions: {
+        path: 'services.service packageInfo',
+      },
+    });
+
+    appExpress.response200(
+      schedules.filter((schedule) => {
+        return schedule.services.some((service) => {
+          return (
+            ((service.service as ConsultationService).specialization as ObjectId).toString() ===
+            specialization
+          );
+        });
+      }),
+    );
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
   }
+};
+
+const update: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    // Validate the request body against schema
+    const validationResult = updateScheduleSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return appExpress.response400(
+        ErrorCode.INVALID_REQUEST_BODY,
+        validationResult.error.format(),
+      );
+    }
+    const scheduleData: any = validationResult;
+    const id = req.params.id as unknown as ObjectId;
+
+    // Update schedule
+    const updatedSchedule = await scheduleService.update(id, scheduleData);
+    if (updatedSchedule) {
+      return appExpress.response200(updatedSchedule);
+    } else {
+      return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
+    }
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      message: (error as Error).message,
+    });
+  }
+};
 export default {
   create,
   findById,
