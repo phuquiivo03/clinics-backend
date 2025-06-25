@@ -116,25 +116,43 @@ const createMany: RequestHandler = async (req, res, next) => {
 
 const findAll: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
+  const { page = '1', limit = '10' } = req.query;
+  const pageNum = parseInt(page as string);
+  const limitNum = parseInt(limit as string);
+  
+  const options: MongooseFindManyOptions = {
+    pagination: {
+      page: pageNum,
+      limit: limitNum,
+    },
+  };
+  
   try {
-    const consultationServices = await consultationServiceService.findAll();
-    appExpress.response200(consultationServices);
+    const result = await consultationServiceService.findAll(options);
+    
+    appExpress.response200(result);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
+
 const findMany: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const { page, limit } = req.query;
+  const { page = '1', limit = '10' } = req.query;
+  const pageNum = parseInt(page as string);
+  const limitNum = parseInt(limit as string);
+  
   const options: MongooseFindManyOptions = {
     pagination: {
-      page: parseInt(page as string),
-      limit: parseInt(limit as string),
+      page: pageNum,
+      limit: limitNum,
     },
   };
+  
   try {
-    const consultationServices = await consultationServiceService.findMany(options);
-    appExpress.response200(consultationServices);
+    const result = await consultationServiceService.findMany(options);
+    
+    appExpress.response200(result);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
@@ -146,13 +164,23 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
     const { specialization } = req.params;
+    const { page = '1', limit = '10' } = req.query;
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    
     const options: MongooseFindManyOptions = {
       filter: {
         specialization: specialization as unknown as ObjectId,
       },
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+      },
     };
-    const consultationServices = await consultationServiceService.findMany(options);
-    appExpress.response200(consultationServices);
+    
+    const result = await consultationServiceService.findMany(options);
+    
+    appExpress.response200(result);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
