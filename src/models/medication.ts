@@ -33,4 +33,4 @@ const medicationSchema = new Schema<Medication>(
   },
 );
 
-export default model<Medication>(DOCUMENT, medicationSchema, COLLECTION); 
+export default model<Medication>(DOCUMENT, medicationSchema, COLLECTION);

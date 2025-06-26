@@ -36,10 +36,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
 
     try {
-      const decoded = jwt.verify(
-        authHeader,
-        process.env.JWT_SECRET || 'default_secret',
-      ) as IAuthenJWT;
+      const decoded = jwt.verify(authHeader, config.jwt.authen.secret) as IAuthenJWT;
       if (decoded.expired < Date.now()) {
         appExpress.response401(ErrorCode.TOKEN_EXPIRED, {});
         return;
