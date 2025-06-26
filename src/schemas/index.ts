@@ -10,3 +10,4 @@ export * from './packageWeek';
 export * from './prescription';
 export * from './medicine';
 export * from './medication';
+export * from './medicalExamination';

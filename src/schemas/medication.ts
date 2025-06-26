@@ -14,5 +14,4 @@ export const updateMedicationSchema = z.object({
   frequency: z.string().min(1).optional(),
   duration: z.string().min(1).optional(),
   instruction: z.string().optional(),
-}); 
-
+});

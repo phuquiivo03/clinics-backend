@@ -49,7 +49,9 @@ class ConsultationServiceService {
     }
   }
 
-  async findAll(options?: MongooseFindManyOptions): Promise<{ data: ConsultationService[], pagination: Pagination }> {
+  async findAll(
+    options?: MongooseFindManyOptions,
+  ): Promise<{ data: ConsultationService[]; pagination: Pagination }> {
     try {
       return this.consultationServiceRepository.findAll(options);
     } catch (error) {
@@ -57,7 +59,9 @@ class ConsultationServiceService {
     }
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<{ data: ConsultationService[], pagination: Pagination }> {
+  async findMany(
+    options?: MongooseFindManyOptions,
+  ): Promise<{ data: ConsultationService[]; pagination: Pagination }> {
     try {
       return this.consultationServiceRepository.findMany(options);
     } catch (error) {

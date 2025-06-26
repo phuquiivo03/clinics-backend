@@ -13,7 +13,6 @@ export interface JwtAuthenConfig {
 }
 
 export interface JwtRefreshConfig {
-  secret: string;
   expiresIn: string;
 }
 

@@ -12,4 +12,4 @@ export const updateMedicineSchema = z.object({
   dosage: z.string().min(1).optional(),
   form: z.string().min(1).optional(),
   route: z.string().min(1).optional(),
-}); 
+});

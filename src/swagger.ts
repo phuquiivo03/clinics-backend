@@ -1,6 +1,11 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 import fs from 'fs';
+import { MedicalExaminationResultSchema, PrescriptionSchema } from './docs/components/schemas';
+import { medicalExaminationPaths } from './docs/paths/medical-examination.docs';
+import { prescriptionPaths } from './docs/paths/prescription.docs';
+import { schedulePaths, ScheduleSchemas } from './docs/paths/schedule.swagger';
+import { authPaths } from './docs/paths/auth.docs';
 
 // Get all route files recursively
 const getRouteFiles = (dir: string): string[] => {
@@ -33,7 +38,49 @@ const options: swaggerJsdoc.Options = {
         description: 'Development server',
       },
     ],
+    paths: {
+      ...medicalExaminationPaths,
+      ...prescriptionPaths,
+      ...schedulePaths,
+      ...authPaths,
+    },
     components: {
+      schemas: {
+        ICDCode: MedicalExaminationResultSchema.ICDCode,
+        SubclinicalResult: MedicalExaminationResultSchema.SubclinicalResult,
+        MedicalExaminationResult: MedicalExaminationResultSchema.MedicalExaminationResult,
+        MedicalExaminationResultCreate:
+          MedicalExaminationResultSchema.MedicalExaminationResultCreate,
+        MedicalExaminationResultUpdate:
+          MedicalExaminationResultSchema.MedicalExaminationResultUpdate,
+        Medication: PrescriptionSchema.Medication,
+        Prescription: PrescriptionSchema.Prescription,
+        PrescriptionCreate: PrescriptionSchema.PrescriptionCreate,
+        PrescriptionUpdate: PrescriptionSchema.PrescriptionUpdate,
+        Schedule: ScheduleSchemas.Schedule,
+        Error: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+              example: 'error',
+            },
+            error: {
+              type: 'object',
+              properties: {
+                code: {
+                  type: 'string',
+                  example: 'INTERNAL_SERVER_ERROR',
+                },
+                message: {
+                  type: 'string',
+                  example: 'An unexpected error occurred',
+                },
+              },
+            },
+          },
+        },
+      },
       securitySchemes: {
         bearerAuth: {
           type: 'http',

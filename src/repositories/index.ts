@@ -9,6 +9,7 @@ export * from './periodPackage';
 export * from './dayPackage';
 export * from './packageWeek';
 export * from './blog';
+export * from './medicalExamination';
 
 import scheduleRepository from './schedule';
 import roomRepository from './room';
@@ -17,6 +18,7 @@ import dayPackageRepository from './dayPackage';
 import packageWeekRepository from './packageWeek';
 export * from './specialty';
 export * from './prescription';
+export * from './medicalExamination';
 
 export {
   scheduleRepository,
@@ -25,3 +27,4 @@ export {
   dayPackageRepository,
   packageWeekRepository,
 };
+export * from './medicalExamination';
