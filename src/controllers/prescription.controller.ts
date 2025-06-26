@@ -21,16 +21,17 @@ const create: RequestHandler = async (req, res) => {
     }
 
     // Process medications - they can be ObjectIds or full Medication objects
-    const medications: Array<Medication | ObjectId> = validatedData.medications.map(med => {
+    const medications: Array<Medication | ObjectId> = validatedData.medications.map((med) => {
       if (typeof med === 'string') {
         return new Types.ObjectId(med) as unknown as ObjectId;
       } else {
         // It's a Medication object, convert medicine field to ObjectId if it's a string
         const medication: Medication = {
           ...med,
-          medicine: typeof med.medicine === 'string' 
-            ? new Types.ObjectId(med.medicine) as unknown as ObjectId 
-            : med.medicine
+          medicine:
+            typeof med.medicine === 'string'
+              ? (new Types.ObjectId(med.medicine) as unknown as ObjectId)
+              : med.medicine,
         };
         return medication;
       }
@@ -135,16 +136,17 @@ const updatePrescription: RequestHandler = async (req, res) => {
     // Process medications if provided
     let medications: Array<Medication | ObjectId> | undefined;
     if (validatedData.medications) {
-      medications = validatedData.medications.map(med => {
+      medications = validatedData.medications.map((med) => {
         if (typeof med === 'string') {
           return new Types.ObjectId(med) as unknown as ObjectId;
         } else {
           // It's a Medication object, convert medicine field to ObjectId if it's a string
           const medication: Medication = {
             ...med,
-            medicine: typeof med.medicine === 'string' 
-              ? new Types.ObjectId(med.medicine) as unknown as ObjectId 
-              : med.medicine
+            medicine:
+              typeof med.medicine === 'string'
+                ? (new Types.ObjectId(med.medicine) as unknown as ObjectId)
+                : med.medicine,
           };
           return medication;
         }

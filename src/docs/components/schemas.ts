@@ -528,3 +528,370 @@
  *         createdAt: 2024-04-22T10:00:00.000Z
  *         updatedAt: 2024-04-22T10:00:00.000Z
  */
+
+export const MedicalExaminationResultSchema = {
+  ICDCode: {
+    type: 'object',
+    properties: {
+      icdCode: {
+        type: 'string',
+        example: 'J45.0',
+      },
+      description: {
+        type: 'string',
+        example: 'Bronchial asthma',
+      },
+    },
+  },
+  SubclinicalResult: {
+    type: 'object',
+    properties: {
+      service: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c85',
+      },
+      resultData: {
+        type: 'string',
+        example: 'Normal blood count results',
+      },
+      performedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+      performedBy: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c86',
+      },
+      notes: {
+        type: 'string',
+        example: 'Patient was fasting as required',
+      },
+    },
+  },
+  MedicalExaminationResult: {
+    type: 'object',
+    properties: {
+      _id: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c87',
+      },
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+      createdAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+      updatedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+    },
+  },
+  MedicalExaminationResultCreate: {
+    type: 'object',
+    required: ['patient', 'examinationDate', 'symptoms'],
+    properties: {
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+    },
+  },
+  MedicalExaminationResultUpdate: {
+    type: 'object',
+    properties: {
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+    },
+  },
+};
+
+export const PrescriptionSchema = {
+  Medication: {
+    type: 'object',
+    required: ['medicine', 'quantity', 'frequency', 'duration'],
+    properties: {
+      medicine: {
+        type: 'string',
+        description: 'Reference to the medicine',
+        example: '60d21b4667d0d8992e610c85',
+      },
+      quantity: {
+        type: 'integer',
+        minimum: 1,
+        description: 'Quantity of medicine to be taken',
+        example: 2,
+      },
+      frequency: {
+        type: 'string',
+        description: 'How often to take the medicine',
+        example: 'Twice daily',
+      },
+      duration: {
+        type: 'string',
+        description: 'How long to take the medicine',
+        example: '7 days',
+      },
+      instruction: {
+        type: 'string',
+        description: 'Special instructions for taking the medicine',
+        example: 'Take after meals with water',
+      },
+    },
+  },
+  Prescription: {
+    type: 'object',
+    properties: {
+      _id: {
+        type: 'string',
+        description: 'Unique identifier for the prescription',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      dateIssued: {
+        type: 'string',
+        format: 'date-time',
+        description: 'Date when the prescription was issued',
+        example: '2023-06-15T10:30:00Z',
+      },
+      doctor: {
+        type: 'string',
+        description: 'Reference to the doctor who issued the prescription',
+        example: '60d21b4667d0d8992e610c90',
+      },
+      patient: {
+        type: 'string',
+        description: 'Reference to the patient',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+      isPaid: {
+        type: 'boolean',
+        description: 'Whether the prescription has been paid for',
+        example: false,
+      },
+      createdAt: {
+        type: 'string',
+        format: 'date-time',
+        description: 'When the prescription was created in the system',
+        example: '2023-06-15T10:30:00Z',
+      },
+      updatedAt: {
+        type: 'string',
+        format: 'date-time',
+        description: 'When the prescription was last updated',
+        example: '2023-06-15T10:30:00Z',
+      },
+    },
+  },
+  PrescriptionCreate: {
+    type: 'object',
+    required: ['patient', 'diagnosis', 'medications', 'totalCost'],
+    properties: {
+      patient: {
+        type: 'string',
+        description: 'Reference to the patient',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+    },
+  },
+  PrescriptionUpdate: {
+    type: 'object',
+    properties: {
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+    },
+  },
+};

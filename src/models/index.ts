@@ -13,6 +13,7 @@ import imageModel from './image';
 import prescriptionModel from './prescription';
 import medicineModel from './medicine';
 import medicationModel from './medication';
+import { MedicalExaminationResultModel } from './medicalExamination';
 
 export {
   userModel,
@@ -30,4 +31,5 @@ export {
   prescriptionModel,
   medicineModel,
   medicationModel,
+  MedicalExaminationResultModel,
 };

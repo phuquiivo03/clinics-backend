@@ -16,9 +16,9 @@ interface BaseRepository<T> {
     session?: ClientSession,
   ): Promise<T | null>;
   update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
-  findAll(options?: MongooseFindManyOptions): Promise<{ data: T[] | [], pagination: Pagination }>;
+  findAll(options?: MongooseFindManyOptions): Promise<{ data: T[] | []; pagination: Pagination }>;
   delete(id: ObjectId): Promise<T | null>;
-  findMany(options?: MongooseFindManyOptions): Promise<{ data: T[] | [], pagination: Pagination }>;
+  findMany(options?: MongooseFindManyOptions): Promise<{ data: T[] | []; pagination: Pagination }>;
 }
 
 class BaseRepositoryImpl<T> implements BaseRepository<T> {
@@ -73,7 +73,9 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
   }
 
-  async findAll(options?: MongooseFindManyOptions): Promise<{ data: T[] | [], pagination: Pagination }> {
+  async findAll(
+    options?: MongooseFindManyOptions,
+  ): Promise<{ data: T[] | []; pagination: Pagination }> {
     try {
       // Just delegate to findMany with the provided options
       return this.findMany(options);
@@ -102,45 +104,46 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<{ data: T[] | [],  pagination: Pagination }> {
+  async findMany(
+    options?: MongooseFindManyOptions,
+  ): Promise<{ data: T[] | []; pagination: Pagination }> {
     console.log('FINDMANY::OPTIONS', options);
     try {
       const filter = options?.filter || {};
-      
+
       // Get total count first
       const totalCount = await this.model.countDocuments(filter).exec();
-      
+
       // Then get the data with pagination
       const query = this.model.find(filter);
       if (options?.pagination) {
         query.skip(((options.pagination.page || 1) - 1) * (options.pagination.limit || 10));
         query.limit(options.pagination.limit || 10);
       }
-      
+
       if (options?.selectFields) {
         query.select(options.selectFields);
       }
-      
+
       if (options?.sort) {
         query.sort(options.sort);
       }
-      
+
       if (options?.populateOptions) {
         console.log('POPULATE::OPTIONS', options.populateOptions);
         query.populate(options.populateOptions);
       }
-    
+
       const data = await query.exec();
-      
+
       return {
         data,
         pagination: {
           total: totalCount,
           page: options?.pagination?.page || 1,
           limit: options?.pagination?.limit || 10,
-          totalPages: Math.ceil(totalCount / (options?.pagination?.limit || 10))
+          totalPages: Math.ceil(totalCount / (options?.pagination?.limit || 10)),
         },
-        
       };
     } catch (error) {
       throw error;

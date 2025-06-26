@@ -6,7 +6,7 @@ import { authMiddleware } from '../../middleware/auth';
 const router = express.Router();
 
 // All routes are protected with authMiddleware in the main server file
-router.use(authMiddleware)
+router.use(authMiddleware);
 // Doctor routes
 router.post('/', prescriptionController.create);
 router.get('/doctor', prescriptionController.getDoctorPrescriptions);

@@ -15,7 +15,6 @@ export const config: Config = {
       expiresIn: process.env.JWT_EXPIRED || '10m',
     },
     refresh: {
-      secret: process.env.JWT_REFRESH_SECRET || 'default_secret',
       expiresIn: process.env.JWT_REFRESH_EXPIRED || '30d',
     },
   },
