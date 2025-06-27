@@ -24,7 +24,7 @@ class UtilsService {
 
   static generateRefreshToken(id: string): string {
     let expired = config.jwt.refresh.expiresIn;
-    const secret = config.jwt.refresh.secret;
+    const secret = config.jwt.authen.secret;
     // @ts-ignore
     return jwt.sign({ id }, secret, {
       expiresIn: expired,

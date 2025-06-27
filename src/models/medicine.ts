@@ -28,4 +28,4 @@ const medicineSchema = new Schema<Medicine>(
   },
 );
 
-export default model<Medicine>(DOCUMENT, medicineSchema, COLLECTION); 
+export default model<Medicine>(DOCUMENT, medicineSchema, COLLECTION);

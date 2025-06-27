@@ -8,6 +8,8 @@ import { config } from '../config';
 import { registerSchema, verifyOTPSchema } from '../schemas/authen';
 import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import type { IAuthenJWT } from '../types';
 
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
@@ -173,7 +175,6 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     const requestRefreshToken: string | undefined = req.body.refreshToken;
     // Assuming req.user and req.user._id are populated by upstream authentication middleware
     // If not, this will throw an error. Robust code would check req.user.
-    const userId = req.user._id.toString();
 
     if (!requestRefreshToken) {
       appExpress.response400(ErrorCode.MISSING_REFRESH_TOKEN, {
@@ -181,6 +182,16 @@ const refreshToken: RequestHandler = async (req, res, next) => {
       });
       return;
     }
+
+    const decoded = jwt.verify(requestRefreshToken, config.jwt.authen.secret) as IAuthenJWT;
+    if (decoded.expired < Date.now()) {
+      appExpress.response401(ErrorCode.TOKEN_EXPIRED, {});
+      return;
+    }
+
+    const userId = decoded.id.toString();
+
+    console.log('REFRESH_TOKEN::DECODED', decoded);
 
     const activeRefreshTokenKey = config.redis.key.refreshToken(userId);
     const usedRefreshTokensSetKey = config.redis.key.usedRefreshTokensSet(userId);
@@ -235,7 +246,6 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     // 7. Send the new tokens to the client
     appExpress.response200({ authenToken: newAuthenToken, refreshToken: newRefreshToken });
   } catch (error) {
-    console.error('Error in refreshToken handler:', error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
       message: (error as Error).message || 'An unexpected error occurred while refreshing token.',
     });

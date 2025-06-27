@@ -5,24 +5,29 @@ export const prescriptionSchema = z.object({
   patient: z.string(),
   diagnosis: z.string().min(1),
   notes: z.string().optional(),
-  medications: z.array(
-    z.union([
-      z.string(), // ObjectId as string
-      medicationSchema // Full medication object
-    ])
-  ).min(1),
+  medications: z
+    .array(
+      z.union([
+        z.string(), // ObjectId as string
+        medicationSchema, // Full medication object
+      ]),
+    )
+    .min(1),
   totalCost: z.number().min(0),
 });
 
 export const updatePrescriptionSchema = z.object({
   diagnosis: z.string().min(1).optional(),
   notes: z.string().optional(),
-  medications: z.array(
-    z.union([
-      z.string(), // ObjectId as string
-      medicationSchema // Full medication object
-    ])
-  ).min(1).optional(),
+  medications: z
+    .array(
+      z.union([
+        z.string(), // ObjectId as string
+        medicationSchema, // Full medication object
+      ]),
+    )
+    .min(1)
+    .optional(),
   totalCost: z.number().min(0).optional(),
 });
 

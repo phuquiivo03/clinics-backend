@@ -31,13 +31,15 @@ const prescriptionSchema = new Schema<Prescription>(
         type: Schema.Types.Mixed,
         required: true,
         validate: {
-          validator: function(v: any) {
+          validator: function (v: any) {
             // Either an ObjectId or a Medication object with required fields
-            return mongoose.Types.ObjectId.isValid(v) || 
-              (v.medicine && v.quantity && v.frequency && v.duration);
+            return (
+              mongoose.Types.ObjectId.isValid(v) ||
+              (v.medicine && v.quantity && v.frequency && v.duration)
+            );
           },
-          message: 'Medications must be valid ObjectIds or Medication objects'
-        }
+          message: 'Medications must be valid ObjectIds or Medication objects',
+        },
       },
     ],
     totalCost: {

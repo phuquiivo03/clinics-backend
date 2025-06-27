@@ -529,234 +529,369 @@
  *         updatedAt: 2024-04-22T10:00:00.000Z
  */
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Promotion:
- *       type: object
- *       required:
- *         - title
- *         - description
- *         - image
- *         - condition
- *         - regulation
- *         - discountType
- *         - discountValue
- *         - validFrom
- *         - validTo
- *       properties:
- *         _id:
- *           type: string
- *           format: uid
- *           description: The unique identifier for the promotion
- *           example: "507f1f77bcf86cd799439011"
- *         title:
- *           type: string
- *           description: The title of the promotion
- *           example: "Summer Sale 2024"
- *         description:
- *           type: string
- *           description: The description of the promotion
- *           example: "Get amazing discounts on all summer items"
- *         image:
- *           type: string
- *           description: The URL of the promotion image
- *           example: "https://example.com/images/summer-sale.jpg"
- *         condition:
- *           type: string
- *           description: The conditions for the promotion
- *           example: "Minimum purchase of $100"
- *         regulation:
- *           type: string
- *           description: The regulations for the promotion
- *           example: "Cannot be combined with other promotions"
- *         discountType:
- *           type: string
- *           enum: [Miễn phí, percentage, price]
- *           description: The type of discount
- *           example: "percentage"
- *         discountValue:
- *           type: string
- *           description: The value of the discount
- *           example: "20"
- *         validFrom:
- *           type: string
- *           format: date-time
- *           description: The start date of the promotion
- *           example: "2024-06-01T00:00:00Z"
- *         validTo:
- *           type: string
- *           format: date-time
- *           description: The end date of the promotion
- *           example: "2024-08-31T23:59:59Z"
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the promotion was created
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the promotion was last updated
- *       example:
- *         _id: "507f1f77bcf86cd799439011"
- *         title: "Summer Sale 2024"
- *         description: "Get amazing discounts on all summer items"
- *         image: "https://example.com/images/summer-sale.jpg"
- *         condition: "Minimum purchase of $100"
- *         regulation: "Cannot be combined with other promotions"
- *         discountType: "percentage"
- *         discountValue: "20"
- *         validFrom: "2024-06-01T00:00:00Z"
- *         validTo: "2024-08-31T23:59:59Z"
- *         createdAt: "2024-04-22T10:00:00.000Z"
- *         updatedAt: "2024-04-22T10:00:00.000Z"
- */
+export const MedicalExaminationResultSchema = {
+  ICDCode: {
+    type: 'object',
+    properties: {
+      icdCode: {
+        type: 'string',
+        example: 'J45.0',
+      },
+      description: {
+        type: 'string',
+        example: 'Bronchial asthma',
+      },
+    },
+  },
+  SubclinicalResult: {
+    type: 'object',
+    properties: {
+      service: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c85',
+      },
+      resultData: {
+        type: 'string',
+        example: 'Normal blood count results',
+      },
+      performedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+      performedBy: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c86',
+      },
+      notes: {
+        type: 'string',
+        example: 'Patient was fasting as required',
+      },
+    },
+  },
+  MedicalExaminationResult: {
+    type: 'object',
+    properties: {
+      _id: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c87',
+      },
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+      createdAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+      updatedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-06-15T10:30:00Z',
+      },
+    },
+  },
+  MedicalExaminationResultCreate: {
+    type: 'object',
+    required: ['patient', 'examinationDate', 'symptoms'],
+    properties: {
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+    },
+  },
+  MedicalExaminationResultUpdate: {
+    type: 'object',
+    properties: {
+      patient: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      examinationDate: {
+        type: 'string',
+        example: '2023-06-15',
+      },
+      symptoms: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        example: ['Fever', 'Cough', 'Fatigue'],
+      },
+      subclinicalResults: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SubclinicalResult',
+        },
+      },
+      finalDiagnosis: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/ICDCode',
+        },
+      },
+      prescription: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      followUp: {
+        type: 'object',
+        properties: {
+          nextVisit: {
+            type: 'string',
+            example: '2023-06-30',
+          },
+          notes: {
+            type: 'string',
+            example: 'Follow up in two weeks to check progress',
+          },
+        },
+      },
+    },
+  },
+};
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Image:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           format: uid
- *           description: The unique identifier for the image
- *           example: "507f1f77bcf86cd799439011"
- *         url:
- *           type: string
- *           description: The URL of the uploaded image
- *           example: "https://example.com/uploads/image123.jpg"
- *         filename:
- *           type: string
- *           description: The original filename of the uploaded image
- *           example: "profile_picture.jpg"
- *         originalName:
- *           type: string
- *           description: The original name of the uploaded file
- *           example: "my-photo.jpg"
- *         mimetype:
- *           type: string
- *           description: The MIME type of the uploaded image
- *           example: "image/jpeg"
- *         size:
- *           type: number
- *           description: The size of the uploaded image in bytes
- *           example: 1024000
- *         uploadedBy:
- *           type: string
- *           format: uid
- *           description: Reference to the user who uploaded the image
- *           example: "507f1f77bcf86cd799439011"
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the image was uploaded
- *           example: "2024-04-22T10:00:00.000Z"
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the image record was last updated
- *           example: "2024-04-22T10:00:00.000Z"
- *       example:
- *         _id: "507f1f77bcf86cd799439011"
- *         url: "https://example.com/uploads/image123.jpg"
- *         filename: "image123.jpg"
- *         originalName: "my-photo.jpg"
- *         mimetype: "image/jpeg"
- *         size: 1024000
- *         uploadedBy: "507f1f77bcf86cd799439011"
- *         createdAt: "2024-04-22T10:00:00.000Z"
- *         updatedAt: "2024-04-22T10:00:00.000Z"
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Appointment:
- *       type: object
- *       required:
- *         - patient
- *         - doctor
- *         - date
- *         - startTime
- *         - endTime
- *         - status
- *       properties:
- *         _id:
- *           type: string
- *           format: uid
- *           description: The unique identifier for the appointment
- *           example: "507f1f77bcf86cd799439011"
- *         patient:
- *           type: string
- *           format: uid
- *           description: Reference to the patient (User)
- *           example: "507f1f77bcf86cd799439012"
- *         doctor:
- *           type: string
- *           format: uid
- *           description: Reference to the doctor
- *           example: "507f1f77bcf86cd799439013"
- *         date:
- *           type: string
- *           format: date
- *           description: The appointment date
- *           example: "2024-04-25"
- *         startTime:
- *           type: string
- *           description: The appointment start time
- *           example: "09:00"
- *         endTime:
- *           type: string
- *           description: The appointment end time
- *           example: "10:00"
- *         status:
- *           type: string
- *           enum: [pending, confirmed, cancelled, completed]
- *           description: The current status of the appointment
- *           example: "pending"
- *         symptoms:
- *           type: string
- *           description: Patient symptoms (optional)
- *           example: "Chest pain and shortness of breath"
- *         diagnosis:
- *           type: string
- *           description: Medical diagnosis (filled by doctor)
- *           example: "Acute myocardial infarction"
- *         prescription:
- *           type: string
- *           description: Prescribed medications (filled by doctor)
- *           example: "Aspirin 81mg daily, Atorvastatin 40mg daily"
- *         notes:
- *           type: string
- *           description: Additional notes from the consultation
- *           example: "Patient responded well to treatment. Follow-up in 2 weeks."
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the appointment was created
- *           example: "2024-04-22T10:00:00.000Z"
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The timestamp when the appointment was last updated
- *           example: "2024-04-22T10:00:00.000Z"
- *       example:
- *         _id: "507f1f77bcf86cd799439011"
- *         patient: "507f1f77bcf86cd799439012"
- *         doctor: "507f1f77bcf86cd799439013"
- *         date: "2024-04-25"
- *         startTime: "09:00"
- *         endTime: "10:00"
- *         status: "pending"
- *         symptoms: "Chest pain and shortness of breath"
- *         diagnosis: ""
- *         prescription: ""
- *         notes: ""
- *         createdAt: "2024-04-22T10:00:00.000Z"
- *         updatedAt: "2024-04-22T10:00:00.000Z"
- */
+export const PrescriptionSchema = {
+  Medication: {
+    type: 'object',
+    required: ['medicine', 'quantity', 'frequency', 'duration'],
+    properties: {
+      medicine: {
+        type: 'string',
+        description: 'Reference to the medicine',
+        example: '60d21b4667d0d8992e610c85',
+      },
+      quantity: {
+        type: 'integer',
+        minimum: 1,
+        description: 'Quantity of medicine to be taken',
+        example: 2,
+      },
+      frequency: {
+        type: 'string',
+        description: 'How often to take the medicine',
+        example: 'Twice daily',
+      },
+      duration: {
+        type: 'string',
+        description: 'How long to take the medicine',
+        example: '7 days',
+      },
+      instruction: {
+        type: 'string',
+        description: 'Special instructions for taking the medicine',
+        example: 'Take after meals with water',
+      },
+    },
+  },
+  Prescription: {
+    type: 'object',
+    properties: {
+      _id: {
+        type: 'string',
+        description: 'Unique identifier for the prescription',
+        example: '60d21b4667d0d8992e610c89',
+      },
+      dateIssued: {
+        type: 'string',
+        format: 'date-time',
+        description: 'Date when the prescription was issued',
+        example: '2023-06-15T10:30:00Z',
+      },
+      doctor: {
+        type: 'string',
+        description: 'Reference to the doctor who issued the prescription',
+        example: '60d21b4667d0d8992e610c90',
+      },
+      patient: {
+        type: 'string',
+        description: 'Reference to the patient',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+      isPaid: {
+        type: 'boolean',
+        description: 'Whether the prescription has been paid for',
+        example: false,
+      },
+      createdAt: {
+        type: 'string',
+        format: 'date-time',
+        description: 'When the prescription was created in the system',
+        example: '2023-06-15T10:30:00Z',
+      },
+      updatedAt: {
+        type: 'string',
+        format: 'date-time',
+        description: 'When the prescription was last updated',
+        example: '2023-06-15T10:30:00Z',
+      },
+    },
+  },
+  PrescriptionCreate: {
+    type: 'object',
+    required: ['patient', 'diagnosis', 'medications', 'totalCost'],
+    properties: {
+      patient: {
+        type: 'string',
+        description: 'Reference to the patient',
+        example: '60d21b4667d0d8992e610c88',
+      },
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+    },
+  },
+  PrescriptionUpdate: {
+    type: 'object',
+    properties: {
+      diagnosis: {
+        type: 'string',
+        description: 'Diagnosis for which the prescription is issued',
+        example: 'Acute bronchitis',
+      },
+      notes: {
+        type: 'string',
+        description: 'Additional notes about the prescription',
+        example: 'Patient allergic to penicillin',
+      },
+      medications: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/Medication',
+        },
+        description: 'List of medications prescribed',
+      },
+      totalCost: {
+        type: 'number',
+        minimum: 0,
+        description: 'Total cost of all medications',
+        example: 250000,
+      },
+    },
+  },
+};
