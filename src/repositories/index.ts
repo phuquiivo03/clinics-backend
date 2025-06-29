@@ -10,6 +10,7 @@ export * from './dayPackage';
 export * from './packageWeek';
 export * from './blog';
 export * from './medicalExamination';
+export * from './payment';
 
 import scheduleRepository from './schedule';
 import roomRepository from './room';

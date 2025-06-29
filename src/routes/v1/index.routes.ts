@@ -15,6 +15,8 @@ import specialtyRouter from './specialty.route';
 import imageRouter from './image.routes';
 import prescriptionRouter from './prescription.routes';
 import medicalExaminationRoutes from './medicalExamination.routes';
+import paymentRouter from './payment.routes';
+
 const router = Router();
 router.use('/user', userRouter);
 router.use('/doctor', doctorRouter);
@@ -32,4 +34,6 @@ router.use('/specialties', specialtyRouter);
 router.use('/image', imageRouter);
 router.use('/prescription', prescriptionRouter);
 router.use('/medical-examinations', medicalExaminationRoutes);
+router.use('/payment', paymentRouter);
+
 export default router;

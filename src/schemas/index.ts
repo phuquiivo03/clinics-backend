@@ -11,3 +11,4 @@ export * from './prescription';
 export * from './medicine';
 export * from './medication';
 export * from './medicalExamination';
+export * from './payment.schema';

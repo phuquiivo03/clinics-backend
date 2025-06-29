@@ -2,6 +2,7 @@ import type { ObjectId } from 'mongoose';
 import type { User } from './user';
 import type { ConsultationPackage } from './consultationPackage';
 import type { ConsultationService } from './consultationService';
+import type { Payment } from './payment';
 
 export interface Schedule {
   _id?: ObjectId;
@@ -13,8 +14,9 @@ export interface Schedule {
   type: 'package' | 'services';
   packageInfo: ObjectId | ConsultationPackage;
   services: ScheduleService[];
+  payments?: Payment[] | ObjectId[];
 }
-
+ // mới tạo lịch xong -> tạo luôn payments
 export interface ScheduleService {
   service: ObjectId | ConsultationService;
   status: ScheduleServiceStatus;

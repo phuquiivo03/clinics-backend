@@ -14,6 +14,7 @@ import prescriptionModel from './prescription';
 import medicineModel from './medicine';
 import medicationModel from './medication';
 import { MedicalExaminationResultModel } from './medicalExamination';
+import { PaymentModel } from './payment.model';
 
 export {
   userModel,
@@ -32,4 +33,5 @@ export {
   medicineModel,
   medicationModel,
   MedicalExaminationResultModel,
+  PaymentModel,
 };
