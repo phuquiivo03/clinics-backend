@@ -50,6 +50,21 @@ const options: swaggerJsdoc.Options = {
         - data: the actual response data
         - message: optional message providing additional information
         - error: error message (only present when success is false)
+        
+        ## Features
+        - Complete medical examination tracking with ICD-10 coding
+        - Prescription management system with medication tracking
+        - Healthcare booking system for services and packages
+        - Role-based access control (Admin, Doctor, Patient)
+        - File upload support for images and documents
+        - Comprehensive pagination support
+        - Real-time scheduling and appointment management
+        
+        ## Available Modules
+        This API covers 18 different modules including authentication, user management,
+        doctor profiles, consultation services and packages, medical examinations,
+        prescriptions, scheduling, room management, blogs, promotions, specialties,
+        and image management.
       `,
       termsOfService: 'https://clinics.example.com/terms',
       contact: {
@@ -73,10 +88,10 @@ const options: swaggerJsdoc.Options = {
       },
     ],
     paths: {
-      ...medicalExaminationPaths,
-      ...prescriptionPaths,
-      ...schedulePaths,
       ...authPaths,
+      ...schedulePaths,
+      ...prescriptionPaths,
+      ...medicalExaminationPaths,
     },
     components: {
       schemas: {
@@ -246,6 +261,14 @@ const options: swaggerJsdoc.Options = {
       {
         name: 'Schedules',
         description: 'Appointment and schedule management',
+      },
+      {
+        name: 'Prescriptions',
+        description: 'Medical prescription management and medication tracking',
+      },
+      {
+        name: 'Medical Examination',
+        description: 'Healthcare examination tracking with ICD-10 coding',
       },
       {
         name: 'Appointments',

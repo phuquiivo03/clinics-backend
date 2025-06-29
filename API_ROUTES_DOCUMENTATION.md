@@ -98,6 +98,31 @@ Authorization: Bearer <token>
 | POST   | `/v1/schedule`                   | Create schedule (booking)       | Yes           | -                  |
 | PATCH  | `/v1/schedule/:id`               | Update schedule                 | Yes           | Owner/Admin/Doctor |
 
+### 💊 Prescription Management
+
+| Method | Endpoint                       | Description                 | Auth Required | Role Required |
+| ------ | ------------------------------ | --------------------------- | ------------- | ------------- |
+| GET    | `/v1/prescription`             | Get all prescriptions       | Yes           | Admin         |
+| GET    | `/v1/prescription/:id`         | Get prescription by ID      | Yes           | -             |
+| GET    | `/v1/prescription/doctor`      | Get doctor's prescriptions  | Yes           | Doctor        |
+| GET    | `/v1/prescription/patient`     | Get patient's prescriptions | Yes           | Patient       |
+| POST   | `/v1/prescription`             | Create prescription         | Yes           | Doctor        |
+| PUT    | `/v1/prescription/:id`         | Update prescription         | Yes           | Doctor        |
+| PUT    | `/v1/prescription/:id/payment` | Update payment status       | Yes           | -             |
+| DELETE | `/v1/prescription/:id`         | Delete prescription         | Yes           | Doctor        |
+
+### 🔬 Medical Examination Management
+
+| Method | Endpoint                                      | Description                     | Auth Required | Role Required | Pagination |
+| ------ | --------------------------------------------- | ------------------------------- | ------------- | ------------- | ---------- |
+| GET    | `/v1/medical-examinations`                    | Get all medical examinations    | Yes           | -             | Yes        |
+| GET    | `/v1/medical-examinations/:id`                | Get medical examination by ID   | Yes           | -             | No         |
+| GET    | `/v1/medical-examinations/user`               | Get current user's examinations | Yes           | -             | No         |
+| GET    | `/v1/medical-examinations/patient/:patientId` | Get examinations by patient ID  | Yes           | -             | No         |
+| POST   | `/v1/medical-examinations`                    | Create medical examination      | Yes           | -             | No         |
+| PATCH  | `/v1/medical-examinations/:id`                | Update medical examination      | Yes           | Doctor        | No         |
+| DELETE | `/v1/medical-examinations/:id`                | Delete medical examination      | Yes           | -             | No         |
+
 ### ⏰ Period Package Management
 
 | Method | Endpoint                                  | Description              | Auth Required |
@@ -170,18 +195,18 @@ Authorization: Bearer <token>
 | ------ | ----------- | ------------ | ------------- | ----------- |
 | POST   | `/v1/image` | Upload image | Yes           | Yes         |
 
-### 🩺 Appointments (Currently Disabled)
+### 🩺 Appointments (Not Active)
 
-**Note: All appointment routes are currently commented out and not active**
+**Note: Appointment routes exist in the codebase but are commented out and NOT registered in the router**
 
-| Method | Endpoint                      | Description               | Status   |
-| ------ | ----------------------------- | ------------------------- | -------- |
-| GET    | `/v1/appointment/user`        | Get user appointments     | Disabled |
-| GET    | `/v1/appointment/doctor`      | Get doctor appointments   | Disabled |
-| POST   | `/v1/appointment`             | Create appointment        | Disabled |
-| PUT    | `/v1/appointment/:id/status`  | Update appointment status | Disabled |
-| PUT    | `/v1/appointment/:id/medical` | Update medical info       | Disabled |
-| DELETE | `/v1/appointment/:id`         | Delete appointment        | Disabled |
+| Method | Endpoint                      | Description               | Status     |
+| ------ | ----------------------------- | ------------------------- | ---------- |
+| GET    | `/v1/appointment/user`        | Get user appointments     | Not Active |
+| GET    | `/v1/appointment/doctor`      | Get doctor appointments   | Not Active |
+| POST   | `/v1/appointment`             | Create appointment        | Not Active |
+| PUT    | `/v1/appointment/:id/status`  | Update appointment status | Not Active |
+| PUT    | `/v1/appointment/:id/medical` | Update medical info       | Not Active |
+| DELETE | `/v1/appointment/:id`         | Delete appointment        | Not Active |
 
 ## Query Parameters
 
@@ -249,13 +274,48 @@ This allows booking:
 - Complete consultation packages
 - Time slot management with morning/afternoon options
 
+## Prescription System
+
+Doctors can manage prescriptions through:
+
+```
+POST /v1/prescription - Create prescription
+PUT /v1/prescription/:id - Update prescription
+PUT /v1/prescription/:id/payment - Update payment status
+```
+
+Patients can view their prescriptions:
+
+```
+GET /v1/prescription/patient - Get patient's prescriptions
+```
+
+## Medical Examination System
+
+Healthcare providers can manage medical examinations:
+
+```
+POST /v1/medical-examinations - Create examination result
+PATCH /v1/medical-examinations/:id - Update examination (Doctor only)
+GET /v1/medical-examinations/user - Get user's examinations
+```
+
+Features:
+
+- ICD-10 coding for diagnoses
+- Subclinical test results tracking
+- Follow-up scheduling
+- Integration with prescriptions
+
 ## Notes
 
 - 🔒 Protected routes require authentication
 - 👮 Role-based routes require specific user roles (Admin, Doctor)
 - 📄 Some endpoints support pagination with `page` and `limit` parameters
 - 📁 File upload endpoints accept multipart/form-data
-- ⚠️ Appointment system is prepared but currently disabled
+- ⚠️ Appointment system code exists but routes are not active
+- 💊 Prescription system is fully active and functional
+- 🔬 Medical examination system with comprehensive healthcare tracking
 
 ## Environment Variables
 
