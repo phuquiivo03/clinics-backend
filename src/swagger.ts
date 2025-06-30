@@ -6,6 +6,7 @@ import { medicalExaminationPaths } from './docs/paths/medical-examination.docs';
 import { prescriptionPaths } from './docs/paths/prescription.docs';
 import { schedulePaths, ScheduleSchemas } from './docs/paths/schedule.swagger';
 import { authPaths } from './docs/paths/auth.docs';
+import { paymentPaths } from './docs/paths/payment.docs';
 
 // Get all route files recursively
 const getRouteFiles = (dir: string): string[] => {
@@ -43,6 +44,7 @@ const options: swaggerJsdoc.Options = {
       ...prescriptionPaths,
       ...schedulePaths,
       ...authPaths,
+      ...paymentPaths,
     },
     components: {
       schemas: {
