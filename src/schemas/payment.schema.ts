@@ -21,7 +21,7 @@ const paymentSchema = new Schema<Payment>(
     },
     note: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    paymentId: { type: String, required: true },
+    paymentId: { type: String, required: false },
   },
   {
     timestamps: true,

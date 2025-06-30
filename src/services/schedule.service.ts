@@ -2,6 +2,7 @@ import { type ClientSession, type ObjectId } from 'mongoose';
 import scheduleRepository from '../repositories/schedule';
 import type { Schedule } from '../types/schedules';
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
+import type { Pagination } from '../types/response';
 
 class ScheduleService {
   async create(data: Partial<Schedule>, session?: ClientSession): Promise<Schedule | null> {
@@ -28,7 +29,7 @@ class ScheduleService {
     }
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<Schedule[] | []> {
+  async findMany(options?: MongooseFindManyOptions): Promise<{ data: [] | Schedule[]; pagination: Pagination; }> {
     try {
       return scheduleRepository.findAll(options);
     } catch (error) {
@@ -36,9 +37,9 @@ class ScheduleService {
     }
   }
 
-  async update(id: ObjectId, schedule: Partial<Schedule>): Promise<Schedule | null> {
+  async update(id: ObjectId, schedule: Partial<Schedule>, session?: ClientSession): Promise<Schedule | null> {
     try {
-      return scheduleRepository.update(id, schedule);
+      return scheduleRepository.update(id, schedule, {session});
     } catch (error) {
       throw error;
     }

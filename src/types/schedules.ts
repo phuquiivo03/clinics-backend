@@ -13,9 +13,18 @@ export interface Schedule {
   status: ScheduleStatus;
   type: 'package' | 'services';
   packageInfo: ObjectId | ConsultationPackage;
-  services: ScheduleService[];
-  payments?: Payment[] | ObjectId[];
+  services: ScheduleService[]; //  to manage status of examination? which service is completed?
+  payments: SchedulePaymentInfo; //payment info -> tổng tiền, tổng tiền đã thanh toán, tổng tiền chưa thanh toán
 }
+
+
+
+export type SchedulePaymentInfo = {
+  payments: ObjectId[] | Payment[];
+  totalPrice: number;
+  totalPaid: number;
+}
+
  // mới tạo lịch xong -> tạo luôn payments
 export interface ScheduleService {
   service: ObjectId | ConsultationService;

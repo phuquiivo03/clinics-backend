@@ -26,7 +26,10 @@ export type Payment = {
   status: PaymentStatus;
   note?: string;
   user: ObjectId | User;
-  paymentId: string;
+  paymentId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+
+
