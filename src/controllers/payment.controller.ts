@@ -1,11 +1,12 @@
 import type { Request, Response, NextFunction } from 'express';
 import { PaymentService } from '../services/payment.service';
-import type { Payment } from '../types/payment';
+import type { Bill, Payment } from '../types/payment';
 import { PaymentStatus } from '../types/payment';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
-import { Schema } from 'mongoose';
+import { Schema, type ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import schedule from '../models/schedule';
 
 export class PaymentController {
   private paymentService: PaymentService;
@@ -14,7 +15,7 @@ export class PaymentController {
     this.paymentService = new PaymentService();
   }
 
-  async createPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
       const paymentData: Payment = req.body;
@@ -28,7 +29,7 @@ export class PaymentController {
     }
   }
 
-  async getPaymentById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
       const { id } = req.params;
@@ -49,7 +50,7 @@ export class PaymentController {
     }
   }
 
-  async getAllPayments(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
       const payments = await this.paymentService.findAll();
@@ -97,7 +98,46 @@ export class PaymentController {
     }
   }
 
-  async updatePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getBillForPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+      const scheduleId  = req.params.scheduleId as string | '';
+      if (!scheduleId) {
+        appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
+          message: 'Schedule ID is required',
+        });
+        return;
+      }
+
+      const options: MongooseFindManyOptions = {
+        filter: {
+          schedule: scheduleId as unknown as ObjectId,
+        }
+      }
+      const payemnts = (await this.paymentService.findMany(options)).data;
+      if (!payemnts || payemnts.length === 0) {
+        appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Bill not found for the payment' });
+        return;
+      }
+
+      const pendingPayment = payemnts.filter(payment => {
+        return payment.status === PaymentStatus.PENDING;
+      })
+
+      const totalAmount = pendingPayment.reduce((total, payment) => total + payment.amount, 0)
+
+      const bill: Bill = {
+        totalAmount,
+        payments: pendingPayment,
+      }
+
+      appExpress.response200(bill);
+    } catch (error) {
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
       const { id } = req.params;
@@ -154,7 +194,7 @@ export class PaymentController {
     }
   }
 
-  async deletePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
       const { id } = req.params;

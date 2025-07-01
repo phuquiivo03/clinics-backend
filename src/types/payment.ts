@@ -31,5 +31,8 @@ export type Payment = {
   updatedAt?: Date;
 };
 
-
+export type Bill = {
+  totalAmount: number;
+  payments: ObjectId | Payment[];
+}
 
