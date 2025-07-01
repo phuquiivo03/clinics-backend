@@ -22,7 +22,7 @@ import {
   type ScheduleService,
   type SchedulePaymentInfo,
 } from '../types/schedules';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { ConsultationService } from '../types';
 import { config } from '../config';
 import { PaymentMethod, PaymentStatus, type Payment } from '../types/payment';
@@ -257,7 +257,14 @@ const findById: RequestHandler = async (req, res, next) => {
     }
 
     const id = req.params.id as unknown as ObjectId;
-    const schedule = await scheduleService.findById(id);
+    const options: MongooseFindOneOptions = {
+      populateOptions: {
+        
+        path: 'payments.payments services.service',
+        select: 'paymentId amount status method createdAt updatedAt name description price',
+      }
+    }
+    const schedule = await scheduleService.findById(id, options);
     if (schedule) {
       return appExpress.response200(schedule);
     }
