@@ -4,6 +4,7 @@ import {
   type Schedule,
   type CDateRange,
   ScheduleServiceStatus,
+  type SchedulePaymentInfo,
 } from '../types/schedules';
 
 const DOCUMENT = 'Schedule';
@@ -19,6 +20,22 @@ const DateRangeSchema = new Schema<CDateRange>({
     required: true,
   },
 });
+
+const SchedulePaymentInfoSchema = new Schema<SchedulePaymentInfo>({
+  payments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Payment',
+  }],
+  totalPrice: {
+    type: Number,
+    default: 0,
+  },
+  totalPaid: {
+    type: Number,
+    default: 0,
+  },
+});
+
 const scheduleSchema = new Schema<Schedule>(
   {
     userId: {
@@ -63,7 +80,14 @@ const scheduleSchema = new Schema<Schedule>(
         },
       },
     ],
-
+    payments: {
+      type: SchedulePaymentInfoSchema,
+      default: {
+        payments: [],
+        totalPrice: 0,
+        totalPaid: 0,
+      },
+    },
     packageInfo: {
       type: Schema.Types.ObjectId,
       ref: 'ConsultationPackage',

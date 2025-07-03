@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express';
 import {
   consultationPackageService,
+  consultationServiceService,
   periodPackageService,
   scheduleService,
 } from '../services/index.service';
@@ -19,10 +20,14 @@ import {
   ScheduleStatus,
   type Schedule,
   type ScheduleService,
+  type SchedulePaymentInfo,
 } from '../types/schedules';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { ConsultationService } from '../types';
 import { config } from '../config';
+import { PaymentMethod, PaymentStatus, type Payment } from '../types/payment';
+import { PaymentService } from '../services/payment.service';
+
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
@@ -39,6 +44,7 @@ const create: RequestHandler = async (req, res, next) => {
     // scheduleData.date = new Date(scheduleData.date);
     // // create transaction
     const session = await mongoose.startSession();
+    const paymentService = new PaymentService();
 
     try {
       // Start the transaction
@@ -67,27 +73,65 @@ const create: RequestHandler = async (req, res, next) => {
                     }))
                   : [];
 
+              // Calculate total price from services
+              let totalPrice = 0;
+              for (const serviceItem of selectedPackage.tests) {
+                totalPrice += (serviceItem as ConsultationService).price || 0;
+              }
+
+              // Create default payment info
+              const paymentInfo: SchedulePaymentInfo = {
+                payments: [],
+                totalPrice,
+                totalPaid: 0,
+              };
+
               return {
                 ...scheduleData,
                 services,
                 userId: req.user.id,
                 status: ScheduleStatus.CONFIRMED,
+                payments: paymentInfo,
               };
             }
           : async (): Promise<Schedule> => {
+              // For service type, fetch services to calculate price
+              const serviceIds = scheduleData.services || [];
+              const services: ScheduleService[] = serviceIds.map((svc: string) => {
+                return {
+                  service: svc as unknown as ObjectId,
+                  status: ScheduleServiceStatus.PENDING,
+                } as ScheduleService;
+              });
+
+              // Calculate total price from services
+              let totalPrice = 0;
+              for (const serviceItem of services) {
+                const serviceDetails = await consultationServiceService.findById(
+                  serviceItem.service as ObjectId
+                );
+                if (serviceDetails) {
+                  totalPrice += serviceDetails.price || 0;
+                }
+              }
+
+              // Create default payment info
+              const paymentInfo: SchedulePaymentInfo = {
+                payments: [],
+                totalPrice,
+                totalPaid: 0,
+              };
+
               return {
                 ...scheduleData,
-                services: scheduleData.services.map((svc: string) => {
-                  return {
-                    service: svc as unknown as ObjectId,
-                    status: ScheduleServiceStatus.PENDING,
-                  } as ScheduleService;
-                }),
+                services,
                 userId: req.user.id,
                 status: ScheduleStatus.CONFIRMED,
                 packageInfo: config.customPackage as unknown as ObjectId,
+                payments: paymentInfo,
               };
             };
+
       const scheduleDataToCreate = await getScheduleData();
       const schedule = await scheduleService.create(scheduleDataToCreate, session);
 
@@ -98,10 +142,53 @@ const create: RequestHandler = async (req, res, next) => {
         });
       }
 
+      // Create default payment entries for each service
+      for (const serviceItem of schedule.services) {
+        // Get service details to get the price
+        const serviceDetails = await consultationServiceService.findById(
+          serviceItem.service as ObjectId
+        );
+        
+        if (serviceDetails) {
+          // Create a default payment for this service
+          const paymentData: Omit<Payment, '_id'> = {
+            schedule: schedule._id as ObjectId,
+            service: serviceItem.service as ObjectId,
+            method: PaymentMethod.CASH,
+            amount: serviceDetails.price,
+            status: PaymentStatus.PENDING,
+            note: '',
+            user: req.user.id,
+            paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+            createdAt: new Date(),
+          };
+          
+          // Create payment record
+          const payment = await paymentService.create(paymentData);
+          if (payment && payment._id) {
+            // Add payment ID to schedule's payments array
+            if (!schedule.payments) {
+              schedule.payments = {
+                payments: [],
+                totalPrice: 0,
+                totalPaid: 0,
+              };
+            }
+            (schedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
+            schedule.payments.totalPaid += payment.amount;
+          }
+        }
+      }
+      // Update the schedule with payment IDs
+      if (schedule.payments && schedule.payments.payments.length > 0) {
+        await scheduleService.update(schedule._id as ObjectId, { 
+          payments: schedule.payments 
+        }, session);
+      }
+
       await session.commitTransaction();
 
       // If we get here, everything succeeded
-      // await session.commitTransaction();
       return appExpress.response201(schedule);
     } catch (error: any) {
       // If there's an error, abort the transaction
@@ -170,7 +257,14 @@ const findById: RequestHandler = async (req, res, next) => {
     }
 
     const id = req.params.id as unknown as ObjectId;
-    const schedule = await scheduleService.findById(id);
+    const options: MongooseFindOneOptions = {
+      populateOptions: {
+        
+        path: 'payments.payments services.service',
+        select: 'paymentId amount status method createdAt updatedAt name description price',
+      }
+    }
+    const schedule = await scheduleService.findById(id, options);
     if (schedule) {
       return appExpress.response200(schedule);
     }
@@ -230,7 +324,7 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
     const schedules = await scheduleService.findMany(options);
 
     const formattedSchedulesNew = [0, 1, 2, 3, 4, 5, 6].map((dayOffset) => {
-      const times = schedules.filter((schedule) => schedule.dayOffset === dayOffset);
+      const times = schedules.data.filter((schedule) => schedule.dayOffset === dayOffset);
       const timesFormated = [0, 1, 2, 3, 4, 5, 6].map((time) => {
         return {
           timeOffset: time,
@@ -292,7 +386,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
     });
 
     appExpress.response200(
-      schedules.filter((schedule) => {
+      schedules.data.filter((schedule) => {
         return schedule.services.some((service) => {
           return (
             ((service.service as ConsultationService).specialization as ObjectId).toString() ===
