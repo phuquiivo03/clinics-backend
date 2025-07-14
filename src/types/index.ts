@@ -10,4 +10,4 @@ export * from './image';
 export * from './periodPackage';
 
 export * from './prescription';
-export * from './medication';
+export * from '../../../clinical/types/medication';

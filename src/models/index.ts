@@ -15,7 +15,7 @@ import medicineModel from './medicine';
 import medicationModel from './medication';
 import { MedicalExaminationResultModel } from './medicalExamination';
 import { PaymentModel } from './payment.model';
-
+import waitingMessageModel from './waitingMessage';
 export {
   userModel,
   doctorModel,
@@ -34,4 +34,5 @@ export {
   medicationModel,
   MedicalExaminationResultModel,
   PaymentModel,
+  waitingMessageModel,
 };

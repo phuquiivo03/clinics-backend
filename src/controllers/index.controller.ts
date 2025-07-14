@@ -11,6 +11,8 @@ import dayPackageController from './dayPackage.controller';
 import packageWeekController from './packageWeek.controller';
 import imageController from './image.controller';
 import prescriptionController from './prescription.controller';
+import waitingMessageController from './waitingMessage.controller';
+
 export {
   // appoinmentController,
   userController,
@@ -25,4 +27,5 @@ export {
   packageWeekController,
   imageController,
   prescriptionController,
+  waitingMessageController,
 };

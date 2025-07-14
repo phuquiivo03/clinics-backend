@@ -7,6 +7,7 @@ import { prescriptionPaths } from './docs/paths/prescription.docs';
 import { schedulePaths, ScheduleSchemas } from './docs/paths/schedule.swagger';
 import { authPaths } from './docs/paths/auth.docs';
 import { paymentPaths } from './docs/paths/payment.docs';
+import { waitingMessagePaths, WaitingMessageSchemas } from './docs/paths/waitingMessage.docs';
 
 // Get all route files recursively
 const getRouteFiles = (dir: string): string[] => {
@@ -35,7 +36,7 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: process.env.SERVER_URL || 'http://localhost:8081',
+        url: `${process.env.SERVER_URL || 'http://localhost:8081'}/api/v1`,
         description: 'Development server',
       },
     ],
@@ -45,6 +46,7 @@ const options: swaggerJsdoc.Options = {
       ...schedulePaths,
       ...authPaths,
       ...paymentPaths,
+      ...waitingMessagePaths,
     },
     components: {
       schemas: {
@@ -60,6 +62,7 @@ const options: swaggerJsdoc.Options = {
         PrescriptionCreate: PrescriptionSchema.PrescriptionCreate,
         PrescriptionUpdate: PrescriptionSchema.PrescriptionUpdate,
         Schedule: ScheduleSchemas.Schedule,
+        WaitingMessage: WaitingMessageSchemas.WaitingMessage,
         Error: {
           type: 'object',
           properties: {

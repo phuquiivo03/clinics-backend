@@ -1,4 +1,4 @@
-import type { MedicalExaminationResult } from '../types/medicalExamination';
+import type { MedicalExaminationResult } from '../../../clinical/types/medicalExamination';
 import { ErrorCode } from '../pkg/e/code';
 import {
   MedicalExaminationResultRepositoryImpl,

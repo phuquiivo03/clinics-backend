@@ -10,16 +10,16 @@ const paymentController = new PaymentController();
 router.use(authMiddleware);
 
 // Routes for regular users
-router.post('/', paymentController.create.bind(paymentController));
+router.post('/', paymentController.createPayment.bind(paymentController));
 router.get('/user', paymentController.getUserPayments.bind(paymentController));
-router.get('/:id', paymentController.findById.bind(paymentController));
-router.get('/schedule/:scheduleId', paymentController.getBillForPayment.bind(paymentController));
+router.get('/:id', paymentController.getPaymentById.bind(paymentController));
+
 // Admin only routes
 router.use(checkRole([ROLE.ADMIN]));
-router.get('/', paymentController.findAll.bind(paymentController));
+router.get('/', paymentController.getAllPayments.bind(paymentController));
 router.get('/status/:status', paymentController.getPaymentsByStatus.bind(paymentController));
-router.put('/:id', paymentController.update.bind(paymentController));
+router.put('/:id', paymentController.updatePayment.bind(paymentController));
 router.put('/:id/status', paymentController.updatePaymentStatus.bind(paymentController));
-router.delete('/:id', paymentController.delete.bind(paymentController));
+router.delete('/:id', paymentController.deletePayment.bind(paymentController));
 
 export default router; 
