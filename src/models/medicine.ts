@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { Medicine } from '../../../clinical/types/medication';
+import type { Medicine } from '../../../clinical/src/types/medication';
 
 const DOCUMENT = 'Medicine';
 const COLLECTION = 'Medicines';

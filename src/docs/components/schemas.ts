@@ -597,6 +597,14 @@ export const MedicalExaminationResultSchema = {
           $ref: '#/components/schemas/SubclinicalResult',
         },
       },
+      services: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        description: 'Array of consultation service IDs',
+        example: ['60d21b4667d0d8992e610c90', '60d21b4667d0d8992e610c91'],
+      },
       finalDiagnosis: {
         type: 'array',
         items: {
@@ -657,6 +665,14 @@ export const MedicalExaminationResultSchema = {
           $ref: '#/components/schemas/SubclinicalResult',
         },
       },
+      services: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        description: 'Array of consultation service IDs',
+        example: ['60d21b4667d0d8992e610c90', '60d21b4667d0d8992e610c91'],
+      },
       finalDiagnosis: {
         type: 'array',
         items: {
@@ -705,6 +721,14 @@ export const MedicalExaminationResultSchema = {
         items: {
           $ref: '#/components/schemas/SubclinicalResult',
         },
+      },
+      services: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        description: 'Array of consultation service IDs',
+        example: ['60d21b4667d0d8992e610c90', '60d21b4667d0d8992e610c91'],
       },
       finalDiagnosis: {
         type: 'array',

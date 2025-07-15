@@ -18,6 +18,7 @@ export const MedicalExaminationResultCreateSchema = z.object({
   examinationDate: z.string(),
   symptoms: z.array(z.string()),
   subclinicalResults: z.array(SubclinicalResultSchema).optional(),
+  services: z.array(z.string()).optional(), // Array of ConsultationService IDs
   finalDiagnosis: z.array(ICDCodeSchema).optional(),
   prescription: z.string().optional(),
   followUp: z

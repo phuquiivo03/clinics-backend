@@ -26,6 +26,7 @@ const MedicalExaminationResultSchema = new Schema<MedicalExaminationResult>(
     examinationDate: { type: String, required: true },
     symptoms: [{ type: String, required: true }],
     subclinicalResults: [SubclinicalResultSchema],
+    services: [{ type: Schema.Types.ObjectId, ref: 'ConsultationService' }],
     finalDiagnosis: [ICDCodeSchema],
     prescription: { type: Schema.Types.ObjectId, ref: 'Prescription' },
     followUp: {
