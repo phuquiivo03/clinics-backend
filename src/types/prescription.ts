@@ -1,7 +1,7 @@
 import type { ObjectId } from 'mongoose';
 import type { Doctor } from './doctor';
 import type { User } from './user';
-import type { Medication } from './medication';
+import type { Medication } from '../../../clinical/types/medication';
 
 export interface Prescription {
   _id: string; // Mã đơn thuốc

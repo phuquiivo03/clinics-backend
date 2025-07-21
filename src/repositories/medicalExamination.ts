@@ -1,4 +1,4 @@
-import type { MedicalExaminationResult } from '../types/medicalExamination';
+import type { MedicalExaminationResult } from '../../../clinical/types/medicalExamination';
 import { BaseRepositoryImpl, type BaseRepository } from './base';
 import { MedicalExaminationResultModel } from '../models';
 import type { ObjectId } from 'mongoose';

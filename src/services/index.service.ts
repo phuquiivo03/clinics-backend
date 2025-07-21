@@ -14,6 +14,7 @@ import pinataService from './pinata.service';
 import imageService from './image.service';
 import prescriptionService from './prescription.service';
 import { PaymentService } from './payment.service';
+import waitingMessageService from './waitingMessage.service';
 
 export * from './medicalExamination.service';
 export {
@@ -33,4 +34,5 @@ export {
   imageService,
   prescriptionService,
   PaymentService,
+  waitingMessageService,
 };

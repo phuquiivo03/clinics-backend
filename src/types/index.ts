@@ -8,6 +8,5 @@ export * from './blogs';
 export * from './specialty';
 export * from './image';
 export * from './periodPackage';
-
 export * from './prescription';
-export * from './medication';
+export * from './medicalExamination';

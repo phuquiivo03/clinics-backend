@@ -5,83 +5,148 @@
  *     CreateScheduleRequest:
  *       type: object
  *       required:
- *         - userId
- *         - date
- *         - startTime
- *         - endTime
- *         - status
- *         - package_id
- *         - packagePeriodId
+ *         - dayOffset
+ *         - timeOffset
+ *         - type
+ *         - weekPeriod
  *       properties:
  *         userId:
  *           type: string
- *           description: ID of the user making the schedule
+ *           description: ID of the user (optional, defaults to authenticated user)
  *           example: "67e9180afb886c8bef80f7c3"
- *         date:
+ *         dayOffset:
+ *           type: number
+ *           description: Day of week (0 = Monday, 6 = Sunday)
+ *           example: 1
+ *         timeOffset:
+ *           type: number
+ *           description: Time slot (0 = morning, 1 = afternoon)
+ *           example: 1
+ *         type:
  *           type: string
- *           format: date-time
- *           description: Date of the schedule
- *           example: "2024-04-15T00:00:00.000Z"
- *         startTime:
+ *           enum: ['package', 'custom']
+ *           description: Type of schedule
+ *           example: "package"
+ *         packageId:
  *           type: string
- *           description: Start time of the schedule
- *           example: "09:30"
- *         endTime:
- *           type: string
- *           description: End time of the schedule
- *           example: "10:15"
+ *           description: ID of the consultation package (required if type is package)
+ *           example: "6835430bd5a938c2795cdfa5"
+ *         services:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Array of service IDs (required if type is custom)
+ *           example: ["65fb32a9c5844e123f6789ef", "65fb32a9c5844e123f6789eg"]
+ *         weekPeriod:
+ *           type: object
+ *           required:
+ *             - from
+ *             - to
+ *           properties:
+ *             from:
+ *               type: string
+ *               format: date-time
+ *               description: Start date of the week period
+ *               example: "2024-04-15T00:00:00.000Z"
+ *             to:
+ *               type: string
+ *               format: date-time
+ *               description: End date of the week period
+ *               example: "2024-04-21T23:59:59.999Z"
+ *     UpdateScheduleRequest:
+ *       type: object
+ *       properties:
  *         status:
  *           type: string
+ *           enum: ['pending', 'confirmed', 'cancelled', 'completed']
  *           description: Status of the schedule
- *           example: "pending"
- *         package_id:
- *           type: string
- *           description: ID of the package
- *           example: "65fb32a9c5844e123f6789ef"
- *         packagePeriodId:
- *           type: string
- *           description: ID of the package period
- *           example: "67f382da58ca745bcec5f69f"
+ *           example: "confirmed"
+ *         dayOffset:
+ *           type: number
+ *           description: Day of week (0 = Monday, 6 = Sunday)
+ *           example: 1
+ *         timeOffset:
+ *           type: number
+ *           description: Time slot (0 = morning, 1 = afternoon)
+ *           example: 1
+ *         weekPeriod:
+ *           type: object
+ *           properties:
+ *             from:
+ *               type: string
+ *               format: date-time
+ *               description: Start date of the week period
+ *               example: "2024-04-15T00:00:00.000Z"
+ *             to:
+ *               type: string
+ *               format: date-time
+ *               description: End date of the week period
+ *               example: "2024-04-21T23:59:59.999Z"
  *     ScheduleResponse:
  *       type: object
  *       properties:
+ *         status:
+ *           type: string
+ *           example: "success"
+ *         data:
+ *           $ref: '#/components/schemas/Schedule'
+ *     ScheduleListResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           example: "success"
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Schedule'
+ *     SchedulePaginatedResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           example: "success"
  *         data:
  *           type: object
  *           properties:
- *             _id:
- *               type: string
- *             userId:
- *               type: string
- *             date:
- *               type: string
- *               format: date-time
- *             start_time:
- *               type: string
- *             end_time:
- *               type: string
- *             status:
- *               type: string
- *             package_id:
- *               type: string
- *             createdAt:
- *               type: string
- *               format: date-time
- *             updatedAt:
- *               type: string
- *               format: date-time
- *             __v:
- *               type: number
- *         msg:
- *           type: string
- *           example: "OK"
- *         code:
- *           type: number
- *           example: 200
+ *             docs:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Schedule'
+ *             totalDocs:
+ *               type: integer
+ *               example: 100
+ *             limit:
+ *               type: integer
+ *               example: 10
+ *             totalPages:
+ *               type: integer
+ *               example: 10
+ *             page:
+ *               type: integer
+ *               example: 1
+ *             pagingCounter:
+ *               type: integer
+ *               example: 1
+ *             hasPrevPage:
+ *               type: boolean
+ *               example: false
+ *             hasNextPage:
+ *               type: boolean
+ *               example: true
+ *             prevPage:
+ *               type: ["integer", "null"]
+ *               example: null
+ *             nextPage:
+ *               type: ["integer", "null"]
+ *               example: 2
  *     Error:
  *       type: object
  *       properties:
  *         message:
  *           type: string
+ *         code:
+ *           type: number
  */
 
 /**
@@ -89,7 +154,7 @@
  * /api/v1/schedule:
  *   post:
  *     summary: Create a new schedule
- *     description: Creates a new schedule with the specified user, date, time, and package information
+ *     description: Creates a new schedule appointment for the authenticated user. Creates payment records for each service automatically.
  *     tags: [Schedule]
  *     security:
  *       - bearerAuth: []
@@ -114,6 +179,12 @@
  *               $ref: '#/components/schemas/Error'
  *       401:
  *         description: Unauthorized - Invalid or missing token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Not found - Package or service not found
  *         content:
  *           application/json:
  *             schema:
@@ -175,54 +246,17 @@ export const schedulePaths = {
     post: {
       tags: ['Schedule'],
       summary: 'Create a new schedule',
+      description: 'Creates a new schedule appointment for the authenticated user. Creates payment records for each service automatically.',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              required: ['date', 'startTime', 'endTime', 'type'],
-              properties: {
-                date: {
-                  type: 'string',
-                  format: 'date',
-                  description: 'Date of the schedule',
-                  example: '2024-06-15',
-                },
-                startTime: {
-                  type: 'string',
-                  description: 'Start time of the schedule',
-                  example: '09:30',
-                },
-                endTime: {
-                  type: 'string',
-                  description: 'End time of the schedule',
-                  example: '10:15',
-                },
-                type: {
-                  type: 'string',
-                  enum: ['package', 'custom'],
-                  description: 'Type of schedule',
-                  example: 'package',
-                },
-                packageId: {
-                  type: 'string',
-                  description: 'ID of the consultation package (required if type is package)',
-                  example: '65fb32a9c5844e123f6789ef',
-                },
-                services: {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                  },
-                  description: 'Array of service IDs (required if type is custom)',
-                  example: ['65fb32a9c5844e123f6789ef', '65fb32a9c5844e123f6789eg'],
-                },
-              },
-            },
-          },
-        },
+              $ref: '#/components/schemas/CreateScheduleRequest'
+            }
+          }
+        }
       },
       responses: {
         201: {
@@ -230,41 +264,52 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    $ref: '#/components/schemas/Schedule',
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/ScheduleResponse'
+              }
+            }
+          }
         },
         400: {
           description: 'Bad request - Invalid input data',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
+        404: {
+          description: 'Not found - Package or service not found',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
     },
   },
   '/schedule/many': {
@@ -278,12 +323,11 @@ export const schedulePaths = {
           in: 'query',
           name: 'options',
           schema: {
-            type: 'string',
+            type: 'string'
           },
           description: 'JSON string with filter, sort, and pagination options',
-          example:
-            '{"filter":{"status":"confirmed"},"sort":{"date":-1},"pagination":{"page":1,"limit":10}}',
-        },
+          example: '{"filter":{"status":"confirmed"},"sort":{"date":-1},"pagination":{"page":1,"limit":10}}'
+        }
       ],
       responses: {
         200: {
@@ -291,86 +335,43 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    type: 'object',
-                    properties: {
-                      docs: {
-                        type: 'array',
-                        items: {
-                          $ref: '#/components/schemas/Schedule',
-                        },
-                      },
-                      totalDocs: {
-                        type: 'integer',
-                        example: 100,
-                      },
-                      limit: {
-                        type: 'integer',
-                        example: 10,
-                      },
-                      totalPages: {
-                        type: 'integer',
-                        example: 10,
-                      },
-                      page: {
-                        type: 'integer',
-                        example: 1,
-                      },
-                      pagingCounter: {
-                        type: 'integer',
-                        example: 1,
-                      },
-                      hasPrevPage: {
-                        type: 'boolean',
-                        example: false,
-                      },
-                      hasNextPage: {
-                        type: 'boolean',
-                        example: true,
-                      },
-                      prevPage: {
-                        type: ['integer', 'null'],
-                        example: null,
-                      },
-                      nextPage: {
-                        type: ['integer', 'null'],
-                        example: 2,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/SchedulePaginatedResponse'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         403: {
           description: 'Forbidden - User does not have required role',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
-    },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
   },
   '/schedule/user': {
     get: {
@@ -384,41 +385,39 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/components/schemas/Schedule',
-                    },
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/ScheduleListResponse'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
-    },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
   },
   '/schedule/current-week': {
     get: {
       tags: ['Schedule'],
       summary: 'Get schedules for the current week',
-      description: 'Retrieves all schedules for the current week, organized by day and time',
+      description: 'Retrieves all schedules for the current week, organized by day and time slots',
       security: [{ bearerAuth: [] }],
       responses: {
         200: {
@@ -430,7 +429,7 @@ export const schedulePaths = {
                 properties: {
                   status: {
                     type: 'string',
-                    example: 'success',
+                    example: 'success'
                   },
                   data: {
                     type: 'array',
@@ -440,7 +439,7 @@ export const schedulePaths = {
                         dayOffset: {
                           type: 'integer',
                           description: 'Day of the week (0 = Monday, 6 = Sunday)',
-                          example: 0,
+                          example: 0
                         },
                         data: {
                           type: 'array',
@@ -450,55 +449,101 @@ export const schedulePaths = {
                               timeOffset: {
                                 type: 'integer',
                                 description: 'Time slot index',
-                                example: 0,
+                                example: 0
                               },
                               data: {
                                 type: 'array',
                                 items: {
-                                  $ref: '#/components/schemas/Schedule',
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
+                                  $ref: '#/components/schemas/Schedule'
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
-    },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
   },
   '/schedule/by-specialization': {
     get: {
       tags: ['Schedule'],
       summary: 'Get schedules by specialization',
-      description: 'Retrieves schedules filtered by specialization',
+      description: 'Retrieves schedules filtered by specialization, date range, time slot, day of week and status',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
           in: 'query',
           name: 'specialization',
           schema: {
-            type: 'string',
+            type: 'string'
           },
           required: true,
           description: 'Specialization ID to filter by',
-          example: '65fb32a9c5844e123f6789ef',
+          example: '65fb32a9c5844e123f6789ef'
         },
+        {
+          in: 'query',
+          name: 'dateRange',
+          schema: {
+            type: 'string'
+          },
+          description: 'JSON string with date range in format ["YYYY-MM-DD", "YYYY-MM-DD"]',
+          example: '["2024-06-10", "2024-06-16"]'
+        },
+        {
+          in: 'query',
+          name: 'timeOffset',
+          schema: {
+            type: 'string'
+          },
+          description: 'Time slot index to filter by',
+          example: '0'
+        },
+        {
+          in: 'query',
+          name: 'dayOffset',
+          schema: {
+            type: 'string'
+          },
+          description: 'Day of week to filter by (0 = Monday, 6 = Sunday)',
+          example: '0'
+        },
+        {
+          in: 'query',
+          name: 'status',
+          schema: {
+            type: 'string'
+          },
+          description: 'Status to filter by',
+          example: 'confirmed'
+        }
       ],
       responses: {
         200: {
@@ -506,45 +551,43 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/components/schemas/Schedule',
-                    },
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/ScheduleListResponse'
+              }
+            }
+          }
         },
         400: {
-          description: 'Bad request - Invalid specialization ID',
+          description: 'Bad request - Invalid parameters',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
-    },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
   },
   '/schedule/{id}': {
     get: {
@@ -558,11 +601,11 @@ export const schedulePaths = {
           name: 'id',
           required: true,
           schema: {
-            type: 'string',
+            type: 'string'
           },
           description: 'Schedule ID',
-          example: '67f24f29b661fd51f526da3a',
-        },
+          example: '67f24f29b661fd51f526da3a'
+        }
       ],
       responses: {
         200: {
@@ -570,41 +613,42 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    $ref: '#/components/schemas/Schedule',
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/ScheduleResponse'
+              }
+            }
+          }
         },
         404: {
           description: 'Schedule not found',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
     },
     patch: {
       tags: ['Schedule'],
@@ -617,45 +661,21 @@ export const schedulePaths = {
           name: 'id',
           required: true,
           schema: {
-            type: 'string',
+            type: 'string'
           },
           description: 'Schedule ID',
-          example: '67f24f29b661fd51f526da3a',
-        },
+          example: '67f24f29b661fd51f526da3a'
+        }
       ],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              properties: {
-                status: {
-                  type: 'string',
-                  enum: ['pending', 'confirmed', 'cancelled', 'completed'],
-                  description: 'Status of the schedule',
-                  example: 'confirmed',
-                },
-                date: {
-                  type: 'string',
-                  format: 'date',
-                  description: 'Date of the schedule',
-                  example: '2024-06-15',
-                },
-                startTime: {
-                  type: 'string',
-                  description: 'Start time of the schedule',
-                  example: '09:30',
-                },
-                endTime: {
-                  type: 'string',
-                  description: 'End time of the schedule',
-                  example: '10:15',
-                },
-              },
-            },
-          },
-        },
+              $ref: '#/components/schemas/UpdateScheduleRequest'
+            }
+          }
+        }
       },
       responses: {
         200: {
@@ -663,63 +683,64 @@ export const schedulePaths = {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    example: 'success',
-                  },
-                  data: {
-                    $ref: '#/components/schemas/Schedule',
-                  },
-                },
-              },
-            },
-          },
+                $ref: '#/components/schemas/ScheduleResponse'
+              }
+            }
+          }
         },
         400: {
           description: 'Bad request - Invalid input data',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         403: {
           description: 'Forbidden - User does not have permission to update this schedule',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
         404: {
           description: 'Schedule not found',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error',
-              },
-            },
-          },
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
         },
-      },
-    },
-  },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 };
 
 export const ScheduleSchemas = {
@@ -728,45 +749,39 @@ export const ScheduleSchemas = {
     properties: {
       _id: {
         type: 'string',
-        example: '67f24f29b661fd51f526da3a',
+        example: '67f24f29b661fd51f526da3a'
       },
       userId: {
         type: 'string',
         description: 'ID of the user who created the schedule',
-        example: '67e9180afb886c8bef80f7c3',
+        example: '67e9180afb886c8bef80f7c3'
       },
-      date: {
-        type: 'string',
-        format: 'date',
-        description: 'Date of the schedule',
-        example: '2024-06-15',
+      dayOffset: {
+        type: 'integer',
+        description: 'Day of the week (0 = Monday, 6 = Sunday)',
+        example: 1
       },
-      startTime: {
-        type: 'string',
-        description: 'Start time of the schedule',
-        example: '09:30',
-      },
-      endTime: {
-        type: 'string',
-        description: 'End time of the schedule',
-        example: '10:15',
+      timeOffset: {
+        type: 'integer',
+        description: 'Time slot (0 = morning, 1 = afternoon)',
+        example: 1
       },
       status: {
         type: 'string',
         enum: ['pending', 'confirmed', 'cancelled', 'completed'],
         description: 'Status of the schedule',
-        example: 'confirmed',
+        example: 'confirmed'
       },
       type: {
         type: 'string',
         enum: ['package', 'custom'],
         description: 'Type of schedule',
-        example: 'package',
+        example: 'package'
       },
       packageId: {
         type: 'string',
         description: 'ID of the consultation package (if type is package)',
-        example: '65fb32a9c5844e123f6789ef',
+        example: '6835430bd5a938c2795cdfa5'
       },
       services: {
         type: 'array',
@@ -776,17 +791,41 @@ export const ScheduleSchemas = {
             service: {
               type: 'string',
               description: 'ID of the service',
-              example: '65fb32a9c5844e123f6789ef',
+              example: '65fb32a9c5844e123f6789ef'
             },
             status: {
               type: 'string',
               enum: ['pending', 'completed', 'cancelled'],
               description: 'Status of the service',
-              example: 'pending',
-            },
-          },
+              example: 'pending'
+            }
+          }
         },
-        description: 'Services included in the schedule',
+        description: 'Services included in the schedule'
+      },
+      payments: {
+        type: 'object',
+        properties: {
+          payments: {
+            type: 'array',
+            items: {
+              type: 'string',
+              description: 'Payment ID'
+            },
+            description: 'Array of payment IDs related to this schedule'
+          },
+          totalPrice: {
+            type: 'number',
+            description: 'Total price of all services in the schedule',
+            example: 150000
+          },
+          totalPaid: {
+            type: 'number',
+            description: 'Total amount paid',
+            example: 0
+          }
+        },
+        description: 'Payment information for this schedule'
       },
       weekPeriod: {
         type: 'object',
@@ -795,38 +834,28 @@ export const ScheduleSchemas = {
             type: 'string',
             format: 'date-time',
             description: 'Start date of the week period',
-            example: '2024-06-10T00:00:00.000Z',
+            example: '2024-04-15T00:00:00.000Z'
           },
           to: {
             type: 'string',
             format: 'date-time',
             description: 'End date of the week period',
-            example: '2024-06-16T23:59:59.999Z',
-          },
-        },
-      },
-      dayOffset: {
-        type: 'integer',
-        description: 'Day of the week (0 = Monday, 6 = Sunday)',
-        example: 0,
-      },
-      timeOffset: {
-        type: 'integer',
-        description: 'Time slot index',
-        example: 0,
+            example: '2024-04-21T23:59:59.999Z'
+          }
+        }
       },
       createdAt: {
         type: 'string',
         format: 'date-time',
         description: 'When the schedule was created',
-        example: '2024-06-01T10:30:00Z',
+        example: '2024-06-01T10:30:00Z'
       },
       updatedAt: {
         type: 'string',
         format: 'date-time',
         description: 'When the schedule was last updated',
-        example: '2024-06-01T10:30:00Z',
-      },
-    },
-  },
+        example: '2024-06-01T10:30:00Z'
+      }
+    }
+  }
 };

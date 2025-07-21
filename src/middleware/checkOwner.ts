@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { CustomExpress } from '../pkg/app/response';
 import { userModel, doctorModel, scheduleModel } from '../models';
+import WaitingMessageModel from '../models/waitingMessage';
 import type { Model } from 'mongoose';
 import { ErrorCode } from '../pkg/e/code';
 import type { ROLE } from '../types';
@@ -8,12 +9,14 @@ export enum ModelRelate {
   USER = 'user',
   DOCTOR = 'doctor',
   SCHEDULE = 'schedule',
+  WAITING_MESSAGE = 'waitingMessage',
 }
 
 const models: { [key in ModelRelate]: Model<any> } = {
   [ModelRelate.USER]: userModel,
   [ModelRelate.DOCTOR]: doctorModel, // Assuming doctor is also a user
   [ModelRelate.SCHEDULE]: scheduleModel, // Assuming schedule is related to user
+  [ModelRelate.WAITING_MESSAGE]: WaitingMessageModel,
 };
 
 export const checkOwnerOrRole =

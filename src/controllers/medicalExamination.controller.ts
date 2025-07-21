@@ -8,7 +8,7 @@ import type { RequestHandler } from 'express';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId, SortOrder } from 'mongoose';
-import type { MedicalExaminationResult, SubclinicalResult } from '../types/medicalExamination';
+import type { MedicalExaminationResult, SubclinicalResult } from '../../../clinical/types/medicalExamination';
 import type { MongooseFindManyOptions } from '../repositories/type';
 
 export class MedicalExaminationResultController {

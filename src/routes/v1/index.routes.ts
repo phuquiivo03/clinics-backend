@@ -16,6 +16,7 @@ import imageRouter from './image.routes';
 import prescriptionRouter from './prescription.routes';
 import medicalExaminationRoutes from './medicalExamination.routes';
 import paymentRouter from './payment.routes';
+import waitingMessageRouter from './waitingMessage.routes';
 
 const router = Router();
 router.use('/user', userRouter);
@@ -35,5 +36,6 @@ router.use('/image', imageRouter);
 router.use('/prescription', prescriptionRouter);
 router.use('/medical-examinations', medicalExaminationRoutes);
 router.use('/payment', paymentRouter);
+router.use('/waiting-message', waitingMessageRouter);
 
 export default router;
