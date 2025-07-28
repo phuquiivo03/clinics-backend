@@ -326,7 +326,7 @@ export const schedulePaths = {
             type: 'string'
           },
           description: 'JSON string with filter, sort, and pagination options',
-          example: '{"filter":{"status":"confirmed"},"sort":{"date":-1},"pagination":{"page":1,"limit":10}}'
+          example: '{"filter":{"status":"confirmed"},"sort":{"date":-1},"pagination":{"page":1,"limit":10}, "populateOptions": {"path": "user", "select": ["name", "email"]}}'
         }
       ],
       responses: {
