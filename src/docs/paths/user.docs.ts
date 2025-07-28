@@ -37,6 +37,96 @@
 /**
  * @swagger
  * /user:
+ *   get:
+ *     summary: Get all users with pagination and filtering
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: options
+ *         schema:
+ *           type: string
+ *         description: JSON string with query options (filter, pagination, sort, etc.). If provided, other individual query parameters are ignored.
+ *         example: '{"filter":{"role":"user"},"pagination":{"page":1,"limit":10},"sort":{"createdAt":-1}}'
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination (used only if options is not provided)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of users per page (used only if options is not provided)
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [admin, normal, doctor]
+ *         description: Filter users by role (used only if options is not provided)
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter users by name (case-insensitive search) (used only if options is not provided)
+ *       - in: query
+ *         name: phoneNumber
+ *         schema:
+ *           type: string
+ *         description: Filter users by phone number (case-insensitive search) (used only if options is not provided)
+ *     responses:
+ *       200:
+ *         description: List of users retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/User'
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                           description: Total number of users
+ *                           example: 100
+ *                         page:
+ *                           type: integer
+ *                           description: Current page number
+ *                           example: 1
+ *                         limit:
+ *                           type: integer
+ *                           description: Number of users per page
+ *                           example: 10
+ *                         totalPages:
+ *                           type: integer
+ *                           description: Total number of pages
+ *                           example: 10
+ *       400:
+ *         description: Bad request - Invalid options format
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - Token does not have required permissions
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user:
  *   patch:
  *     summary: Update user profile
  *     tags: [Users]

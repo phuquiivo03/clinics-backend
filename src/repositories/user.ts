@@ -2,11 +2,12 @@ import type { Model, ObjectId } from 'mongoose';
 import type { User } from '../types';
 import { userModel } from '../models';
 import type { MongooseFindOneOptions, MongooseUpdateOptions } from './type';
+import { BaseRepositoryImpl, type BaseRepository } from './base';
 
-class UserRepository {
-  model: Model<User>;
+interface UserRepository extends BaseRepository<User> {}
+class UserRepositoryImpl extends BaseRepositoryImpl<User> implements UserRepository {
   constructor() {
-    this.model = userModel;
+    super(userModel);
   }
 
   async create(data: User): Promise<User | null> {
@@ -36,6 +37,7 @@ class UserRepository {
     return query.exec();
   }
 
+
   async update(
     id: ObjectId,
     data: Partial<User>,
@@ -52,6 +54,6 @@ class UserRepository {
   }
 }
 
-const userRepository = new UserRepository();
+const userRepository = new UserRepositoryImpl();
 
-export { userRepository, UserRepository };
+export { userRepository, type UserRepository };
