@@ -151,7 +151,7 @@
 
 /**
  * @swagger
- * /api/v1/schedule:
+ * /schedule:
  *   post:
  *     summary: Create a new schedule
  *     description: Creates a new schedule appointment for the authenticated user. Creates payment records for each service automatically.
@@ -199,7 +199,7 @@
 
 /**
  * @swagger
- * /api/v1/schedule/{id}:
+ * /schedule/{id}:
  *   get:
  *     summary: Get schedule by ID
  *     description: Retrieves a schedule by its ID

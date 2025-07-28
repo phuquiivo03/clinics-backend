@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/blog:
+ * /blog:
  *   post:
  *     summary: Create a new blog post
  *     tags: [Blogs]
@@ -96,7 +96,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/createMany:
+ * /blog/createMany:
  *   post:
  *     summary: Create multiple blog posts
  *     tags: [Blogs]
@@ -151,7 +151,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/active:
+ * /blog/active:
  *   get:
  *     summary: Get all active blog posts
  *     tags: [Blogs]
@@ -183,7 +183,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/{id}:
+ * /blog/{id}:
  *   get:
  *     summary: Get a blog post by ID
  *     tags: [Blogs]
@@ -276,7 +276,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/{id}/toggle:
+ * /blog/{id}/toggle:
  *   patch:
  *     summary: Toggle blog post active status
  *     tags: [Blogs]

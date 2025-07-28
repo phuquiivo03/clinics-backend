@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/user:
+ * /user:
  *   post:
  *     summary: Create a new user with password
  *     tags: [Users]
@@ -36,7 +36,7 @@
 
 /**
  * @swagger
- * /api/v1/user:
+ * /user:
  *   patch:
  *     summary: Update user profile
  *     tags: [Users]
@@ -94,7 +94,7 @@
 
 /**
  * @swagger
- * /api/v1/user/profile:
+ * /user/profile:
  *   get:
  *     summary: Get user profile
  *     tags: [Users]

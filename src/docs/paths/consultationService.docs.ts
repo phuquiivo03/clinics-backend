@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/consultation-service:
+ * /consultation-service:
  *  get:
  *      summary: Get all consultation services
  *      description: Retrieve a list of all consultation services
@@ -113,7 +113,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-service/{id}:
+ * /consultation-service/{id}:
  *  get:
  *      summary: Get a consultation service by ID
  *      description: Retrieve a specific consultation service by its ID
@@ -280,7 +280,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-service/many:
+ * /consultation-service/many:
  *  get:
  *      summary: Get many consultation services
  *      description: Retrieve a list of many consultation services

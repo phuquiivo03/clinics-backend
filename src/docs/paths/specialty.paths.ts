@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/specialties:
+ * /specialties:
  *   post:
  *     summary: Create a new specialty
  *     tags: [Specialties]
@@ -39,7 +39,7 @@
 
 /**
  * @swagger
- * /api/v1/specialties/many:
+ * /specialties/many:
  *   post:
  *     summary: Create multiple specialties
  *     tags: [Specialties]
@@ -78,7 +78,7 @@
 
 /**
  * @swagger
- * /api/v1/specialties:
+ * /specialties:
  *   get:
  *     summary: Get all specialties
  *     tags: [Specialties]
@@ -99,7 +99,7 @@
 
 /**
  * @swagger
- * /api/v1/specialties/{id}:
+ * /specialties/{id}:
  *   get:
  *     summary: Get a specialty by ID
  *     tags: [Specialties]
@@ -127,7 +127,7 @@
 
 /**
  * @swagger
- * /api/v1/specialties/{id}:
+ * /specialties/{id}:
  *   put:
  *     summary: Update a specialty
  *     tags: [Specialties]
@@ -172,7 +172,7 @@
 
 /**
  * @swagger
- * /api/v1/specialties/{id}:
+ * /specialties/{id}:
  *   delete:
  *     summary: Delete a specialty
  *     tags: [Specialties]

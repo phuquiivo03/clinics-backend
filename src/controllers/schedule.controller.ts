@@ -62,7 +62,7 @@ const create: RequestHandler = async (req, res, next) => {
                 },
               });
               if (selectedPackage == null) {
-                throw new Error('Period package not found');
+                throw new Error('  package not found');
               }
 
               const services: ScheduleService[] =
