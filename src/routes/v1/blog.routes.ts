@@ -10,6 +10,7 @@ const blogController = new BlogController();
 // Public routes
 router.get('/', blogController.findAll.bind(blogController));
 router.get('/active', blogController.findActive.bind(blogController));
+router.get('/many', blogController.findMany.bind(blogController));
 router.get('/:id', blogController.findById.bind(blogController));
 
 // Protected routes

@@ -8,6 +8,8 @@ import redisClient from '../db/redis_connection';
 import pinataService from '../services/pinata.service';
 import fs from 'fs';
 import { config } from '../config';
+import type { MongooseFindManyOptions } from '../repositories/type';
+
 export class BlogController {
   constructor() {}
 
@@ -108,6 +110,59 @@ export class BlogController {
       appExpress.response200(blogs);
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
+    }
+  }
+  
+  async findMany(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+      // Parse options from query parameter if provided, otherwise use default options
+      let options: MongooseFindManyOptions = {
+        sort: { createdAt: -1 }, // Sort by creation date, newest first
+        pagination: {
+          page: 1,
+          limit: 10
+        }
+      };
+
+      // If options are provided as a JSON string, parse them
+      if (req.query.options) {
+        try {
+          options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
+        } catch (error) {
+          return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+            message: 'Invalid options format. Please provide a valid JSON string.'
+          });
+        }
+      } else {
+        // Handle individual query parameters if options is not provided
+        const { page = 1, limit = 10, title, active, specialties } = req.query;
+        
+        // Build filter object based on query parameters
+        const filter: Record<string, any> = {};
+        if (active !== undefined) filter.active = active === 'true';
+        if (title) filter.title = { $regex: title, $options: 'i' }; // Case-insensitive search
+        if (specialties) {
+          // Handle specialties as comma-separated list
+          const specialtyIds = (specialties as string).split(',');
+          filter.specialties = { $in: specialtyIds };
+        }
+        
+        options = {
+          filter,
+          pagination: {
+            page: Number(page),
+            limit: Number(limit)
+          },
+          sort: { createdAt: -1 } // Sort by creation date, newest first
+        };
+      }
+      
+      const result = await blogService.findMany(options);
+      appExpress.response200(result);
+    } catch (error) {
+      console.error(error);
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
     }
   }
 
