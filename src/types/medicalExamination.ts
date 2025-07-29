@@ -10,6 +10,7 @@ export type MedicalExaminationResult = {
   examinationDate: string;
   symptoms: string[];
   subclinicalResults: SubclinicalResult[];
+  services: ConsultationService[] | ObjectId[];
   finalDiagnosis?: ICDCode[];
   prescription?: Prescription | ObjectId;
   followUp?: {

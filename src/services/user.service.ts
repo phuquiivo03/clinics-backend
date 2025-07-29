@@ -3,7 +3,8 @@ import user from '../models/user';
 import { type UserRepository, userRepository } from '../repositories';
 import type { User } from '../types';
 import jwt from 'jsonwebtoken';
-import type { MongooseFindOneOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
+import type { Pagination } from '../types/response';
 // Generate JWT
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'default_secret', {
@@ -62,7 +63,7 @@ class UserService {
 
   async findAndUpdate(id: ObjectId, data: Partial<User>): Promise<User | null> {
     try {
-      return this.userRepository.update(id, data);
+      return this.userRepository.update(id, data, { new: true, upsert: false });
     } catch (error) {
       throw error;
     }
@@ -94,6 +95,20 @@ class UserService {
         return this.userRepository.findOne({ filter: options.filter });
       }
       return null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(options?: MongooseFindManyOptions): Promise<{ data: User[] | []; pagination: Pagination }> {
+    try {
+      const result = await this.userRepository.findMany(options);
+      // Remove password from all users
+      const usersWithoutPassword = result.data.map(user => this.userWithoutPassword(user));
+      return {
+        data: usersWithoutPassword,
+        pagination: result.pagination
+      };
     } catch (error) {
       throw error;
     }

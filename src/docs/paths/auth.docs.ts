@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /auth/login:
  *   post:
  *     summary: Login user
  *     description: Login user
@@ -29,7 +29,7 @@
 
 /**
  * @swagger
- * /api/v1/auth/verify-otp:
+ * /auth/verify-otp:
  *   post:
  *     summary: Verify OTP
  *     description: Verify OTP
@@ -58,7 +58,7 @@
 
 /**
  * @swagger
- * /api/v1/auth/register:
+ * /auth/register:
  *   post:
  *     summary: Register a new user
  *     description: Register a new user with phone number, this api will send a OTP to the user's phone number
@@ -134,7 +134,7 @@
 
 /**
  * @swagger
- * /api/v1/auth/logout:
+ * /auth/logout:
  *   post:
  *     summary: Logout user
  *     description: Logs out the currently authenticated user by invalidating their authentication token and refresh token
@@ -164,7 +164,7 @@
 
 /**
  * @swagger
- * /api/v1/auth/refresh-token:
+ * /auth/refresh-token:
  *   post:
  *     summary: Refresh authentication token
  *     description: Generates a new authentication token and refresh token pair using a valid refresh token

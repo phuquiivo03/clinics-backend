@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/promotion:
+ * /promotion:
  *   post:
  *     summary: Create a new promotion
  *     tags: [Promotions]
@@ -100,7 +100,7 @@
 
 /**
  * @swagger
- * /api/v1/promotion/createMany:
+ * /promotion/createMany:
  *   post:
  *     summary: Create multiple promotions
  *     tags: [Promotions]
@@ -183,7 +183,7 @@
 
 /**
  * @swagger
- * /api/v1/promotion/active:
+ * /promotion/active:
  *   get:
  *     summary: Get all active promotions
  *     tags: [Promotions]
@@ -202,7 +202,7 @@
 
 /**
  * @swagger
- * /api/v1/promotion/{id}:
+ * /promotion/{id}:
  *   get:
  *     summary: Get a promotion by ID
  *     tags: [Promotions]

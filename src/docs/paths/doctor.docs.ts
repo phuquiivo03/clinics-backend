@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/doctor:
+ * /doctor:
  *   get:
  *     summary: Get all doctors
  *     tags: [Doctors]
@@ -107,7 +107,7 @@
 
 /**
  * @swagger
- * /api/v1/doctor/{id}:
+ * /doctor/{id}:
  *   get:
  *     summary: Get a doctor by ID
  *     tags: [Doctors]
@@ -136,7 +136,7 @@
 
 /**
  * @swagger
- * /api/v1/doctor/{id}:
+ * /doctor/{id}:
  *   patch:
  *     summary: Update a doctor
  *     tags: [Doctors]
@@ -218,7 +218,7 @@
 
 /**
  * @swagger
- * /api/v1/doctor/{id}:
+ * /doctor/{id}:
  *   delete:
  *     summary: Delete a doctor
  *     tags: [Doctors]

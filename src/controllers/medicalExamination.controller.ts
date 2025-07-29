@@ -8,8 +8,10 @@ import type { RequestHandler } from 'express';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId, SortOrder } from 'mongoose';
-import type { MedicalExaminationResult, SubclinicalResult } from '../../../clinical/types/medicalExamination';
+import type { MedicalExaminationResult, SubclinicalResult } from '../types/medicalExamination';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import waitingMessageService from '../services/waitingMessage.service';
+import { WaitingMessageStatus } from '../types/waitingMessage';
 
 export class MedicalExaminationResultController {
   private service: MedicalExaminationResultService;
@@ -39,6 +41,7 @@ export class MedicalExaminationResultController {
         ...validatedData,
         patient: validatedData.patient as unknown as ObjectId,
         subclinicalResults,
+        services: validatedData.services?.map(serviceId => serviceId as unknown as ObjectId),
         prescription: validatedData.prescription
           ? (validatedData.prescription as unknown as ObjectId)
           : undefined,
@@ -186,6 +189,13 @@ export class MedicalExaminationResultController {
         updateData.prescription = validatedData.prescription as unknown as ObjectId;
       }
 
+      // Handle services array with proper typing
+      if (validatedData.services) {
+        updateData.services = validatedData.services.map(serviceId => 
+          serviceId as unknown as ObjectId
+        );
+      }
+
       // Handle subclinical results with proper typing
       if (validatedData.subclinicalResults) {
         updateData.subclinicalResults = validatedData.subclinicalResults.map((item) => ({
@@ -197,6 +207,20 @@ export class MedicalExaminationResultController {
       }
 
       const result = await this.service.update(id, updateData as Partial<MedicalExaminationResult>);
+      // create message for patient after a week
+      //check if all the services are done
+      if (result.services.length === result.subclinicalResults.length) {
+        const message = await waitingMessageService.create({
+          userId: result.patient as unknown as ObjectId,
+          message: 'Your medical examination is complete. Please come to the clinic for the next step.',
+          triggerAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          status: WaitingMessageStatus.PENDING,
+        });
+        // create message for patient
+        // const message = await this.service.createMessage(id);
+      }
+
+      
       return appExpress.response200(result);
     } catch (error) {
       return appExpress.response400(ErrorCode.BAD_REQUEST, {

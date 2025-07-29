@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/room:
+ * /room:
  *  get:
  *      summary: Get all rooms
  *      description: Retrieve a list of all rooms
@@ -83,7 +83,7 @@
 
 /**
  * @swagger
- * /api/v1/room/{id}:
+ * /room/{id}:
  *  get:
  *      summary: Get a room by ID
  *      description: Retrieve a specific room by its ID
@@ -180,7 +180,7 @@
 
 /**
  * @swagger
- * /api/v1/room/createMany:
+ * /room/createMany:
  *  post:
  *      summary: Create multiple rooms
  *      description: Create multiple rooms with the provided details

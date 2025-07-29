@@ -114,7 +114,7 @@
 
 /**
  * @swagger
- * /api/v1/payment:
+ * /payment:
  *   post:
  *     summary: Create a new payment
  *     tags: [Payments]
@@ -196,7 +196,7 @@
 
 /**
  * @swagger
- * /api/v1/payment/user:
+ * /payment/user:
  *   get:
  *     summary: Get payments for the authenticated user
  *     tags: [Payments]
@@ -217,7 +217,7 @@
 
 /**
  * @swagger
- * /api/v1/payment/{id}:
+ * /payment/{id}:
  *   get:
  *     summary: Get a payment by ID
  *     tags: [Payments]
@@ -319,7 +319,7 @@
 
 /**
  * @swagger
- * /api/v1/payment/{id}/status:
+ * /payment/{id}/status:
  *   put:
  *     summary: Update payment status
  *     tags: [Payments]
@@ -365,7 +365,7 @@
 
 /**
  * @swagger
- * /api/v1/payment/status/{status}:
+ * /payment/status/{status}:
  *   get:
  *     summary: Get payments by status
  *     tags: [Payments]

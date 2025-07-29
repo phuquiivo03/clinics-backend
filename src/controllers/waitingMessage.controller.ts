@@ -6,7 +6,8 @@ import mongoose from 'mongoose';
 import { waitingMessageService } from '../services/index.service';
 import { createWaitingMessageSchema, updateWaitingMessageSchema } from '../schemas';
 import type { MongooseFindManyOptions } from '../repositories/type';
-import type { WaitingMessageStatus } from '../types/waitingMessage';
+import { WaitingMessageStatus } from '../types/waitingMessage';
+import { unknown } from 'zod';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -23,7 +24,7 @@ const create: RequestHandler = async (req, res, next) => {
     // Prepare message data with authenticated user
     const messageData = {
       ...validationResult.data,
-      userId: req.user.id,
+      userId:  validationResult.data.userId as unknown as ObjectId,
       triggerAt: new Date(validationResult.data.triggerAt),
     };
 
@@ -59,14 +60,19 @@ const findById: RequestHandler = async (req, res, next) => {
 const findByUserId: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
+    const trigged = req.query.trigged as unknown as boolean || false;
     const userId = req.user._id;
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {});
     }
 
-    const messages = await waitingMessageService.findMany({
-      filter: { userId },
-    });
+    const options: MongooseFindManyOptions = trigged ? {
+      filter: { userId, status: WaitingMessageStatus.PENDING, triggerAt: { $lte: new Date() } },
+    } : {
+      filter: { userId, status: WaitingMessageStatus.PENDING },
+    }
+
+    const messages = await waitingMessageService.findMany(options);
     
     return appExpress.response200(messages);
   } catch (error) {
@@ -149,3 +155,4 @@ export default {
   update,
   remove,
 }; 
+

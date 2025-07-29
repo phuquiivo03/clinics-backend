@@ -8,6 +8,10 @@
  *         - message
  *         - triggerAt
  *       properties:
+ *         userId:
+ *           type: string
+ *           description: ID of the user who owns this message
+ *           example: "67e9180afb886c8bef80f7c3"
  *         message:
  *           type: string
  *           description: The message content

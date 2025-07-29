@@ -12,6 +12,7 @@ import { config } from '../config';
 import redisClient from '../db/redis_connection';
 import pinataService from '../services/pinata.service';
 import fs from 'fs';
+import type { MongooseFindManyOptions } from '../repositories/type';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -128,8 +129,58 @@ const updateUserProfile: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getAllUsers: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    // Parse options from query parameter if provided, otherwise use default options
+    let options: MongooseFindManyOptions = {
+      sort: { createdAt: -1 }, // Sort by creation date, newest first
+      pagination: {
+        page: 1,
+        limit: 10
+      }
+    };
+
+    // If options are provided as a JSON string, parse them
+    if (req.query.options) {
+      try {
+        options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
+      } catch (error) {
+        return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+          message: 'Invalid options format. Please provide a valid JSON string.'
+        });
+      }
+    } else {
+      // Handle individual query parameters if options is not provided
+      const { page = 1, limit = 10, role, name, phoneNumber } = req.query;
+      
+      // Build filter object based on query parameters
+      const filter: Record<string, any> = {};
+      if (role) filter.role = role;
+      if (name) filter.name = { $regex: name, $options: 'i' }; // Case-insensitive search
+      if (phoneNumber) filter.phoneNumber = { $regex: phoneNumber, $options: 'i' };
+      
+      options = {
+        filter,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit)
+        },
+        sort: { createdAt: -1 } // Sort by creation date, newest first
+      };
+    }
+    
+    const result = await userService.findMany(options);
+    appExpress.response200(result);
+  } catch (error) {
+    console.error(error);
+    appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
+  }
+};
+
 export default {
   getUserProfile,
   createUser,
   updateUserProfile,
+  getAllUsers
 };

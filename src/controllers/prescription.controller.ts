@@ -5,7 +5,7 @@ import { Types, type ObjectId } from 'mongoose';
 import doctorService from '../services/doctor.service';
 import prescriptionService from '../services/prescription.service';
 import { prescriptionSchema, updatePrescriptionSchema } from '../schemas';
-import type { Medication } from '../../../clinical/types/medication';
+import type { Medication } from '../../../clinical/src/types/medication';
 import type { Prescription } from '../types';
 
 // Create prescription

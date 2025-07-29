@@ -1,6 +1,3 @@
-import { z } from 'zod';
-import { createSpecialtySchema, updateSpecialtySchema } from '../../schemas/specialty.schema';
-
 /**
  * @swagger
  * /specialties:

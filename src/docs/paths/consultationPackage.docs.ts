@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-package:
+ * /consultation-package:
  *   get:
  *     summary: Get all consultation packages
  *     tags: [Consultation Packages]
@@ -191,7 +191,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-package/{id}:
+ * /consultation-package/{id}:
  *   get:
  *     summary: Get a consultation package by ID
  *     tags: [Consultation Packages]
@@ -442,7 +442,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-package/many:
+ * /consultation-package/many:
  *   get:
  *     summary: Get many consultation packages
  *     tags: [Consultation Packages]

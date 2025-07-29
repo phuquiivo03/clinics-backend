@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/v1/blog:
+ * /blog:
  *   post:
  *     summary: Create a new blog post
  *     tags: [Blogs]
@@ -96,7 +96,90 @@
 
 /**
  * @swagger
- * /api/v1/blog/createMany:
+ * /blog/many:
+ *   get:
+ *     summary: Get blog posts with advanced filtering, sorting and pagination
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: query
+ *         name: options
+ *         schema:
+ *           type: string
+ *         description: JSON string with query options for filtering, sorting, and pagination. The options object can include filter, sort, and pagination properties.
+ *         example: '{"filter":{"active":true,"title":{"$regex":"health","$options":"i"}},"sort":{"createdAt":-1},"pagination":{"page":1,"limit":10}, "populateOptions": {"path": "author", "select": ["name", "email"]}}'
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         description: Page number (used only if options is not provided)
+ *         default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: number
+ *         description: Number of blogs per page (used only if options is not provided)
+ *         default: 10
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Filter blogs by title (case-insensitive search) (used only if options is not provided)
+ *       - in: query
+ *         name: active
+ *         schema:
+ *           type: boolean
+ *         description: Filter blogs by active status (used only if options is not provided)
+ *       - in: query
+ *         name: specialties
+ *         schema:
+ *           type: string
+ *         description: Filter blogs by specialties (comma-separated list of specialty IDs) (used only if options is not provided)
+ *     responses:
+ *       200:
+ *         description: List of blogs retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Blog'
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                           description: Total number of blogs
+ *                           example: 100
+ *                         page:
+ *                           type: integer
+ *                           description: Current page number
+ *                           example: 1
+ *                         limit:
+ *                           type: integer
+ *                           description: Number of blogs per page
+ *                           example: 10
+ *                         totalPages:
+ *                           type: integer
+ *                           description: Total number of pages
+ *                           example: 10
+ *       400:
+ *         description: Bad request - Invalid options format
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /blog/createMany:
  *   post:
  *     summary: Create multiple blog posts
  *     tags: [Blogs]
@@ -151,7 +234,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/active:
+ * /blog/active:
  *   get:
  *     summary: Get all active blog posts
  *     tags: [Blogs]
@@ -183,7 +266,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/{id}:
+ * /blog/{id}:
  *   get:
  *     summary: Get a blog post by ID
  *     tags: [Blogs]
@@ -276,7 +359,7 @@
 
 /**
  * @swagger
- * /api/v1/blog/{id}/toggle:
+ * /blog/{id}/toggle:
  *   patch:
  *     summary: Toggle blog post active status
  *     tags: [Blogs]

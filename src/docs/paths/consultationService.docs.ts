@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/consultation-service:
+ * /consultation-service:
  *  get:
  *      summary: Get all consultation services
  *      description: Retrieve a list of all consultation services
@@ -113,7 +113,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-service/{id}:
+ * /consultation-service/{id}:
  *  get:
  *      summary: Get a consultation service by ID
  *      description: Retrieve a specific consultation service by its ID
@@ -280,56 +280,7 @@
 
 /**
  * @swagger
- * /api/v1/consultation-service/specialization/{specialization}:
- *   get:
- *     summary: Get consultation services by specialization
- *     tags: [Consultation Service]
- *     security: []  # No authentication required to view consultation services
- *     parameters:
- *       - in: path
- *         name: specialization
- *         required: true
- *         schema:
- *           type: string
- *         description: The specialization to filter consultation services by
- *         example: "cardiology"
- *     responses:
- *       200:
- *         description: List of consultation services with the specified specialization retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/ConsultationService'
- *                   example: [{
- *                     _id: "666666666666666666666666",
- *                     name: "Cardiac Stress Test",
- *                     description: "A comprehensive cardiac stress test to evaluate heart function under physical stress",
- *                     duration: 60,
- *                     room: "67f2519ec765019a3fd5ec9a",
- *                     doctor: "67e9180afb886c8bef80f7c3",
- *                     price: 150000,
- *                     specialization: "cardiology"
- *                   }]
- *                 message:
- *                   type: string
- *                   example: "Consultation services retrieved successfully"
- *       404:
- *         description: No consultation services found with the specified specialization
- *       500:
- *         description: Internal server error
- */
-
-/**
- * @swagger
- * /api/v1/consultation-service/many:
+ * /consultation-service/many:
  *  get:
  *      summary: Get many consultation services
  *      description: Retrieve a list of many consultation services

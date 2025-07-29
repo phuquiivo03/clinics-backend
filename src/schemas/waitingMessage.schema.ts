@@ -3,6 +3,7 @@ import { WaitingMessageStatus } from '../types/waitingMessage';
 
 // Schema for creating a waiting message
 export const createWaitingMessageSchema = z.object({
+  userId: z.string().min(1, 'User ID is required'),
   message: z.string().min(1, 'Message is required'),
   status: z.enum([
     WaitingMessageStatus.PENDING,

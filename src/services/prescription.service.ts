@@ -1,6 +1,7 @@
 import { PrescriptionRepositoryImpl, type PrescriptionRepository } from '../repositories';
 import type { Prescription } from '../types';
 import type { ObjectId } from 'mongoose';
+import type { Pagination } from '../types/response';
 
 class PrescriptionService {
   private prescriptionRepository: PrescriptionRepository;
@@ -33,7 +34,7 @@ class PrescriptionService {
     }
   }
 
-  async getByPatientId(patientId: ObjectId): Promise<Prescription[]> {
+  async getByPatientId(patientId: ObjectId): Promise<{ data: Prescription[]; pagination: Pagination }> {
     try {
       return await this.prescriptionRepository.findMany({
         filter: { patient: patientId },
@@ -46,7 +47,7 @@ class PrescriptionService {
     }
   }
 
-  async getByDoctorId(doctorId: ObjectId): Promise<Prescription[]> {
+  async getByDoctorId(doctorId: ObjectId): Promise<{ data: Prescription[]; pagination: Pagination }> {
     try {
       return await this.prescriptionRepository.findMany({
         filter: { doctor: doctorId },
@@ -90,7 +91,7 @@ class PrescriptionService {
     isPaid?: boolean;
     startDate?: string;
     endDate?: string;
-  }): Promise<Prescription[]> {
+  }): Promise<{ data: Prescription[]; pagination: Pagination }> {
     try {
       const filter: any = {};
 
