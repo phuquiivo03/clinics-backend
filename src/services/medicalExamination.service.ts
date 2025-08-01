@@ -6,6 +6,7 @@ import {
 } from '../repositories/medicalExamination';
 import type { ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import type { AppResponse } from '../dto/response';
 
 class MedicalExaminationResultService {
   readonly repository: MedicalExaminationResultRepository;
@@ -28,7 +29,7 @@ class MedicalExaminationResultService {
 
   async findMany(
     options: MongooseFindManyOptions,
-  ): Promise<{ data: MedicalExaminationResult[] | []; pagination: any }> {
+  ): Promise<AppResponse<MedicalExaminationResult[]>> {
     try {
       return await this.repository.findMany(options);
     } catch (error) {
@@ -50,7 +51,7 @@ class MedicalExaminationResultService {
 
   async findByPatientId(
     patientId: string,
-  ): Promise<{ data: MedicalExaminationResult[] | []; pagination: any }> {
+  ): Promise<AppResponse<MedicalExaminationResult[]>> {
     try {
       return await this.repository.findByPatientId(patientId as unknown as ObjectId);
     } catch (error) {

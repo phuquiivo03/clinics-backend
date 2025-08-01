@@ -9,6 +9,7 @@ import type {
   MongooseUpdateOptions,
 } from '../repositories/type';
 import type { ConsultationPackage } from '../types';
+import type { AppResponse } from '../dto/response';
 
 class ConsultationPackageService {
   readonly consultationPackageRepository: ConsultationPackageRepository;
@@ -57,7 +58,7 @@ class ConsultationPackageService {
     }
   }
 
-  async findAll(options: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
+  async findAll(options: MongooseFindManyOptions): Promise<AppResponse<ConsultationPackage[]>> {
     try {
       return this.consultationPackageRepository.findAll(options);
     } catch (error) {
@@ -65,7 +66,7 @@ class ConsultationPackageService {
     }
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<ConsultationPackage[]> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<ConsultationPackage[]>> {
     try {
       return this.consultationPackageRepository.findMany(options);
     } catch (error) {
