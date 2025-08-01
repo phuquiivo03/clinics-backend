@@ -59,32 +59,67 @@ export class MedicalExaminationResultController {
 
   findMany: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
-    const { page = 1, limit = 10 } = req.query;
-    const requestOptionsString = req.query.options as string;
-    let requestOptions: MongooseFindManyOptions = {};
-    let pageOptions: MongooseFindManyOptions = {
-      pagination: {
-        page: Number(page),
-        limit: Number(limit),
-      },
-    };
-
+    
     try {
-      if (requestOptionsString) {
-        requestOptions = JSON.parse(requestOptionsString);
+      // Parse options from query parameter if provided, otherwise use default options
+      let options: MongooseFindManyOptions = {
+        sort: { createdAt: -1 }, // Sort by creation date, newest first
+        pagination: {
+          page: 1,
+          limit: 10
+        }
+      };
+
+      // If options are provided as a JSON string, parse them
+      if (req.query.options) {
+        try {
+          options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
+        } catch (error) {
+          return appExpress.response400(ErrorCode.BAD_REQUEST, {
+            message: 'Invalid options format. Please provide a valid JSON string.'
+          });
+        }
+      } else {
+        // Handle individual query parameters if options is not provided
+        const { 
+          page = 1, 
+          limit = 10, 
+          patient, 
+          examinationDate,
+          startDate,
+          endDate,
+          prescription,
+          hasServices
+        } = req.query;
+        
+        // Build filter object based on query parameters
+        const filter: Record<string, any> = {};
+        if (patient) filter.patient = patient;
+        if (examinationDate) filter.examinationDate = examinationDate;
+        if (prescription) filter.prescription = prescription;
+        if (hasServices === 'true') filter.services = { $exists: true, $not: { $size: 0 } };
+        if (hasServices === 'false') filter.services = { $exists: false };
+        
+        // Date range filtering based on createdAt
+        if (startDate || endDate) {
+          filter.createdAt = {};
+          if (startDate) filter.createdAt.$gte = new Date(startDate as string);
+          if (endDate) filter.createdAt.$lte = new Date(endDate as string);
+        }
+        
+        options = {
+          filter,
+          pagination: {
+            page: Number(page),
+            limit: Number(limit)
+          },
+          sort: { createdAt: -1 } // Sort by creation date, newest first
+        };
       }
 
-      const results = await this.service.findMany({
-        ...requestOptions,
-        ...pageOptions,
-      });
+      const results = await this.service.findMany(options);
       return appExpress.response200(results);
     } catch (error) {
-      if (error instanceof SyntaxError) {
-        return appExpress.response400(ErrorCode.BAD_REQUEST, {
-          message: 'Invalid options format: ' + error.message,
-        });
-      }
       return appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
         message: (error as Error).message,
       });

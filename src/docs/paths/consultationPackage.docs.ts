@@ -9,16 +9,24 @@
  * @swagger
  * /consultation-package:
  *   get:
- *     summary: Get all consultation packages
+ *     summary: Get all consultation packages with advanced filtering and pagination
  *     tags: [Consultation Packages]
  *     parameters:
+ *       - in: query
+ *         name: options
+ *         schema:
+ *           type: string
+ *         description: |
+ *           JSON string containing query options. When provided, individual parameters are ignored.
+ *           Example: {"filter":{"category":"cardiology","price":{"$gte":100,"$lte":500}},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}
+ *         example: '{"filter":{"category":"cardiology"},"pagination":{"page":1,"limit":5}}'
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           minimum: 1
  *           default: 1
- *         description: Page number for pagination
+ *         description: Page number for pagination (ignored if options parameter is provided)
  *       - in: query
  *         name: limit
  *         schema:
@@ -26,15 +34,36 @@
  *           minimum: 1
  *           maximum: 100
  *           default: 10
- *         description: Number of items per page
+ *         description: Number of items per page (ignored if options parameter is provided)
  *       - in: query
- *         name: search
+ *         name: title
  *         schema:
  *           type: string
- *         description: Search term to filter packages by title or description
+ *         description: Search term to filter packages by title (case-insensitive, ignored if options parameter is provided)
+ *         example: "heart"
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter packages by exact category match (ignored if options parameter is provided)
+ *         example: "cardiology"
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *           minimum: 0
+ *         description: Minimum price filter (ignored if options parameter is provided)
+ *         example: 100
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *           minimum: 0
+ *         description: Maximum price filter (ignored if options parameter is provided)
+ *         example: 1000
  *     responses:
  *       200:
- *         description: List of consultation packages
+ *         description: List of consultation packages with pagination information
  *         content:
  *           application/json:
  *             schema:
@@ -62,6 +91,19 @@
  *                     pages:
  *                       type: integer
  *                       example: 10
+ *       400:
+ *         description: Invalid request parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Invalid options format. Please provide a valid JSON string.
  *       500:
  *         description: Server error
  *         content:
@@ -447,6 +489,14 @@
  *     summary: Get many consultation packages
  *     tags: [Consultation Packages]
  *     parameters:
+ *       - in: query
+ *         name: options
+ *         schema:
+ *           type: string
+ *         description: |
+ *           JSON string containing query options. When provided, individual parameters are ignored.
+ *           Example: {"filter":{"category":"cardiology","price":{"$gte":100,"$lte":500}},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}
+ *         example: '{"filter":{"category":"cardiology"},"pagination":{"page":1,"limit":5}}'
  *       - in: query
  *         name: page
  *         schema:

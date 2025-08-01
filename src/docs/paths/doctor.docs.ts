@@ -2,23 +2,85 @@
  * @swagger
  * /doctor:
  *   get:
- *     summary: Get all doctors
+ *     summary: Get all doctors with advanced filtering and pagination
  *     tags: [Doctors]
  *     security: []  # No authentication required to view doctors
  *     parameters:
  *       - in: query
+ *         name: options
+ *         schema:
+ *           type: string
+ *         description: |
+ *           JSON string containing query options. When provided, individual parameters are ignored.
+ *           Example: {"filter":{"specialization":"67e9180afb886c8bef80f7c3","experience":{"$gte":5}},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}
+ *         example: '{"filter":{"specialization":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5}}'
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination (ignored if options parameter is provided)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page (ignored if options parameter is provided)
+ *       - in: query
  *         name: specialization
  *         schema:
  *           type: string
- *         description: Filter doctors by specialization
+ *           format: uid
+ *         description: Filter doctors by specialization ID (ignored if options parameter is provided)
+ *         example: "67e9180afb886c8bef80f7c3"
  *       - in: query
  *         name: minExperience
  *         schema:
  *           type: integer
- *         description: Filter doctors by minimum years of experience
+ *           minimum: 0
+ *         description: Filter doctors by minimum years of experience (ignored if options parameter is provided)
+ *         example: 5
+ *       - in: query
+ *         name: maxExperience
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *         description: Filter doctors by maximum years of experience (ignored if options parameter is provided)
+ *         example: 20
+ *       - in: query
+ *         name: minConsultationFee
+ *         schema:
+ *           type: number
+ *           minimum: 0
+ *         description: Minimum consultation fee filter (ignored if options parameter is provided)
+ *         example: 100000
+ *       - in: query
+ *         name: maxConsultationFee
+ *         schema:
+ *           type: number
+ *           minimum: 0
+ *         description: Maximum consultation fee filter (ignored if options parameter is provided)
+ *         example: 500000
+ *       - in: query
+ *         name: minRating
+ *         schema:
+ *           type: number
+ *           minimum: 0
+ *           maximum: 5
+ *         description: Minimum average rating filter (ignored if options parameter is provided)
+ *         example: 4.0
+ *       - in: query
+ *         name: bio
+ *         schema:
+ *           type: string
+ *         description: Search term to filter doctors by bio (case-insensitive, ignored if options parameter is provided)
+ *         example: "cardiologist"
  *     responses:
  *       200:
- *         description: List of doctors retrieved successfully
+ *         description: List of doctors retrieved successfully with pagination information
  *         content:
  *           application/json:
  *             schema:
@@ -28,6 +90,34 @@
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Doctor'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 50
+ *                     page:
+ *                       type: integer
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     pages:
+ *                       type: integer
+ *                       example: 5
+ *       400:
+ *         description: Invalid request parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Invalid options format. Please provide a valid JSON string.
  *   post:
  *     summary: Create a new doctor
  *     tags: [Doctors]
