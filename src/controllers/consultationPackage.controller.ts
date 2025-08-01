@@ -151,15 +151,54 @@ const findAll: RequestHandler = async (req, res, next) => {
 
 const findMany: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const { page, limit } = req.query;
-  const options: MongooseFindManyOptions = {
-    pagination: {
-      page: parseInt(page as string),
-      limit: parseInt(limit as string),
-    },
-    selectFields: ['title', 'titleImage', 'category', 'price', 'description'],
-  };
+  
   try {
+    // Parse options from query parameter if provided, otherwise use default options
+    let options: MongooseFindManyOptions = {
+      sort: { createdAt: -1 }, // Sort by creation date, newest first
+      pagination: {
+        page: 1,
+        limit: 10
+      },
+      selectFields: ['title', 'titleImage', 'category', 'price', 'description']
+    };
+
+    // If options are provided as a JSON string, parse them
+    if (req.query.options) {
+      try {
+        console.log('OPTIONS', req.query.options);
+        options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
+      } catch (error) {
+        return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+          message: 'Invalid options format. Please provide a valid JSON string.'
+        });
+      }
+    } else {
+      console.log('NO OPTIONS');
+      // Handle individual query parameters if options is not provided
+      const { page = 1, limit = 10, title, category, minPrice, maxPrice } = req.query;
+      
+      // Build filter object based on query parameters
+      const filter: Record<string, any> = {};
+      if (title) filter.title = { $regex: title, $options: 'i' }; // Case-insensitive search
+      if (category) filter.category = category;
+      if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
+      }
+      
+      options = {
+        filter,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit)
+        },
+        sort: { createdAt: -1 }, // Sort by creation date, newest first
+        selectFields: ['title', 'titleImage', 'category', 'price', 'description']
+      };
+    }
+
     const consultationPackages = await consultationPackageService.findMany(options);
     appExpress.response200(consultationPackages);
   } catch (error) {

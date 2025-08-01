@@ -5,7 +5,7 @@ import { Types, type ObjectId } from 'mongoose';
 import doctorService from '../services/doctor.service';
 import prescriptionService from '../services/prescription.service';
 import { prescriptionSchema, updatePrescriptionSchema } from '../schemas';
-import type { Medication } from '../../../clinical/src/types/medication';
+import type { Medication } from '../types/medication';
 import type { Prescription } from '../types';
 
 // Create prescription
@@ -204,17 +204,70 @@ const updatePaymentStatus: RequestHandler = async (req, res) => {
 // Get all prescriptions (admin only)
 const getAllPrescriptions: RequestHandler = async (req, res) => {
   try {
-    const { isPaid, startDate, endDate } = req.query;
+    // Parse options from query parameter if provided, otherwise use default options
+    let filters: any = {
+      sort: { createdAt: -1 }, // Sort by creation date, newest first
+      pagination: {
+        page: 1,
+        limit: 10
+      }
+    };
 
-    const filters: any = {};
-    if (isPaid !== undefined) {
-      filters.isPaid = isPaid === 'true';
-    }
-    if (startDate) {
-      filters.startDate = startDate as string;
-    }
-    if (endDate) {
-      filters.endDate = endDate as string;
+    // If options are provided as a JSON string, parse them
+    if (req.query.options) {
+      try {
+        filters = JSON.parse(req.query.options as string);
+      } catch (error) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid options format. Please provide a valid JSON string.'
+        });
+        return;
+      }
+    } else {
+      // Handle individual query parameters if options is not provided
+      const { 
+        page = 1, 
+        limit = 10, 
+        isPaid, 
+        startDate, 
+        endDate, 
+        patient, 
+        doctor, 
+        diagnosis,
+        minTotalCost,
+        maxTotalCost 
+      } = req.query;
+      
+      // Build filter object based on query parameters
+      const filterObj: Record<string, any> = {};
+      if (isPaid !== undefined) filterObj.isPaid = isPaid === 'true';
+      if (patient) filterObj.patient = patient;
+      if (doctor) filterObj.doctor = doctor;
+      if (diagnosis) filterObj.diagnosis = { $regex: diagnosis, $options: 'i' }; // Case-insensitive search
+      
+      // Date range filtering
+      if (startDate || endDate) {
+        filterObj.createdAt = {};
+        if (startDate) filterObj.createdAt.$gte = new Date(startDate as string);
+        if (endDate) filterObj.createdAt.$lte = new Date(endDate as string);
+      }
+      
+      // Total cost range filtering
+      if (minTotalCost || maxTotalCost) {
+        filterObj.totalCost = {};
+        if (minTotalCost) filterObj.totalCost.$gte = Number(minTotalCost);
+        if (maxTotalCost) filterObj.totalCost.$lte = Number(maxTotalCost);
+      }
+      
+      filters = {
+        filter: filterObj,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit)
+        },
+        sort: { createdAt: -1 } // Sort by creation date, newest first
+      };
     }
 
     const prescriptions = await prescriptionService.getAll(filters);

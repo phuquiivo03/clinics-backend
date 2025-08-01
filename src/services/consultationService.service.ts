@@ -6,6 +6,7 @@ import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../reposit
 import type { ConsultationService } from '../types';
 import type { ObjectId } from 'mongoose';
 import type { Pagination } from '../types/response';
+import type { AppResponse } from '../dto/response';
 
 class ConsultationServiceService {
   readonly consultationServiceRepository: ConsultationServiceRepository;
@@ -51,7 +52,7 @@ class ConsultationServiceService {
 
   async findAll(
     options?: MongooseFindManyOptions,
-  ): Promise<{ data: ConsultationService[]; pagination: Pagination }> {
+  ): Promise<AppResponse<ConsultationService[]>> {
     try {
       return this.consultationServiceRepository.findAll(options);
     } catch (error) {
@@ -61,7 +62,7 @@ class ConsultationServiceService {
 
   async findMany(
     options?: MongooseFindManyOptions,
-  ): Promise<{ data: ConsultationService[]; pagination: Pagination }> {
+  ): Promise<AppResponse<ConsultationService[]>> {
     try {
       return this.consultationServiceRepository.findMany(options);
     } catch (error) {

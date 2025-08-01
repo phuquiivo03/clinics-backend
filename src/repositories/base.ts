@@ -5,6 +5,7 @@ import type {
   MongooseUpdateOptions,
 } from './type';
 import type { Pagination } from '../types/response';
+import type { AppResponse } from '../dto/response';
 
 interface BaseRepository<T> {
   create(data: Partial<T>, session?: ClientSession): Promise<T | null>;
@@ -16,9 +17,9 @@ interface BaseRepository<T> {
     session?: ClientSession,
   ): Promise<T | null>;
   update(id: ObjectId, data: Partial<T>, options: MongooseUpdateOptions): Promise<T | null>;
-  findAll(options?: MongooseFindManyOptions): Promise<{ data: T[] | []; pagination: Pagination }>;
+  findAll(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>>;
   delete(id: ObjectId): Promise<T | null>;
-  findMany(options?: MongooseFindManyOptions): Promise<{ data: T[] | []; pagination: Pagination }>;
+  findMany(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>>;
 }
 
 class BaseRepositoryImpl<T> implements BaseRepository<T> {
@@ -75,7 +76,7 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
   async findAll(
     options?: MongooseFindManyOptions,
-  ): Promise<{ data: T[] | []; pagination: Pagination }> {
+  ): Promise<AppResponse<T[]>> {
     try {
       // Just delegate to findMany with the provided options
       return this.findMany(options);
@@ -106,7 +107,7 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
   async findMany(
     options?: MongooseFindManyOptions,
-  ): Promise<{ data: T[] | []; pagination: Pagination }> {
+  ): Promise<AppResponse<T[]>> {
     console.log('FINDMANY::OPTIONS', options);
     try {
       const filter = options?.filter || {};

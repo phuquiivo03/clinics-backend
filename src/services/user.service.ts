@@ -5,6 +5,7 @@ import type { User } from '../types';
 import jwt from 'jsonwebtoken';
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { Pagination } from '../types/response';
+import type { AppResponse } from '../dto/response';
 // Generate JWT
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'default_secret', {
@@ -100,7 +101,7 @@ class UserService {
     }
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<{ data: User[] | []; pagination: Pagination }> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<User[]>> {
     try {
       const result = await this.userRepository.findMany(options);
       // Remove password from all users

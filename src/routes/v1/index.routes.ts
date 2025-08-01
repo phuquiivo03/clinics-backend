@@ -33,7 +33,7 @@ router.use('/blog', blogRouter);
 router.use('/promotion', promotionRouter);
 router.use('/specialties', specialtyRouter);
 router.use('/image', imageRouter);
-router.use('/prescription', prescriptionRouter);
+router.use('/prescriptions', prescriptionRouter);
 router.use('/medical-examinations', medicalExaminationRoutes);
 router.use('/payment', paymentRouter);
 router.use('/waiting-message', waitingMessageRouter);

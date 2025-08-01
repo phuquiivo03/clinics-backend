@@ -2,6 +2,7 @@ import type { Promotion } from '../types/promotion';
 import { type PromotionRepository, PromotionRepositoryImpl } from '../repositories/promotion';
 import type { ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import type { AppResponse } from '../dto/response';
 
 export class PromotionService {
   private promotionRepository: PromotionRepository;
@@ -30,11 +31,11 @@ export class PromotionService {
     return await this.promotionRepository.findById(id);
   }
 
-  async findAll(): Promise<Promotion[]> {
+  async findAll(): Promise<AppResponse<Promotion[]>> {
     return await this.promotionRepository.findAll();
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<Promotion[]> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<Promotion[]>> {
     return await this.promotionRepository.findMany(options);
   }
 
@@ -46,7 +47,7 @@ export class PromotionService {
     return await this.promotionRepository.delete(id);
   }
 
-  async findActive(): Promise<Promotion[]> {
+  async findActive(): Promise<AppResponse<Promotion[]>> {
     const now = new Date();
     return await this.promotionRepository.findMany({
       filter: {

@@ -2,6 +2,7 @@ import { PrescriptionRepositoryImpl, type PrescriptionRepository } from '../repo
 import type { Prescription } from '../types';
 import type { ObjectId } from 'mongoose';
 import type { Pagination } from '../types/response';
+import type { AppResponse } from '../dto/response';
 
 class PrescriptionService {
   private prescriptionRepository: PrescriptionRepository;
@@ -91,7 +92,7 @@ class PrescriptionService {
     isPaid?: boolean;
     startDate?: string;
     endDate?: string;
-  }): Promise<{ data: Prescription[]; pagination: Pagination }> {
+  }): Promise<AppResponse<Prescription[]>> {
     try {
       const filter: any = {};
 

@@ -1,3 +1,4 @@
+import type { AppResponse } from '../dto/response';
 import { DoctorRepositoryImpl, type DoctorRepository } from '../repositories';
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { Doctor } from '../types';
@@ -22,7 +23,7 @@ class DoctorService {
     }
   }
 
-  async findAll(options?: MongooseFindManyOptions): Promise<Doctor[] | []> {
+  async findAll(options?: MongooseFindManyOptions): Promise<AppResponse<Doctor[]>> {
     try {
       return this.doctorRepository.findAll(options);
     } catch (error) {
@@ -38,7 +39,7 @@ class DoctorService {
     }
   }
 
-  async findMany(options: MongooseFindManyOptions): Promise<Doctor[] | []> {
+  async findMany(options: MongooseFindManyOptions): Promise<AppResponse<Doctor[]>> {
     try {
       return this.doctorRepository.findMany(options);
     } catch (error) {

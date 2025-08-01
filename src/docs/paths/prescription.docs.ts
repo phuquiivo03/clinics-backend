@@ -502,8 +502,21 @@ export const prescriptionPaths = {
       security: [{ bearerAuth: [] }],
       parameters: [
         {
+          name: 'options',
+          in: 'query',
+          description:
+            'JSON string containing query options. When provided, individual parameters are ignored. Example: {"filter":{"isPaid":true,"doctor":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}',
+          required: false,
+          schema: {
+            type: 'string',
+          },
+          example: '{"filter":{"isPaid":true},"pagination":{"page":1,"limit":5}}',
+        },
+        {
           name: 'page',
           in: 'query',
+          description: 'Page number for pagination (ignored if options parameter is provided)',
+          required: false,
           schema: {
             type: 'integer',
             minimum: 1,
@@ -514,13 +527,95 @@ export const prescriptionPaths = {
         {
           name: 'limit',
           in: 'query',
+          description: 'Number of items per page (ignored if options parameter is provided)',
+          required: false,
           schema: {
             type: 'integer',
             minimum: 1,
             maximum: 100,
             default: 10,
           },
-          description: 'Number of prescriptions per page',
+        },
+        {
+          name: 'isPaid',
+          in: 'query',
+          description: 'Filter by payment status (ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+            enum: ['true', 'false'],
+          },
+        },
+        {
+          name: 'startDate',
+          in: 'query',
+          description:
+            'Filter by start date (ISO format, ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+        },
+        {
+          name: 'endDate',
+          in: 'query',
+          description: 'Filter by end date (ISO format, ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+        },
+        {
+          name: 'patient',
+          in: 'query',
+          description: 'Filter by patient ID (ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'uid',
+          },
+        },
+        {
+          name: 'doctor',
+          in: 'query',
+          description: 'Filter by doctor ID (ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+            format: 'uid',
+          },
+        },
+        {
+          name: 'diagnosis',
+          in: 'query',
+          description:
+            'Search term to filter prescriptions by diagnosis (case-insensitive, ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'string',
+          },
+        },
+        {
+          name: 'minTotalCost',
+          in: 'query',
+          description: 'Minimum total cost filter (ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'number',
+            minimum: 0,
+          },
+        },
+        {
+          name: 'maxTotalCost',
+          in: 'query',
+          description: 'Maximum total cost filter (ignored if options parameter is provided)',
+          required: false,
+          schema: {
+            type: 'number',
+            minimum: 0,
+          },
         },
       ],
       responses: {

@@ -6,6 +6,7 @@ import type {
   MongooseFindManyOptions,
   MongooseUpdateOptions,
 } from '../repositories/type';
+import type { AppResponse } from '../dto/response';
 
 class RoomService {
   async create(data: Partial<Room>): Promise<Room | null> {
@@ -60,7 +61,7 @@ class RoomService {
     }
   }
 
-  async findAll(options?: MongooseFindManyOptions): Promise<Room[] | []> {
+  async findAll(options?: MongooseFindManyOptions): Promise<AppResponse<Room[]>> {
     try {
       return roomRepository.findAll(options);
     } catch (error) {

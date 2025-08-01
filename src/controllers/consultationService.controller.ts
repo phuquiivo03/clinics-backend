@@ -138,20 +138,53 @@ const findAll: RequestHandler = async (req, res, next) => {
 
 const findMany: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const { page = '1', limit = '10' } = req.query;
-  const pageNum = parseInt(page as string);
-  const limitNum = parseInt(limit as string);
-
-  const options: MongooseFindManyOptions = {
-    pagination: {
-      page: pageNum,
-      limit: limitNum,
-    },
-  };
-
+  
   try {
-    const result = await consultationServiceService.findMany(options);
+    // Parse options from query parameter if provided, otherwise use default options
+    let options: MongooseFindManyOptions = {
+      sort: { createdAt: -1 }, // Sort by creation date, newest first
+      pagination: {
+        page: 1,
+        limit: 10
+      }
+    };
 
+    // If options are provided as a JSON string, parse them
+    if (req.query.options) {
+      try {
+        options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
+      } catch (error) {
+        return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+          message: 'Invalid options format. Please provide a valid JSON string.'
+        });
+      }
+    } else {
+      // Handle individual query parameters if options is not provided
+      const { page = 1, limit = 10, name, minPrice, maxPrice, duration, specialization, doctor } = req.query;
+      
+      // Build filter object based on query parameters
+      const filter: Record<string, any> = {};
+      if (name) filter.name = { $regex: name, $options: 'i' }; // Case-insensitive search
+      if (specialization) filter.specialization = specialization;
+      if (doctor) filter.doctor = doctor;
+      if (duration) filter.duration = Number(duration);
+      if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
+      }
+      
+      options = {
+        filter,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit)
+        },
+        sort: { createdAt: -1 } // Sort by creation date, newest first
+      };
+    }
+
+    const result = await consultationServiceService.findMany(options);
     appExpress.response200(result);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {

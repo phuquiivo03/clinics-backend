@@ -2,6 +2,7 @@ import type { ObjectId } from 'mongoose';
 import type { Specialty } from '../types';
 import { type SpecialtyRepository, SpecialtyRepositoryImpl } from '../repositories';
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
+import type { AppResponse } from '../dto/response';
 
 class SpecialtyService {
   readonly specialtyRepository: SpecialtyRepository;
@@ -47,7 +48,7 @@ class SpecialtyService {
     }
   }
 
-  async findAll(): Promise<Specialty[]> {
+  async findAll(): Promise<AppResponse<Specialty[]>> {
     try {
       return this.specialtyRepository.findAll();
     } catch (error) {
@@ -101,7 +102,7 @@ class SpecialtyService {
     }
   }
 
-  async findMany(options: MongooseFindManyOptions): Promise<Specialty[]> {
+  async findMany(options: MongooseFindManyOptions): Promise<AppResponse<Specialty[]>> {
     try {
       return this.specialtyRepository.findMany(options);
     } catch (error) {
