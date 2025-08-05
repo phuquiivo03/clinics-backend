@@ -37,6 +37,11 @@ const consultationServiceSchema = new Schema<ConsultationService>(
       ref: 'Specialty',
       required: true,
     },
+    type: {
+      type: String,
+      enum: ['consultation', 'treatment'],
+      required: true,
+    },
   },
   {
     timestamps: true,

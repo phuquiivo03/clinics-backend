@@ -8,6 +8,7 @@ export interface ConsultationService {
   description: string;
   specialization: Specialty | ObjectId;
   duration: number;
+  type: 'consultation' | 'treatment';
   room: Room | ObjectId;
   doctor: User | ObjectId;
   price: number;

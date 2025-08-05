@@ -10,6 +10,9 @@ export const createConsultationServiceSchema = z.object({
   doctor: z.string().min(1, 'Doctor ID is required'),
   price: z.number().positive('Price must be a positive number'),
   specialization: z.string().refine(isValidObjectId, 'Invalid specialization ID format').optional(),
+  type: z.enum(['consultation', 'treatment'], {
+    errorMap: () => ({ message: "Type must be either 'consultation' or 'treatment'" }),
+  }),
 });
 
 // Schema for updating a consultation service

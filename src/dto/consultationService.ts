@@ -5,4 +5,5 @@ export interface IConsultationServiceRequest {
   room: string; // Room ID
   doctor: string; // Doctor ID
   price: number;
+  type: 'consultation' | 'treatment';
 }
