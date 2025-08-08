@@ -7,6 +7,7 @@ const router = Router();
 // Public routes
 
 router.get('/', doctorController.getAllDoctors);
+router.get('/findOne', doctorController.findOne);
 router.get('/specialization/:specialization', doctorController.findBySpecialization);
 router.use(authMiddleware, checkRole([ROLE.ADMIN]));
 router.post('/', doctorController.createDoctorProfile);
