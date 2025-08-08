@@ -66,6 +66,8 @@ jobs:
             sudo docker rmi phuquivo03/clinics-management-backend:latest || true
             sudo docker run -d \
             --name clinics-management-backend \
+            --network docker-compose-scripts_web \
+            --expose 3000 \
             -e PORT='${PORT}' \
             -e SERVER_URL=\"https://devq-be0x7.site\" \
             -e NODE_ENV=\"dev\" \
