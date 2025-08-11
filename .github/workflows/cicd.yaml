@@ -67,7 +67,7 @@ jobs:
             sudo docker run -d \
             --name clinics-management-backend \
             --network docker-compose-scripts_web \
-            --expose 3000 \
+            --expose 8081 \
             -e PORT='${PORT}' \
             -e SERVER_URL=\"https://devq-be0x7.site\" \
             -e NODE_ENV=\"dev\" \
