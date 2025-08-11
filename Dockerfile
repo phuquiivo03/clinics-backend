@@ -33,7 +33,7 @@ RUN bun install --no-optional --ignore-scripts
 # Copy source code
 COPY . .
 
-EXPOSE 3000
+EXPOSE 8081
 
 # Start the application directly with TypeScript
 CMD ["bun", "run", "start"]

@@ -40,7 +40,9 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
   async findOne(options: MongooseFindOneOptions): Promise<T | null> {
     try {
       if (options.filter) {
-        return this.model.findOne(options.filter);
+        const query = this.model.findOne(options.filter);
+        query.populate(options.populateOptions || []);
+        return query.exec();
       }
       return this.model.findOne(options);
     } catch (error) {
@@ -74,9 +76,7 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
   }
 
-  async findAll(
-    options?: MongooseFindManyOptions,
-  ): Promise<AppResponse<T[]>> {
+  async findAll(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>> {
     try {
       // Just delegate to findMany with the provided options
       return this.findMany(options);
@@ -105,9 +105,7 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
   }
 
-  async findMany(
-    options?: MongooseFindManyOptions,
-  ): Promise<AppResponse<T[]>> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>> {
     console.log('FINDMANY::OPTIONS', options);
     try {
       const filter = options?.filter || {};
