@@ -740,7 +740,197 @@ export const schedulePaths = {
         }
       }
     }
-  }
+  },
+     '/schedule/doctor/{id}': {
+    get: {
+      tags: ['Schedule'],
+      summary: 'Get schedule by Doctor ID',
+      description: 'Retrieves a specific schedule by its Doctor ID \n\n - **Not userid of doctor**, \n\n - Require: Admin | Doctor role',
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: {
+            type: 'string'
+          },
+          description: 'Doctor ID',
+          example: '67e9180afb886c8bef80f7c3'
+        }
+      ],
+      responses: {
+        200: {
+          "msg": "OK",
+          "code": 200,
+          data: [
+            {
+            "_id": "686625cfde26133440bc519a",
+            "userId": "67f77f3369c84748d2f4df3d",
+            "weekPeriod": {
+                "from": "2025-08-11T00:00:00.000Z",
+                "to": "2025-08-17T23:59:59.999Z",
+                "_id": "686625cfde26133440bc519b"
+            },
+            "dayOffset": 4,
+            "type": "services",
+            "timeOffset": 0,
+            "status": "confirmed",
+            "services": [
+                {
+                    "service": "684d7d3c1a2b3c4d5e6f7a1d",
+                    "status": "pending",
+                    "_id": "686625cfde26133440bc519c"
+                }
+            ],
+            "payments": {
+                "payments": [
+                    "686625cfde26133440bc51a0"
+                ],
+                "totalPrice": 500000,
+                "totalPaid": 500000,
+                "_id": "686625cfde26133440bc519d"
+            },
+            "packageInfo": "68564f4d14037ab8fa3e2ddc",
+            "createdAt": "2025-07-03T06:40:15.157Z",
+            "updatedAt": "2025-07-03T06:40:15.293Z",
+            "__v": 0
+        }
+          ]
+          }
+        },
+        404: {
+          description: 'Schedule not found',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        401: {
+          description: 'Unauthorized - Invalid or missing token',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        403: {
+          description: 'Forbidden - User does not have permission to update this schedule',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    },
+    patch: {
+      tags: ['Schedule'],
+      summary: 'Update schedule by ID',
+      description: 'Updates a specific schedule. User must be the owner or have admin/doctor role.',
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: {
+            type: 'string'
+          },
+          description: 'Schedule ID',
+          example: '67f24f29b661fd51f526da3a'
+        }
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/UpdateScheduleRequest'
+            }
+          }
+        }
+      },
+      responses: {
+        200: {
+          description: 'Schedule updated successfully',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ScheduleResponse'
+              }
+            }
+          }
+        },
+        400: {
+          description: 'Bad request - Invalid input data',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        401: {
+          description: 'Unauthorized - Invalid or missing token',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        403: {
+          description: 'Forbidden - User does not have permission to update this schedule',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        404: {
+          description: 'Schedule not found',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              }
+            }
+          }
+        }
+      }
+    }
 };
 
 export const ScheduleSchemas = {

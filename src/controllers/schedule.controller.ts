@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express';
 import {
   consultationPackageService,
   consultationServiceService,
+  doctorService,
   periodPackageService,
   scheduleService,
 } from '../services/index.service';
@@ -422,6 +423,107 @@ const update: RequestHandler = async (req, res, next) => {
     });
   }
 };
+
+
+const findByDoctorId: RequestHandler = async (req, res, next) => {
+  const doctorId = req.params.id;
+  const defaultDayOffset = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  const {timeOffset, dayOffset = `${defaultDayOffset}`} = req.query;
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+
+    const currentWeek = new Date();
+    const startOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 1),
+    );
+    const endOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 8),
+    );
+
+    // format to vietnam time
+    startOfWeek.setHours(7, 0, 0, 0);
+
+    endOfWeek.setHours(6, 59, 59, 999);
+
+    // find all schedules that are in the current week
+
+
+    const result = await doctorService.aggregate([
+      {
+        $match: {
+          "_id": new mongoose.Types.ObjectId(doctorId)
+            
+        }
+      },  {
+        $lookup: {
+          from: "ConsultationServices",
+          localField: "specialization",
+          foreignField: "specialization",
+          as: "services"
+        }
+      } , {
+        $addFields: {
+          serviceIds: {
+            $map: {
+              input: "$services",
+              as: "service",
+              in: "$$service._id"
+            }
+          }
+        }
+      }, {
+        // take schedule which contain the service of doctor
+        $lookup: {
+          from: "Schedules",
+          let: {
+            serviceIds: "$serviceIds"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $size: {
+                    $filter: {
+                      input: "$services",
+                      as: "schService",
+                      cond: {
+                        $in: ["$$schService.service", "$$serviceIds"]
+                      }
+                    }
+                  }
+                }
+              }
+            }, {
+              $match: {
+                'weekPeriod.from': {
+              $gte: new Date(startOfWeek),
+            },
+            'weekPeriod.to': {
+              $lte: new Date(endOfWeek),
+            }
+              }
+            }
+          ],
+          as: "schedules"
+        }
+      }, {
+        $project: {
+          schedules: 1
+        }
+      }
+    ]);
+
+
+if(result.length === 0) {
+    appExpress.response200([]);
+  } else {
+    appExpress.response200(result[0].schedules);
+  }
+
+  } catch (error) {
+    appExpress.response400(ErrorCode.BAD_REQUEST, { message: (error as Error).message });
+  }
+};
 export default {
   create,
   findById,
@@ -430,4 +532,5 @@ export default {
   getCurrentWeek,
   findBySpecialization,
   update,
+  findByDoctorId
 };

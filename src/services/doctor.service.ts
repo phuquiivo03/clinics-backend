@@ -46,6 +46,14 @@ class DoctorService {
       throw error;
     }
   }
+
+  async aggregate(pipeline: any[], options?: MongooseFindManyOptions): Promise<any[]> {
+    try {
+      return this.doctorRepository.aggregate(pipeline, options);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const doctorService = new DoctorService();
