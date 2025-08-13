@@ -38,9 +38,13 @@ class ScheduleService {
     }
   }
 
-  async update(id: ObjectId, schedule: Partial<Schedule>, session?: ClientSession): Promise<Schedule | null> {
+  async update(
+    id: ObjectId,
+    schedule: Partial<Schedule>,
+    session?: ClientSession,
+  ): Promise<Schedule | null> {
     try {
-      return scheduleRepository.update(id, schedule, {session});
+      return scheduleRepository.update(id, schedule, { session });
     } catch (error) {
       throw error;
     }

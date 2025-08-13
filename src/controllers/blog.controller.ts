@@ -112,7 +112,7 @@ export class BlogController {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
     }
   }
-  
+
   async findMany(req: Request, res: Response, next: NextFunction): Promise<void> {
     const appExpress = new CustomExpress(req, res, next);
     try {
@@ -121,8 +121,8 @@ export class BlogController {
         sort: { createdAt: -1 }, // Sort by creation date, newest first
         pagination: {
           page: 1,
-          limit: 10
-        }
+          limit: 10,
+        },
       };
 
       // If options are provided as a JSON string, parse them
@@ -131,13 +131,13 @@ export class BlogController {
           options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
         } catch (error) {
           return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
-            message: 'Invalid options format. Please provide a valid JSON string.'
+            message: 'Invalid options format. Please provide a valid JSON string.',
           });
         }
       } else {
         // Handle individual query parameters if options is not provided
         const { page = 1, limit = 10, title, active, specialties } = req.query;
-        
+
         // Build filter object based on query parameters
         const filter: Record<string, any> = {};
         if (active !== undefined) filter.active = active === 'true';
@@ -147,17 +147,17 @@ export class BlogController {
           const specialtyIds = (specialties as string).split(',');
           filter.specialties = { $in: specialtyIds };
         }
-        
+
         options = {
           filter,
           pagination: {
             page: Number(page),
-            limit: Number(limit)
+            limit: Number(limit),
           },
-          sort: { createdAt: -1 } // Sort by creation date, newest first
+          sort: { createdAt: -1 }, // Sort by creation date, newest first
         };
       }
-      
+
       const result = await blogService.findMany(options);
       appExpress.response200(result);
     } catch (error) {

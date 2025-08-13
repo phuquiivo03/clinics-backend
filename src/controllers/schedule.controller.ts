@@ -109,7 +109,7 @@ const create: RequestHandler = async (req, res, next) => {
               let totalPrice = 0;
               for (const serviceItem of services) {
                 const serviceDetails = await consultationServiceService.findById(
-                  serviceItem.service as ObjectId
+                  serviceItem.service as ObjectId,
                 );
                 if (serviceDetails) {
                   totalPrice += serviceDetails.price || 0;
@@ -147,9 +147,9 @@ const create: RequestHandler = async (req, res, next) => {
       for (const serviceItem of schedule.services) {
         // Get service details to get the price
         const serviceDetails = await consultationServiceService.findById(
-          serviceItem.service as ObjectId
+          serviceItem.service as ObjectId,
         );
-        
+
         if (serviceDetails) {
           // Create a default payment for this service
           const paymentData: Omit<Payment, '_id'> = {
@@ -163,7 +163,7 @@ const create: RequestHandler = async (req, res, next) => {
             paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             createdAt: new Date(),
           };
-          
+
           // Create payment record
           const payment = await paymentService.create(paymentData);
           if (payment && payment._id) {
@@ -182,9 +182,13 @@ const create: RequestHandler = async (req, res, next) => {
       }
       // Update the schedule with payment IDs
       if (schedule.payments && schedule.payments.payments.length > 0) {
-        await scheduleService.update(schedule._id as ObjectId, { 
-          payments: schedule.payments 
-        }, session);
+        await scheduleService.update(
+          schedule._id as ObjectId,
+          {
+            payments: schedule.payments,
+          },
+          session,
+        );
       }
 
       await session.commitTransaction();
@@ -424,14 +428,12 @@ const update: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 const findByDoctorId: RequestHandler = async (req, res, next) => {
   const doctorId = req.params.id;
-  const defaultDayOffset = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
-  const {timeOffset, dayOffset = `${defaultDayOffset}`} = req.query;
   const appExpress = new CustomExpress(req, res, next);
-  try {
 
+  //tat ca current week current day
+  try {
     const currentWeek = new Date();
     const startOfWeek = new Date(
       currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 1),
@@ -440,43 +442,72 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
       currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 8),
     );
 
+    // get current day offset
+    const currentDayOffset: number = new Date().getDay() - 1; // 0 is Sunday, so we subtract 1 to make it 0 for Monday
+
     // format to vietnam time
     startOfWeek.setHours(7, 0, 0, 0);
 
     endOfWeek.setHours(6, 59, 59, 999);
+    const {
+      from = startOfWeek,
+      to = endOfWeek,
+      dayOffset = currentDayOffset,
+      fullWeek = false,
+    } = req.query;
 
+    if (!new Date(from as string) || !new Date(to as string)) {
+      console.log(from, to);
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
+        message: 'Invalid date range',
+      });
+    }
+    console.log(typeof fullWeek)
+    const offsetConfig = fullWeek ? {$match: {}} : {$match: {dayOffset: parseInt(dayOffset as string, 10)}};
     // find all schedules that are in the current week
-
+    const matchOption = {
+      $match: {
+        'weekPeriod.from': {
+          $gte: new Date(from as string),
+        },
+        'weekPeriod.to': {
+          $lte: new Date(to as string),
+        },
+        
+      },
+    };
 
     const result = await doctorService.aggregate([
       {
         $match: {
-          "_id": new mongoose.Types.ObjectId(doctorId)
-            
-        }
-      },  {
+          _id: new mongoose.Types.ObjectId(doctorId),
+        },
+      },
+      {
         $lookup: {
-          from: "ConsultationServices",
-          localField: "specialization",
-          foreignField: "specialization",
-          as: "services"
-        }
-      } , {
+          from: 'ConsultationServices',
+          localField: 'specialization',
+          foreignField: 'specialization',
+          as: 'services',
+        },
+      },
+      {
         $addFields: {
           serviceIds: {
             $map: {
-              input: "$services",
-              as: "service",
-              in: "$$service._id"
-            }
-          }
-        }
-      }, {
+              input: '$services',
+              as: 'service',
+              in: '$$service._id',
+            },
+          },
+        },
+      },
+      {
         // take schedule which contain the service of doctor
         $lookup: {
-          from: "Schedules",
+          from: 'Schedules',
           let: {
-            serviceIds: "$serviceIds"
+            serviceIds: '$serviceIds',
           },
           pipeline: [
             {
@@ -484,42 +515,34 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
                 $expr: {
                   $size: {
                     $filter: {
-                      input: "$services",
-                      as: "schService",
+                      input: '$services',
+                      as: 'schService',
                       cond: {
-                        $in: ["$$schService.service", "$$serviceIds"]
-                      }
-                    }
-                  }
-                }
-              }
-            }, {
-              $match: {
-                'weekPeriod.from': {
-              $gte: new Date(startOfWeek),
+                        $in: ['$$schService.service', '$$serviceIds'],
+                      },
+                    },
+                  },
+                },
+              },
             },
-            'weekPeriod.to': {
-              $lte: new Date(endOfWeek),
-            }
-              }
-            }
+            matchOption,
+            offsetConfig
           ],
-          as: "schedules"
-        }
-      }, {
+          as: 'schedules',
+        },
+      },
+      {
         $project: {
-          schedules: 1
-        }
-      }
+          schedules: 1,
+        },
+      },
     ]);
 
-
-if(result.length === 0) {
-    appExpress.response200([]);
-  } else {
-    appExpress.response200(result[0].schedules);
-  }
-
+    if (result.length === 0) {
+      appExpress.response200([]);
+    } else {
+      appExpress.response200(result[0].schedules);
+    }
   } catch (error) {
     appExpress.response400(ErrorCode.BAD_REQUEST, { message: (error as Error).message });
   }
@@ -532,5 +555,5 @@ export default {
   getCurrentWeek,
   findBySpecialization,
   update,
-  findByDoctorId
+  findByDoctorId,
 };

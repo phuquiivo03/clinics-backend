@@ -35,7 +35,9 @@ class PrescriptionService {
     }
   }
 
-  async getByPatientId(patientId: ObjectId): Promise<{ data: Prescription[]; pagination: Pagination }> {
+  async getByPatientId(
+    patientId: ObjectId,
+  ): Promise<{ data: Prescription[]; pagination: Pagination }> {
     try {
       return await this.prescriptionRepository.findMany({
         filter: { patient: patientId },
@@ -48,7 +50,9 @@ class PrescriptionService {
     }
   }
 
-  async getByDoctorId(doctorId: ObjectId): Promise<{ data: Prescription[]; pagination: Pagination }> {
+  async getByDoctorId(
+    doctorId: ObjectId,
+  ): Promise<{ data: Prescription[]; pagination: Pagination }> {
     try {
       return await this.prescriptionRepository.findMany({
         filter: { doctor: doctorId },

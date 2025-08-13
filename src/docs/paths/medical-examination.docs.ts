@@ -8,12 +8,14 @@ export const medicalExaminationPaths = {
         {
           name: 'options',
           in: 'query',
-          description: 'JSON string containing query options. When provided, individual parameters are ignored. Example: {"filter":{"patient":"67e9180afb886c8bef80f7c3","examinationDate":"2024-01-15"},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}',
+          description:
+            'JSON string containing query options. When provided, individual parameters are ignored. Example: {"filter":{"patient":"67e9180afb886c8bef80f7c3","examinationDate":"2024-01-15"},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}',
           required: false,
           schema: {
             type: 'string',
           },
-          example: '{"filter":{"patient":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5}}',
+          example:
+            '{"filter":{"patient":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5}}',
         },
         {
           name: 'page',
@@ -49,7 +51,8 @@ export const medicalExaminationPaths = {
         {
           name: 'examinationDate',
           in: 'query',
-          description: 'Filter by exact examination date (ignored if options parameter is provided)',
+          description:
+            'Filter by exact examination date (ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',
@@ -60,7 +63,8 @@ export const medicalExaminationPaths = {
         {
           name: 'startDate',
           in: 'query',
-          description: 'Filter by start date for created records (ignored if options parameter is provided)',
+          description:
+            'Filter by start date for created records (ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',
@@ -71,7 +75,8 @@ export const medicalExaminationPaths = {
         {
           name: 'endDate',
           in: 'query',
-          description: 'Filter by end date for created records (ignored if options parameter is provided)',
+          description:
+            'Filter by end date for created records (ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',
@@ -93,7 +98,8 @@ export const medicalExaminationPaths = {
         {
           name: 'hasServices',
           in: 'query',
-          description: 'Filter by presence of services - true for records with services, false for records without services (ignored if options parameter is provided)',
+          description:
+            'Filter by presence of services - true for records with services, false for records without services (ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',

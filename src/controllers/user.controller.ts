@@ -137,8 +137,8 @@ const getAllUsers: RequestHandler = async (req, res, next) => {
       sort: { createdAt: -1 }, // Sort by creation date, newest first
       pagination: {
         page: 1,
-        limit: 10
-      }
+        limit: 10,
+      },
     };
 
     // If options are provided as a JSON string, parse them
@@ -147,29 +147,29 @@ const getAllUsers: RequestHandler = async (req, res, next) => {
         options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
       } catch (error) {
         return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
-          message: 'Invalid options format. Please provide a valid JSON string.'
+          message: 'Invalid options format. Please provide a valid JSON string.',
         });
       }
     } else {
       // Handle individual query parameters if options is not provided
       const { page = 1, limit = 10, role, name, phoneNumber } = req.query;
-      
+
       // Build filter object based on query parameters
       const filter: Record<string, any> = {};
       if (role) filter.role = role;
       if (name) filter.name = { $regex: name, $options: 'i' }; // Case-insensitive search
       if (phoneNumber) filter.phoneNumber = { $regex: phoneNumber, $options: 'i' };
-      
+
       options = {
         filter,
         pagination: {
           page: Number(page),
-          limit: Number(limit)
+          limit: Number(limit),
         },
-        sort: { createdAt: -1 } // Sort by creation date, newest first
+        sort: { createdAt: -1 }, // Sort by creation date, newest first
       };
     }
-    
+
     const result = await userService.findMany(options);
     appExpress.response200(result);
   } catch (error) {
@@ -182,5 +182,5 @@ export default {
   getUserProfile,
   createUser,
   updateUserProfile,
-  getAllUsers
+  getAllUsers,
 };

@@ -17,15 +17,13 @@ export interface Schedule {
   payments: SchedulePaymentInfo; //payment info -> tổng tiền, tổng tiền đã thanh toán, tổng tiền chưa thanh toán
 }
 
-
-
 export type SchedulePaymentInfo = {
   payments: ObjectId[] | Payment[];
   totalPrice: number;
   totalPaid: number;
-}
+};
 
- // mới tạo lịch xong -> tạo luôn payments
+// mới tạo lịch xong -> tạo luôn payments
 export interface ScheduleService {
   service: ObjectId | ConsultationService;
   status: ScheduleServiceStatus;

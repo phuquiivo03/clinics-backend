@@ -10,4 +10,4 @@ class PaymentRepositoryImpl extends BaseRepositoryImpl<Payment> implements Payme
   }
 }
 
-export { PaymentRepositoryImpl, type PaymentRepository }; 
+export { PaymentRepositoryImpl, type PaymentRepository };

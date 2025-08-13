@@ -37,7 +37,6 @@ class UserRepositoryImpl extends BaseRepositoryImpl<User> implements UserReposit
     return query.exec();
   }
 
-
   async update(
     id: ObjectId,
     data: Partial<User>,

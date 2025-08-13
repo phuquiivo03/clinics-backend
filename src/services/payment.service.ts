@@ -22,14 +22,14 @@ export class PaymentService {
   async findAll(): Promise<{
     data: Payment[] | [];
     pagination: Pagination;
-}> {
+  }> {
     return await this.paymentRepository.findMany();
   }
 
   async findMany(options?: MongooseFindManyOptions): Promise<{
     data: Payment[] | [];
     pagination: Pagination;
-}> {
+  }> {
     return await this.paymentRepository.findMany(options);
   }
 
@@ -41,11 +41,7 @@ export class PaymentService {
     return await this.paymentRepository.delete(id);
   }
 
-
-
-
-
   async updatePaymentStatus(id: ObjectId, status: PaymentStatus): Promise<Payment | null> {
     return await this.paymentRepository.update(id, { status }, { new: true });
   }
-} 
+}

@@ -49,9 +49,7 @@ class MedicalExaminationResultService {
     }
   }
 
-  async findByPatientId(
-    patientId: string,
-  ): Promise<AppResponse<MedicalExaminationResult[]>> {
+  async findByPatientId(patientId: string): Promise<AppResponse<MedicalExaminationResult[]>> {
     try {
       return await this.repository.findByPatientId(patientId as unknown as ObjectId);
     } catch (error) {

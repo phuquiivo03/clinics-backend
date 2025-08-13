@@ -8,7 +8,8 @@ export const prescriptionPaths = {
         {
           name: 'options',
           in: 'query',
-          description: 'JSON string containing query options. When provided, individual parameters are ignored. Example: {"filter":{"isPaid":true,"doctor":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}',
+          description:
+            'JSON string containing query options. When provided, individual parameters are ignored. Example: {"filter":{"isPaid":true,"doctor":"67e9180afb886c8bef80f7c3"},"pagination":{"page":1,"limit":5},"sort":{"createdAt":-1}}',
           required: false,
           schema: {
             type: 'string',
@@ -48,7 +49,8 @@ export const prescriptionPaths = {
         {
           name: 'startDate',
           in: 'query',
-          description: 'Filter by start date (ISO format, ignored if options parameter is provided)',
+          description:
+            'Filter by start date (ISO format, ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',
@@ -88,7 +90,8 @@ export const prescriptionPaths = {
         {
           name: 'diagnosis',
           in: 'query',
-          description: 'Search term to filter prescriptions by diagnosis (case-insensitive, ignored if options parameter is provided)',
+          description:
+            'Search term to filter prescriptions by diagnosis (case-insensitive, ignored if options parameter is provided)',
           required: false,
           schema: {
             type: 'string',

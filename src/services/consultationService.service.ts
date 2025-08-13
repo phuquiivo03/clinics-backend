@@ -50,9 +50,7 @@ class ConsultationServiceService {
     }
   }
 
-  async findAll(
-    options?: MongooseFindManyOptions,
-  ): Promise<AppResponse<ConsultationService[]>> {
+  async findAll(options?: MongooseFindManyOptions): Promise<AppResponse<ConsultationService[]>> {
     try {
       return this.consultationServiceRepository.findAll(options);
     } catch (error) {
@@ -60,9 +58,7 @@ class ConsultationServiceService {
     }
   }
 
-  async findMany(
-    options?: MongooseFindManyOptions,
-  ): Promise<AppResponse<ConsultationService[]>> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<ConsultationService[]>> {
     try {
       return this.consultationServiceRepository.findMany(options);
     } catch (error) {

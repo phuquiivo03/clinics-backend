@@ -20,11 +20,11 @@ const waitingMessageSchema = new mongoose.Schema<WaitingMessage>(
     triggerAt: {
       type: Date,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
   },
 );
 
-export default mongoose.model<WaitingMessage>('WaitingMessage', waitingMessageSchema); 
+export default mongoose.model<WaitingMessage>('WaitingMessage', waitingMessageSchema);

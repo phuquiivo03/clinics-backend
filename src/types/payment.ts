@@ -16,7 +16,6 @@ export enum PaymentMethod {
   UNKNOWN = 'unknown',
 }
 
-
 export type Payment = {
   _id?: ObjectId;
   schedule: ObjectId | Schedule;
@@ -30,6 +29,3 @@ export type Payment = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-
-
-

@@ -166,8 +166,6 @@ const createDoctorProfile: RequestHandler = async (req, res, next) => {
   }
 };
 
-
-
 const findOne: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   let options: MongooseFindOneOptions = {

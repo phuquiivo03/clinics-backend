@@ -115,10 +115,10 @@ export const waitingMessagePaths = {
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/CreateWaitingMessageRequest'
-            }
-          }
-        }
+              $ref: '#/components/schemas/CreateWaitingMessageRequest',
+            },
+          },
+        },
       },
       responses: {
         201: {
@@ -126,60 +126,62 @@ export const waitingMessagePaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/WaitingMessageResponse'
-              }
-            }
-          }
+                $ref: '#/components/schemas/WaitingMessageResponse',
+              },
+            },
+          },
         },
         400: {
           description: 'Bad request - Invalid input data',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
-    }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
+    },
   },
   '/waiting-message/many': {
     get: {
       tags: ['Waiting Messages'],
       summary: 'Get multiple waiting messages with filtering options',
-      description: 'Retrieves waiting messages based on query parameters. Requires admin or doctor role.',
+      description:
+        'Retrieves waiting messages based on query parameters. Requires admin or doctor role.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
           in: 'query',
           name: 'options',
           schema: {
-            type: 'string'
+            type: 'string',
           },
           description: 'JSON string with filter, sort, and pagination options',
-          example: '{"filter":{"status":"pending"},"sort":{"triggerAt":1},"pagination":{"page":1,"limit":10}}'
-        }
+          example:
+            '{"filter":{"status":"pending"},"sort":{"triggerAt":1},"pagination":{"page":1,"limit":10}}',
+        },
       ],
       responses: {
         200: {
@@ -187,43 +189,43 @@ export const waitingMessagePaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/WaitingMessagePaginatedResponse'
-              }
-            }
-          }
+                $ref: '#/components/schemas/WaitingMessagePaginatedResponse',
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         403: {
           description: 'Forbidden - User does not have required role',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
-    }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
+    },
   },
   '/waiting-message/user': {
     get: {
@@ -237,33 +239,33 @@ export const waitingMessagePaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/WaitingMessageListResponse'
-              }
-            }
-          }
+                $ref: '#/components/schemas/WaitingMessageListResponse',
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
-    }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
+    },
   },
   '/waiting-message/{id}': {
     get: {
@@ -277,11 +279,11 @@ export const waitingMessagePaths = {
           name: 'id',
           required: true,
           schema: {
-            type: 'string'
+            type: 'string',
           },
           description: 'Waiting message ID',
-          example: '65fb32a9c5844e123f6789ef'
-        }
+          example: '65fb32a9c5844e123f6789ef',
+        },
       ],
       responses: {
         200: {
@@ -289,47 +291,48 @@ export const waitingMessagePaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/WaitingMessageResponse'
-              }
-            }
-          }
+                $ref: '#/components/schemas/WaitingMessageResponse',
+              },
+            },
+          },
         },
         404: {
           description: 'Waiting message not found',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
     },
     patch: {
       tags: ['Waiting Messages'],
       summary: 'Update waiting message status',
-      description: 'Updates the status of a specific waiting message. User must be the owner or have admin/doctor role.',
+      description:
+        'Updates the status of a specific waiting message. User must be the owner or have admin/doctor role.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -337,21 +340,21 @@ export const waitingMessagePaths = {
           name: 'id',
           required: true,
           schema: {
-            type: 'string'
+            type: 'string',
           },
           description: 'Waiting message ID',
-          example: '65fb32a9c5844e123f6789ef'
-        }
+          example: '65fb32a9c5844e123f6789ef',
+        },
       ],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/UpdateWaitingMessageRequest'
-            }
-          }
-        }
+              $ref: '#/components/schemas/UpdateWaitingMessageRequest',
+            },
+          },
+        },
       },
       responses: {
         200: {
@@ -359,67 +362,68 @@ export const waitingMessagePaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/WaitingMessageResponse'
-              }
-            }
-          }
+                $ref: '#/components/schemas/WaitingMessageResponse',
+              },
+            },
+          },
         },
         400: {
           description: 'Bad request - Invalid input data',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         403: {
           description: 'Forbidden - User does not have permission to update this waiting message',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         404: {
           description: 'Waiting message not found',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
     },
     delete: {
       tags: ['Waiting Messages'],
       summary: 'Delete waiting message by ID',
-      description: 'Deletes a specific waiting message. User must be the owner or have admin/doctor role.',
+      description:
+        'Deletes a specific waiting message. User must be the owner or have admin/doctor role.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -427,11 +431,11 @@ export const waitingMessagePaths = {
           name: 'id',
           required: true,
           schema: {
-            type: 'string'
+            type: 'string',
           },
           description: 'Waiting message ID',
-          example: '65fb32a9c5844e123f6789ef'
-        }
+          example: '65fb32a9c5844e123f6789ef',
+        },
       ],
       responses: {
         200: {
@@ -443,60 +447,60 @@ export const waitingMessagePaths = {
                 properties: {
                   status: {
                     type: 'string',
-                    example: 'success'
+                    example: 'success',
                   },
                   message: {
                     type: 'string',
-                    example: 'Waiting message deleted successfully'
-                  }
-                }
-              }
-            }
-          }
+                    example: 'Waiting message deleted successfully',
+                  },
+                },
+              },
+            },
+          },
         },
         401: {
           description: 'Unauthorized - Invalid or missing token',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         403: {
           description: 'Forbidden - User does not have permission to delete this waiting message',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         404: {
           description: 'Waiting message not found',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
         },
         500: {
           description: 'Internal server error',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/Error'
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 export const WaitingMessageSchemas = {
@@ -505,42 +509,42 @@ export const WaitingMessageSchemas = {
     properties: {
       _id: {
         type: 'string',
-        example: '65fb32a9c5844e123f6789ef'
+        example: '65fb32a9c5844e123f6789ef',
       },
       userId: {
         type: 'string',
         description: 'ID of the user who owns this message',
-        example: '67e9180afb886c8bef80f7c3'
+        example: '67e9180afb886c8bef80f7c3',
       },
       message: {
         type: 'string',
         description: 'The message content',
-        example: "Don't forget your appointment tomorrow!"
+        example: "Don't forget your appointment tomorrow!",
       },
       status: {
         type: 'string',
         enum: ['pending', 'read', 'deleted'],
         description: 'Status of the message',
-        example: 'pending'
+        example: 'pending',
       },
       triggerAt: {
         type: 'string',
         format: 'date-time',
         description: 'When the message should be triggered/displayed',
-        example: '2024-06-15T09:30:00.000Z'
+        example: '2024-06-15T09:30:00.000Z',
       },
       createdAt: {
         type: 'string',
         format: 'date-time',
         description: 'When the message was created',
-        example: '2024-06-01T10:30:00Z'
+        example: '2024-06-01T10:30:00Z',
       },
       updatedAt: {
         type: 'string',
         format: 'date-time',
         description: 'When the message was last updated',
-        example: '2024-06-01T10:30:00Z'
-      }
-    }
-  }
-}; 
+        example: '2024-06-01T10:30:00Z',
+      },
+    },
+  },
+};

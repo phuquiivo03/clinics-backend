@@ -22,10 +22,12 @@ const DateRangeSchema = new Schema<CDateRange>({
 });
 
 const SchedulePaymentInfoSchema = new Schema<SchedulePaymentInfo>({
-  payments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Payment',
-  }],
+  payments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Payment',
+    },
+  ],
   totalPrice: {
     type: Number,
     default: 0,
