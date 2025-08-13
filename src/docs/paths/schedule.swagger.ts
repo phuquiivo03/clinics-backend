@@ -749,7 +749,7 @@ export const schedulePaths = {
       tags: ['Schedule'],
       summary: 'Get schedule by Doctor ID',
       description:
-        'Retrieves a specific schedule by its Doctor ID \n\n - **Not userid of doctor**, \n\n - Require: Admin | Doctor role',
+        'Retrieves a specific schedule by its Doctor ID \n\n - **Not userid of doctor**, \n\n - Require: Admin | Doctor role \n\n ### Params: \n\n - from: Start date of the week period (ISO format) \n\n - to: End date of the week period (ISO format) \n\n - dayOffset: Day of week (0 = Monday, 6 = Sunday) \n\n - fullWeek: Boolean to fetch full week schedules',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -762,6 +762,45 @@ export const schedulePaths = {
           description: 'Doctor ID',
           example: '67e9180afb886c8bef80f7c3',
         },
+        {
+          in: 'query',
+          name: 'from',
+          require: false,
+          schema: {
+            type: 'string',
+            format: 'date-time',
+          },
+          description: 'Start date of the week period (ISO format)',
+          example: '2025-07-11T00:00:00.000Z'
+        }, {
+          in: 'query',
+          name: 'to',
+          require: false,
+          schema: {
+            type: 'string',
+            format: 'date-time',
+          },
+          description: 'End date of the week period (ISO format)',
+          example: '2025-08-17T23:59:59.999Z'
+        },{
+          in: 'query',
+          name: 'dayOffset',
+          require: false,
+          schema: {
+            type: 'number',
+          },
+          description: 'Day of week (0 = Monday, 6 = Sunday)',
+          example: 4
+        }, {
+          in: 'query',
+          name: 'fullWeek',
+          require: false,
+          schema: {
+            type: 'boolean',
+          },
+          description: 'Whether to fetch the full week\'s schedule **if value is false -> do not pass this param**',
+          example: true
+        }
       ],
       responses: {
         200: {
