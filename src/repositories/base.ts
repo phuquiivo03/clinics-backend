@@ -20,6 +20,7 @@ interface BaseRepository<T> {
   findAll(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>>;
   delete(id: ObjectId): Promise<T | null>;
   findMany(options?: MongooseFindManyOptions): Promise<AppResponse<T[]>>;
+  aggregate(pipeline: any[], options?: MongooseFindManyOptions): Promise<any[]>;
 }
 
 class BaseRepositoryImpl<T> implements BaseRepository<T> {
@@ -144,6 +145,16 @@ class BaseRepositoryImpl<T> implements BaseRepository<T> {
           totalPages: Math.ceil(totalCount / (options?.pagination?.limit || 10)),
         },
       };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async aggregate(pipeline: any[], options?: MongooseFindManyOptions): Promise<any[]> {
+    try {
+      const aggregateQuery = this.model.aggregate(pipeline);
+      const data = await aggregateQuery.exec();
+      return data;
     } catch (error) {
       throw error;
     }

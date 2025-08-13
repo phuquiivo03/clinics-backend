@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express';
 import {
   consultationPackageService,
   consultationServiceService,
+  doctorService,
   periodPackageService,
   scheduleService,
 } from '../services/index.service';
@@ -420,6 +421,51 @@ const update: RequestHandler = async (req, res, next) => {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
+  }
+};
+
+
+const findByDoctorId: RequestHandler = async (req, res, next) => {
+  const doctorId = req.params.id;
+  const defaultDayOffset = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  const {timeOffset, dayOffset = `${defaultDayOffset}`} = req.query;
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+
+    const currentWeek = new Date();
+    const startOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 1),
+    );
+    const endOfWeek = new Date(
+      currentWeek.setDate(currentWeek.getDate() - currentWeek.getDay() + 8),
+    );
+
+    // format to vietnam time
+    startOfWeek.setHours(7, 0, 0, 0);
+
+    endOfWeek.setHours(6, 59, 59, 999);
+
+    // find all schedules that are in the current week
+    const options: MongooseFindManyOptions = {
+      filter: {
+        'weekPeriod.from': {
+          $gte: startOfWeek,
+        },
+        'weekPeriod.to': {
+          $lte: endOfWeek,
+        },
+        userId: doctorId,
+        dayOffset: timeOffset
+      },
+    };
+    const schedules = await scheduleService.findMany(options); 
+    
+    appExpress.response200({data: `${doctorId} find`});
+    
+ 
+
+  } catch (error) {
+    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 export default {
