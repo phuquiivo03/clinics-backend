@@ -5,7 +5,7 @@ import { ROLE } from '../../types/user';
 import { checkOwnerOrRole, ModelRelate } from '../../middleware/checkOwner';
 
 const router = Router();
-
+router.get('/doctor/:id', scheduleController.findByDoctorId);
 // GET endpoints
 router.use(authMiddleware);
 router.get('/many', checkRole([ROLE.ADMIN, ROLE.DOCTOR]), scheduleController.findMany);
