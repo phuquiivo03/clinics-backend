@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-// cookie setup.
+// cookie setup..
 app.use(cookieParser(config.cookie.secret));
 
 app.use(
