@@ -1,6 +1,9 @@
 import type { Config } from './types';
 
 export const config: Config = {
+  aiService: {
+    url: process.env.AI_SERVICE_URL || 'http://localhost:3000',
+  },
   nosqlDb: {
     type: process.env.NOSQL_DB_TYPE,
     port: process.env.NOSQL_DB_PORT,

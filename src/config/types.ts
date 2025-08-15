@@ -67,6 +67,11 @@ export interface Config {
   app: AppConfig;
   pinata: PinataConfig;
   customPackage: string;
+  aiService: AIServiceConfig;
+}
+
+export interface AIServiceConfig {
+  url: string;
 }
 
 export interface PinataConfig {
