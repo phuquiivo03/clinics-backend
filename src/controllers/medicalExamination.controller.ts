@@ -41,7 +41,7 @@ export class MedicalExaminationResultController {
         ...validatedData,
         patient: validatedData.patient as unknown as ObjectId,
         subclinicalResults,
-        services: validatedData.services?.map(serviceId => serviceId as unknown as ObjectId),
+        services: validatedData.services?.map((serviceId) => serviceId as unknown as ObjectId),
         prescription: validatedData.prescription
           ? (validatedData.prescription as unknown as ObjectId)
           : undefined,
@@ -59,15 +59,15 @@ export class MedicalExaminationResultController {
 
   findMany: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
-    
+
     try {
       // Parse options from query parameter if provided, otherwise use default options
       let options: MongooseFindManyOptions = {
         sort: { createdAt: -1 }, // Sort by creation date, newest first
         pagination: {
           page: 1,
-          limit: 10
-        }
+          limit: 10,
+        },
       };
 
       // If options are provided as a JSON string, parse them
@@ -76,22 +76,22 @@ export class MedicalExaminationResultController {
           options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
         } catch (error) {
           return appExpress.response400(ErrorCode.BAD_REQUEST, {
-            message: 'Invalid options format. Please provide a valid JSON string.'
+            message: 'Invalid options format. Please provide a valid JSON string.',
           });
         }
       } else {
         // Handle individual query parameters if options is not provided
-        const { 
-          page = 1, 
-          limit = 10, 
-          patient, 
+        const {
+          page = 1,
+          limit = 10,
+          patient,
           examinationDate,
           startDate,
           endDate,
           prescription,
-          hasServices
+          hasServices,
         } = req.query;
-        
+
         // Build filter object based on query parameters
         const filter: Record<string, any> = {};
         if (patient) filter.patient = patient;
@@ -99,21 +99,21 @@ export class MedicalExaminationResultController {
         if (prescription) filter.prescription = prescription;
         if (hasServices === 'true') filter.services = { $exists: true, $not: { $size: 0 } };
         if (hasServices === 'false') filter.services = { $exists: false };
-        
+
         // Date range filtering based on createdAt
         if (startDate || endDate) {
           filter.createdAt = {};
           if (startDate) filter.createdAt.$gte = new Date(startDate as string);
           if (endDate) filter.createdAt.$lte = new Date(endDate as string);
         }
-        
+
         options = {
           filter,
           pagination: {
             page: Number(page),
-            limit: Number(limit)
+            limit: Number(limit),
           },
-          sort: { createdAt: -1 } // Sort by creation date, newest first
+          sort: { createdAt: -1 }, // Sort by creation date, newest first
         };
       }
 
@@ -226,8 +226,8 @@ export class MedicalExaminationResultController {
 
       // Handle services array with proper typing
       if (validatedData.services) {
-        updateData.services = validatedData.services.map(serviceId => 
-          serviceId as unknown as ObjectId
+        updateData.services = validatedData.services.map(
+          (serviceId) => serviceId as unknown as ObjectId,
         );
       }
 
@@ -247,7 +247,8 @@ export class MedicalExaminationResultController {
       if (result.services.length === result.subclinicalResults.length) {
         const message = await waitingMessageService.create({
           userId: result.patient as unknown as ObjectId,
-          message: 'Your medical examination is complete. Please come to the clinic for the next step.',
+          message:
+            'Your medical examination is complete. Please come to the clinic for the next step.',
           triggerAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           status: WaitingMessageStatus.PENDING,
         });
@@ -255,7 +256,6 @@ export class MedicalExaminationResultController {
         // const message = await this.service.createMessage(id);
       }
 
-      
       return appExpress.response200(result);
     } catch (error) {
       return appExpress.response400(ErrorCode.BAD_REQUEST, {

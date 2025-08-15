@@ -22,4 +22,4 @@ router.put('/:id', paymentController.updatePayment.bind(paymentController));
 router.put('/:id/status', paymentController.updatePaymentStatus.bind(paymentController));
 router.delete('/:id', paymentController.deletePayment.bind(paymentController));
 
-export default router; 
+export default router;

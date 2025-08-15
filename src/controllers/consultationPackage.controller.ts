@@ -151,16 +151,16 @@ const findAll: RequestHandler = async (req, res, next) => {
 
 const findMany: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  
+
   try {
     // Parse options from query parameter if provided, otherwise use default options
     let options: MongooseFindManyOptions = {
       sort: { createdAt: -1 }, // Sort by creation date, newest first
       pagination: {
         page: 1,
-        limit: 10
+        limit: 10,
       },
-      selectFields: ['title', 'titleImage', 'category', 'price', 'description']
+      selectFields: ['title', 'titleImage', 'category', 'price', 'description'],
     };
 
     // If options are provided as a JSON string, parse them
@@ -170,14 +170,14 @@ const findMany: RequestHandler = async (req, res, next) => {
         options = JSON.parse(req.query.options as string) as MongooseFindManyOptions;
       } catch (error) {
         return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
-          message: 'Invalid options format. Please provide a valid JSON string.'
+          message: 'Invalid options format. Please provide a valid JSON string.',
         });
       }
     } else {
       console.log('NO OPTIONS');
       // Handle individual query parameters if options is not provided
       const { page = 1, limit = 10, title, category, minPrice, maxPrice } = req.query;
-      
+
       // Build filter object based on query parameters
       const filter: Record<string, any> = {};
       if (title) filter.title = { $regex: title, $options: 'i' }; // Case-insensitive search
@@ -187,15 +187,15 @@ const findMany: RequestHandler = async (req, res, next) => {
         if (minPrice) filter.price.$gte = Number(minPrice);
         if (maxPrice) filter.price.$lte = Number(maxPrice);
       }
-      
+
       options = {
         filter,
         pagination: {
           page: Number(page),
-          limit: Number(limit)
+          limit: Number(limit),
         },
         sort: { createdAt: -1 }, // Sort by creation date, newest first
-        selectFields: ['title', 'titleImage', 'category', 'price', 'description']
+        selectFields: ['title', 'titleImage', 'category', 'price', 'description'],
       };
     }
 

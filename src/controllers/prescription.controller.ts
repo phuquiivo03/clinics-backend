@@ -209,8 +209,8 @@ const getAllPrescriptions: RequestHandler = async (req, res) => {
       sort: { createdAt: -1 }, // Sort by creation date, newest first
       pagination: {
         page: 1,
-        limit: 10
-      }
+        limit: 10,
+      },
     };
 
     // If options are provided as a JSON string, parse them
@@ -220,53 +220,53 @@ const getAllPrescriptions: RequestHandler = async (req, res) => {
       } catch (error) {
         res.status(400).json({
           success: false,
-          message: 'Invalid options format. Please provide a valid JSON string.'
+          message: 'Invalid options format. Please provide a valid JSON string.',
         });
         return;
       }
     } else {
       // Handle individual query parameters if options is not provided
-      const { 
-        page = 1, 
-        limit = 10, 
-        isPaid, 
-        startDate, 
-        endDate, 
-        patient, 
-        doctor, 
+      const {
+        page = 1,
+        limit = 10,
+        isPaid,
+        startDate,
+        endDate,
+        patient,
+        doctor,
         diagnosis,
         minTotalCost,
-        maxTotalCost 
+        maxTotalCost,
       } = req.query;
-      
+
       // Build filter object based on query parameters
       const filterObj: Record<string, any> = {};
       if (isPaid !== undefined) filterObj.isPaid = isPaid === 'true';
       if (patient) filterObj.patient = patient;
       if (doctor) filterObj.doctor = doctor;
       if (diagnosis) filterObj.diagnosis = { $regex: diagnosis, $options: 'i' }; // Case-insensitive search
-      
+
       // Date range filtering
       if (startDate || endDate) {
         filterObj.createdAt = {};
         if (startDate) filterObj.createdAt.$gte = new Date(startDate as string);
         if (endDate) filterObj.createdAt.$lte = new Date(endDate as string);
       }
-      
+
       // Total cost range filtering
       if (minTotalCost || maxTotalCost) {
         filterObj.totalCost = {};
         if (minTotalCost) filterObj.totalCost.$gte = Number(minTotalCost);
         if (maxTotalCost) filterObj.totalCost.$lte = Number(maxTotalCost);
       }
-      
+
       filters = {
         filter: filterObj,
         pagination: {
           page: Number(page),
-          limit: Number(limit)
+          limit: Number(limit),
         },
-        sort: { createdAt: -1 } // Sort by creation date, newest first
+        sort: { createdAt: -1 }, // Sort by creation date, newest first
       };
     }
 

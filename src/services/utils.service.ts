@@ -50,6 +50,22 @@ class UtilsService {
     end.setHours(23, 59, 59, 999);
     return end;
   }
+
+  static getCurrentWeekRange(date: Date): { start: Date; end: Date } {
+    const startOfWeek = new Date(date);
+    const endOfWeek = new Date(date);
+    const day = date.getDay();
+
+    // Set to the start of the week (Sunday)
+    startOfWeek.setDate(date.getDate() - day);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    // Set to the end of the week (Saturday)
+    endOfWeek.setDate(date.getDate() + (6 - day));
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    return { start: startOfWeek, end: endOfWeek };
+  }
 }
 
 export default UtilsService;

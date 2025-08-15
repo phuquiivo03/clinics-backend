@@ -28,4 +28,4 @@ const paymentSchema = new Schema<Payment>(
   },
 );
 
-export const PaymentSchema = paymentSchema; 
+export const PaymentSchema = paymentSchema;

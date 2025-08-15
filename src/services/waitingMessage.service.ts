@@ -21,7 +21,7 @@ class WaitingMessageService {
 
   async update(
     id: ObjectId,
-    data: Partial<Omit<WaitingMessage, '_id'>>
+    data: Partial<Omit<WaitingMessage, '_id'>>,
   ): Promise<WaitingMessage | null> {
     const message = await waitingMessageRepository.update(id, data);
     return message as unknown as WaitingMessage;
@@ -33,4 +33,4 @@ class WaitingMessageService {
   }
 }
 
-export default new WaitingMessageService(); 
+export default new WaitingMessageService();

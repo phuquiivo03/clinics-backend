@@ -105,10 +105,10 @@ class UserService {
     try {
       const result = await this.userRepository.findMany(options);
       // Remove password from all users
-      const usersWithoutPassword = result.data.map(user => this.userWithoutPassword(user));
+      const usersWithoutPassword = result.data.map((user) => this.userWithoutPassword(user));
       return {
         data: usersWithoutPassword,
-        pagination: result.pagination
+        pagination: result.pagination,
       };
     } catch (error) {
       throw error;

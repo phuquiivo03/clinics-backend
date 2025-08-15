@@ -20,11 +20,11 @@ const create: RequestHandler = async (req, res, next) => {
         validationResult.error.format(),
       );
     }
-    
+
     // Prepare message data with authenticated user
     const messageData = {
       ...validationResult.data,
-      userId:  validationResult.data.userId as unknown as ObjectId,
+      userId: validationResult.data.userId as unknown as ObjectId,
       triggerAt: new Date(validationResult.data.triggerAt),
     };
 
@@ -48,7 +48,7 @@ const findById: RequestHandler = async (req, res, next) => {
     if (message) {
       return appExpress.response200(message);
     }
-    
+
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
@@ -60,20 +60,22 @@ const findById: RequestHandler = async (req, res, next) => {
 const findByUserId: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const trigged = req.query.trigged as unknown as boolean || false;
+    const trigged = (req.query.trigged as unknown as boolean) || false;
     const userId = req.user._id;
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {});
     }
 
-    const options: MongooseFindManyOptions = trigged ? {
-      filter: { userId, status: WaitingMessageStatus.PENDING, triggerAt: { $lte: new Date() } },
-    } : {
-      filter: { userId, status: WaitingMessageStatus.PENDING },
-    }
+    const options: MongooseFindManyOptions = trigged
+      ? {
+          filter: { userId, status: WaitingMessageStatus.PENDING, triggerAt: { $lte: new Date() } },
+        }
+      : {
+          filter: { userId, status: WaitingMessageStatus.PENDING },
+        };
 
     const messages = await waitingMessageService.findMany(options);
-    
+
     return appExpress.response200(messages);
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
@@ -87,7 +89,7 @@ const findMany: RequestHandler = async (req, res, next) => {
   const options: MongooseFindManyOptions = JSON.parse(
     (req.query.options as string) || '{}',
   ) as MongooseFindManyOptions;
-  
+
   try {
     const messages = await waitingMessageService.findMany(options);
     return appExpress.response200(messages);
@@ -98,7 +100,6 @@ const findMany: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 // just update status
 const update: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -106,21 +107,20 @@ const update: RequestHandler = async (req, res, next) => {
     // Validate the request body against schema
     const status = req.body.status as WaitingMessageStatus;
     if (!status) {
-      return appExpress.response400(
-        ErrorCode.INVALID_REQUEST_BODY,
-        { message: 'Status is required' },
-      );
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+        message: 'Status is required',
+      });
     }
-    
+
     const id = req.params.id as unknown as ObjectId;
 
     // Update waiting message
     const message = await waitingMessageService.update(id, { status });
-    
+
     if (message) {
       return appExpress.response200(message);
     }
-    
+
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
@@ -134,11 +134,11 @@ const remove: RequestHandler = async (req, res, next) => {
   try {
     const id = req.params.id as unknown as ObjectId;
     const result = await waitingMessageService.delete(id);
-    
+
     if (result) {
       return appExpress.response200({ message: 'Waiting message deleted successfully' });
     }
-    
+
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
     appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
@@ -154,5 +154,4 @@ export default {
   findMany,
   update,
   remove,
-}; 
-
+};

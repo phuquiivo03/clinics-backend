@@ -20,7 +20,7 @@ export class PaymentController {
       const paymentData: Payment = req.body;
       // Add the user ID from the authenticated user
       paymentData.user = req.user._id;
-      
+
       const payment = await this.paymentService.create(paymentData);
       appExpress.response201(payment);
     } catch (error) {
@@ -65,9 +65,9 @@ export class PaymentController {
       const userId = req.user._id;
       const options: MongooseFindManyOptions = {
         filter: {
-            user: userId,
-        }
-      }
+          user: userId,
+        },
+      };
       const payments = await this.paymentService.findMany(options);
       appExpress.response200(payments);
     } catch (error) {
@@ -87,9 +87,9 @@ export class PaymentController {
       }
       const options: MongooseFindManyOptions = {
         filter: {
-            status: status as PaymentStatus,
-        }
-      }
+          status: status as PaymentStatus,
+        },
+      };
       const payments = await this.paymentService.findMany(options);
       appExpress.response200(payments);
     } catch (error) {
@@ -123,31 +123,31 @@ export class PaymentController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      
+
       if (!id) {
         appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
           message: 'Payment ID is required',
         });
         return;
       }
-      
+
       if (!status || !Object.values(PaymentStatus).includes(status)) {
         appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
           message: 'Valid payment status is required',
         });
         return;
       }
-      
+
       const payment = await this.paymentService.updatePaymentStatus(
         new Schema.Types.ObjectId(id),
-        status
+        status,
       );
-      
+
       if (!payment) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Payment not found' });
         return;
       }
-      
+
       appExpress.response200(payment);
     } catch (error) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
@@ -174,4 +174,4 @@ export class PaymentController {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
     }
   }
-} 
+}

@@ -31,4 +31,4 @@ router.delete(
   waitingMessageController.remove,
 );
 
-export default router; 
+export default router;
