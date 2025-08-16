@@ -7,7 +7,7 @@ import waitingMessageService from '../services/waitingMessage.service';
 
 // Cron job that runs at 7 PM every day in Ho Chi Minh City timezone (UTC+7)
 const notificationJob = cron.schedule(
-  '* 0 19 * * *',
+  '0 0 19 * * *',
   async () => {
     console.log('Running daily job at 7 PM Ho Chi Minh City time');
 
