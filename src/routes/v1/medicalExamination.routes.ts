@@ -11,8 +11,8 @@ import { ROLE } from '../../types';
 const router = express.Router();
 const controller = new MedicalExaminationResultController();
 
+router.get('/bot/user/:patientId', controller.findByPatientId)
 router.use(authMiddleware);
-
 router.post('/', validateBody(MedicalExaminationResultCreateSchema), controller.create);
 router.get('/', controller.findMany);
 router.get('/user', controller.findByUser);
