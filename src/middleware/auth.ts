@@ -26,6 +26,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       return;
     }
 
+    
+
     const isBlacklist = await redisClient.get(config.redis.key.authenToken(authHeader));
 
     if (isBlacklist) {
@@ -34,6 +36,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       });
       return;
     }
+
 
     try {
       const decoded = jwt.verify(authHeader, config.jwt.authen.secret) as IAuthenJWT;
@@ -44,6 +47,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       req.authenToken = authHeader;
       req.user = await userRepository.findById(decoded.id, { selectFields: ['-password'] });
       next();
+
     } catch (error) {
       appExpress.response401(ErrorCode.TOKEN_INVALID, {});
     }
