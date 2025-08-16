@@ -10,19 +10,17 @@ router.post('/', async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
     const response = await axios({
-      method: req.method, // giữ nguyên HTTP method
-      url: config.aiService.url, // URL mới
+      method: 'POST', // giữ nguyên HTTP method
+      url: `${config.aiService.url}/chat`, // URL mới
       headers: { ...req.headers }, // forward toàn bộ headers
       params: req.query, // forward query string
       data: req.body, // forward body
       validateStatus: () => true, // để không throw error khi status >= 400
     });
 
-    appExpress.response200({
-      message: 'File processed successfully',
-      data: response,
-    });
-
+    console.log(response.data)
+    appExpress.response200(response.data,
+    );
     // Clean up the temporary file
   } catch (error) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error: (error as Error).message });
