@@ -80,6 +80,7 @@ jobs:
             -e PINATA_JWT='${PINATA_JWT}' \
             -e GATEWAY_URL='${GATEWAY_URL}' \
             -e AI_SERVICE_URL='${AI_SERVICE_URL}' \
+            -e JWT_SECRET='${JWT_SECRET}' \
             -e NOSQL_DB_TYPE=\"mongodb+srv\" \
             -e NOSQL_DB_USER='${NOSQL_DB_USER}' \
             -e NOSQL_DB_PASSWORD='${NOSQL_DB_PASSWORD}' \

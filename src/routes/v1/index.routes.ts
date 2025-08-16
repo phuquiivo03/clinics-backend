@@ -17,10 +17,12 @@ import prescriptionRouter from './prescription.routes';
 import medicalExaminationRoutes from './medicalExamination.routes';
 import paymentRouter from './payment.routes';
 import waitingMessageRouter from './waitingMessage.routes';
+import chatRouter from './chat.route';
 
 const router = Router();
 router.use('/user', userRouter);
 router.use('/doctor', doctorRouter);
+router.use('/chat', chatRouter);
 router.use('/auth', authRouter);
 router.use('/consultation-package', consultationPackageRouter);
 router.use('/consultation-service', consultationServiceRouter);

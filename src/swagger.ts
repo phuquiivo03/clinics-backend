@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { MedicalExaminationResultSchema, PrescriptionSchema } from './docs/components/schemas';
 import { medicalExaminationPaths } from './docs/paths/medical-examination.docs';
+import { chatPaths } from './docs/paths/chat.docs';
 import { prescriptionPaths } from './docs/paths/prescription.docs';
 import { schedulePaths, ScheduleSchemas } from './docs/paths/schedule.swagger';
 import { authPaths } from './docs/paths/auth.docs';
@@ -42,6 +43,7 @@ const options: swaggerJsdoc.Options = {
     ],
     paths: {
       ...medicalExaminationPaths,
+      ...chatPaths,
       ...prescriptionPaths,
       ...schedulePaths,
       ...authPaths,

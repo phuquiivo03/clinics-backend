@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { CustomExpress } from '../pkg/app/response';
-import { ErrorCode } from '../pkg/e/code';
+import { CustomExpress } from '../../pkg/app/response';
+import { ErrorCode } from '../../pkg/e/code';
 import fs from 'fs';
 import axios from 'axios';
-import { config } from '../config';
+import { config } from '../../config';
 const router = Router();
 
 router.post('/', async (req, res, next) => {
