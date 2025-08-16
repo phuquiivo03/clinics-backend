@@ -18,7 +18,6 @@ router.post('/', async (req, res, next) => {
       validateStatus: () => true, // để không throw error khi status >= 400
     });
 
-    console.log(response.data)
     appExpress.response200(response.data,
     );
     // Clean up the temporary file
