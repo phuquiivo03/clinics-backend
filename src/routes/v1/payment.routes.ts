@@ -15,7 +15,7 @@ router.get('/user', paymentController.getUserPayments.bind(paymentController));
 router.get('/:id', paymentController.getPaymentById.bind(paymentController));
 
 // Admin only routes
-router.use(checkRole([ROLE.ADMIN]));
+router.use(checkRole([ROLE.ADMIN, ROLE.DOCTOR]));
 router.get('/', paymentController.getAllPayments.bind(paymentController));
 router.get('/status/:status', paymentController.getPaymentsByStatus.bind(paymentController));
 router.put('/:id', paymentController.updatePayment.bind(paymentController));

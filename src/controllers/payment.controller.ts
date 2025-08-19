@@ -4,7 +4,7 @@ import type { Payment } from '../types/payment';
 import { PaymentStatus } from '../types/payment';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
-import { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
 
 export class PaymentController {
@@ -139,7 +139,8 @@ export class PaymentController {
       }
 
       const payment = await this.paymentService.updatePaymentStatus(
-        new Schema.Types.ObjectId(id),
+        // @ts-ignore
+        new mongoose.Types.ObjectId(id),
         status,
       );
 
