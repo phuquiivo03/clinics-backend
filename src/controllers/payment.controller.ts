@@ -38,7 +38,7 @@ export class PaymentController {
         });
         return;
       }
-      const payment = await this.paymentService.findById(new Schema.Types.ObjectId(id));
+      const payment = await this.paymentService.findById(new  mongoose.Types.ObjectId(id));
       if (!payment) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Payment not found' });
         return;
