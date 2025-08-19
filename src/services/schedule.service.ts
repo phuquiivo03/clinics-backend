@@ -44,6 +44,7 @@ class ScheduleService {
     session?: ClientSession,
   ): Promise<Schedule | null> {
     try {
+      console.log(schedule);
       return scheduleRepository.update(id, schedule, { session });
     } catch (error) {
       throw error;

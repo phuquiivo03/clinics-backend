@@ -411,7 +411,7 @@ const update: RequestHandler = async (req, res, next) => {
         validationResult.error.format(),
       );
     }
-    const scheduleData: any = validationResult;
+    const scheduleData = validationResult.data as any;
     const id = req.params.id as unknown as ObjectId;
 
     // Update schedule
