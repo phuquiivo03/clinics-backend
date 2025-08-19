@@ -12,7 +12,7 @@ const router = express.Router();
 const controller = new MedicalExaminationResultController();
 
 router.use(authMiddleware);
-
+router.get('/bot/user/:patientId', controller.findByPatientId)
 router.post('/', validateBody(MedicalExaminationResultCreateSchema), controller.create);
 router.get('/', controller.findMany);
 router.get('/user', controller.findByUser);

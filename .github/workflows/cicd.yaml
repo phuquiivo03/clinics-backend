@@ -47,6 +47,7 @@ jobs:
           SSH_HOST: ${{ vars.EC2_HOST }}
           SSH_USER: ${{ vars.EC2_USER }}
           PORT: ${{vars.PORT}}
+          AI_SERVICE_URL: ${{ vars.AI_SERVICE_URL }}
           NOSQL_DB_TYPE: ${{ vars.NOSQL_DB_TYPE }}
           NOSQL_DB_USER: ${{ vars.NOSQL_DB_USER }}
           NOSQL_DB_PASSWORD: ${{ secrets.NOSQL_DB_PASSWORD }}
@@ -59,6 +60,10 @@ jobs:
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
+          GATEWAY_URL: ${{ secrets.GATEWAY_URL }}
+          SECRET: ${{ secrets.SECRET }}
+          
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
@@ -72,6 +77,10 @@ jobs:
             -e SERVER_URL=\"https://devq-be0x7.site\" \
             -e NODE_ENV=\"dev\" \
             -e SECRET='${SECRET}' \
+            -e PINATA_JWT='${PINATA_JWT}' \
+            -e GATEWAY_URL='${GATEWAY_URL}' \
+            -e AI_SERVICE_URL='${AI_SERVICE_URL}' \
+            -e JWT_SECRET='${JWT_SECRET}' \
             -e NOSQL_DB_TYPE=\"mongodb+srv\" \
             -e NOSQL_DB_USER='${NOSQL_DB_USER}' \
             -e NOSQL_DB_PASSWORD='${NOSQL_DB_PASSWORD}' \

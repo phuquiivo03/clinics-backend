@@ -149,6 +149,8 @@ export class MedicalExaminationResultController {
     }
   };
 
+  
+
   findByPatientId: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
