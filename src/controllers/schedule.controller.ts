@@ -464,6 +464,7 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
     }
     console.log(typeof fullWeek)
     const offsetConfig = fullWeek ? {$match: {}} : {$match: {dayOffset: parseInt(dayOffset as string, 10)}};
+    console.log(fullWeek,offsetConfig)
     // find all schedules that are in the current week
     const matchOption = {
       $match: {
