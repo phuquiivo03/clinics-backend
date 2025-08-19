@@ -12,7 +12,8 @@ import { config } from '../config';
 import redisClient from '../db/redis_connection';
 import pinataService from '../services/pinata.service';
 import fs from 'fs';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
+import mongoose from 'mongoose';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -176,11 +177,57 @@ const getAllUsers: RequestHandler = async (req, res, next) => {
     console.error(error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
   }
+
+
+
 };
+
+
+const findOne: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    // Parse options from query parameter if provided, otherwise use default options
+    const { id } = req.params;
+    let options: MongooseFindOneOptions = {
+      filter: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    };
+
+    // If options are provided as a JSON string, parse them
+    if (req.query.options) {
+      try {
+        const optionsInput = JSON.parse(req.query.options as string) as MongooseFindOneOptions;
+        options = {
+          ...options,
+          ...optionsInput,
+        };
+      } catch (error) {
+        return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+          message: 'Invalid options format. Please provide a valid JSON string.',
+        });
+      }
+    } 
+    const userData = await userService.findOne(options);
+    if (!userData) {
+      appExpress.response404(ErrorCode.NOT_FOUND, {});
+      return;
+    }
+    
+  appExpress.response200(userService.userWithoutPassword(userData));
+  } catch (error) {
+    console.error(error);
+    appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
+  }
+
+  
+
+}
 
 export default {
   getUserProfile,
   createUser,
   updateUserProfile,
   getAllUsers,
+  findOne
 };

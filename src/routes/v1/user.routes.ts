@@ -14,5 +14,6 @@ router.get('/profile', authMiddleware, userController.getUserProfile);
 
 // Add route for getting all users - requires authentication
 router.get('/', authMiddleware, checkRole([ROLE.ADMIN]), userController.getAllUsers);
+router.get('/:id', authMiddleware, checkRole([ROLE.ADMIN, ROLE.DOCTOR]), userController.findOne);
 
 export default router;
