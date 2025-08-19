@@ -176,7 +176,7 @@ const create: RequestHandler = async (req, res, next) => {
               };
             }
             (schedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
-            schedule.payments.totalPaid += payment.amount;
+            // schedule.payments.totalPaid += payment.amount;
           }
         }
       }
