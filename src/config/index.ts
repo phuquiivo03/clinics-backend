@@ -67,4 +67,8 @@ export const config: Config = {
     viewUrl: 'https://turquoise-dear-mole-333.mypinata.cloud/ipfs/',
   },
   customPackage: process.env.CUSTOM_PACKAGE || '68564f4d14037ab8fa3e2ddc',
+  twilio: {
+    accountSid: process.env.TWILIO_ACCOUNT_SID || '',
+    authToken: process.env.TWILIO_AUTH_TOKEN || '',
+  },
 };

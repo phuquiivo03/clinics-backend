@@ -10,6 +10,7 @@ import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import type { IAuthenJWT } from '../types';
+import twilioService from '../services/twilio.service';
 
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
@@ -28,7 +29,7 @@ const registerUser: RequestHandler = async (req, res, next) => {
     const phoneNumber: string = userRequest.phoneNumber;
     //check if phone number already exists
     const user = await userService.findOne({ filter: { phoneNumber } });
-    if (user) {
+    if (user && user.password) {
       appExpress.response400(ErrorCode.BAD_REQUEST, {
         message: 'Phone number already exists',
       });
@@ -40,6 +41,11 @@ const registerUser: RequestHandler = async (req, res, next) => {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
       return;
     }
+
+    const formatPhoneNumber = `+84${phoneNumber.slice(1)}`;
+
+    // send OTP to phone number
+    // await twilioService.sendSMS(formatPhoneNumber, `Your OTP is ${createdOtp?.code}`);
 
     appExpress.response201({ message: 'OTP created: ' + createdOtp?.code });
   } catch (e) {
