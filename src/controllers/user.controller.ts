@@ -3,8 +3,8 @@ import { z, ZodError } from 'zod';
 import type { RequestHandler } from 'express';
 import { ROLE, type User } from '../types';
 import { otpService, userService } from '../services/index.service';
-import { createUserSchema, updateUserInfoSchema } from '../schemas';
-import type { ICreateUserRequest, IUpdateUserInfoRequest } from '../dto/user';
+import { createUserSchema, unsignupUserSchema, updateUserInfoSchema } from '../schemas';
+import type { ICreateUserRequest, IUnsignupUserRequest, IUpdateUserInfoRequest } from '../dto/user';
 import UtilsService from '../services/utils.service';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
@@ -13,7 +13,8 @@ import redisClient from '../db/redis_connection';
 import pinataService from '../services/pinata.service';
 import fs from 'fs';
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
-import mongoose from 'mongoose';
+import mongoose, { type ObjectId } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const createUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -35,6 +36,34 @@ const createUser: RequestHandler = async (req, res, next) => {
       });
       return;
     }
+    const user = await userService.findOne({ filter: { phoneNumber: userRequest.phoneNumber } });
+    //check if user exist and password is not null
+    if (user && user.password) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Phone number already exists',
+      });
+      return;
+    } else if(user && !user.password) {
+      // usser account is created by doctor before
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userRequest.password, salt);
+      const updatedUser = await userService.findAndUpdate(user._id as ObjectId, { password: hashedPassword });
+      if (!updatedUser || !updatedUser._id) {
+        appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+          message: 'Failed to update password.',
+        });
+        return;
+      }
+      const authenToken = UtilsService.generateAuthenToken(updatedUser._id.toString());
+      const refreshToken = UtilsService.generateRefreshToken(updatedUser._id.toString());
+
+      appExpress.response201({
+        user: userService.userWithoutPassword(updatedUser),
+        authenToken,
+        refreshToken,
+      });
+      return;
+    } 
 
     const data: User = {
       ...userRequest,
@@ -44,6 +73,61 @@ const createUser: RequestHandler = async (req, res, next) => {
       address: null,
       dateOfBirth: null,
       gender: null,
+      occupation: null,
+      comparePassword: async () => false, // Provide a default implementation
+    };
+    const result = await userService.create(data);
+    if (!result._id) {
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
+      return;
+    }
+
+    const authenToken = UtilsService.generateAuthenToken(result._id.toString());
+    const refreshToken = UtilsService.generateRefreshToken(result._id.toString());
+
+    appExpress.response201({
+      user: userService.userWithoutPassword(result),
+      authenToken,
+      refreshToken,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: (error as Error).message,
+    });
+  }
+};
+
+
+const unsignupUser: RequestHandler = async (req, res, next) => {
+  const appExpress = new CustomExpress(req, res, next);
+  try {
+    // Validate request body against schema
+    const userRequest = UtilsService.validateBody<IUnsignupUserRequest>(unsignupUserSchema, req.body);
+    if (userRequest instanceof ZodError) {
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
+        message: userRequest.message,
+      });
+    }
+
+    const user = await userService.findOne({ filter: { phoneNumber: userRequest.phoneNumber } });
+    if (user) {
+      appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: 'Phone number already exists',
+      });
+      return;
+    }
+
+    // check if phone number is verified
+   
+
+    const data: User = {
+      ...userRequest,
+      role: ROLE.NORMAL,
+      address: userRequest.address || '',
+      dateOfBirth: userRequest.dateOfBirth || null,
+      gender: userRequest.gender || null,
+      name: userRequest.name || null,
+      email: userRequest.email || null,
       occupation: null,
       comparePassword: async () => false, // Provide a default implementation
     };
@@ -227,6 +311,7 @@ const findOne: RequestHandler = async (req, res, next) => {
 export default {
   getUserProfile,
   createUser,
+  unsignupUser,
   updateUserProfile,
   getAllUsers,
   findOne

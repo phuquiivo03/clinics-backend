@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/' });
 const router = express.Router();
 
 router.post('/', userController.createUser);
+router.post('/unsignup', authMiddleware, checkRole([ROLE.DOCTOR, ROLE.ADMIN]), userController.unsignupUser);
 
 router.patch('/', authMiddleware, upload.single('avatar'), userController.updateUserProfile);
 

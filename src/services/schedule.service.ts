@@ -44,6 +44,7 @@ class ScheduleService {
     session?: ClientSession,
   ): Promise<Schedule | null> {
     try {
+      console.log("SCHEDULE::paid", schedule.payments?.totalPaid);
       return scheduleRepository.update(id, schedule, { session, new: true });
     } catch (error) {
       throw error;

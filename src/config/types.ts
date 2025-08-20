@@ -68,6 +68,12 @@ export interface Config {
   pinata: PinataConfig;
   customPackage: string;
   aiService: AIServiceConfig;
+  twilio: TwilioConfig;
+}
+
+export interface TwilioConfig {
+  accountSid: string;
+  authToken: string;
 }
 
 export interface AIServiceConfig {
