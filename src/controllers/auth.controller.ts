@@ -69,7 +69,7 @@ const verifyOTP: RequestHandler = async (req, res, next) => {
     const { phoneNumber, code } = userRequest;
     const isValid = await otpService.verify(phoneNumber, code);
     if (!isValid) {
-      appExpress.response401(ErrorCode.OTP_INVALID, {});
+      appExpress.response400(ErrorCode.OTP_INVALID, {});
       return;
     }
     // create cache for phone number
@@ -153,7 +153,7 @@ const changePassword: RequestHandler = async (req, res, next) => {
     }
     const isPasswordValid = await userService.verifyPassword(user, oldPassword);
     if (!isPasswordValid) {
-      appExpress.response401(ErrorCode.UNAUTHORIZED, {
+      appExpress.response400(ErrorCode.UNAUTHORIZED, {
         message: 'Old password is incorrect.',
       });
       return;
@@ -191,7 +191,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
 
     const decoded = jwt.verify(requestRefreshToken, config.jwt.authen.secret) as IAuthenJWT;
     if (decoded.expired < Date.now()) {
-      appExpress.response401(ErrorCode.TOKEN_EXPIRED, {});
+      appExpress.response400(ErrorCode.TOKEN_EXPIRED, {});
       return;
     }
 
@@ -213,7 +213,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
       await redisClient.del(activeRefreshTokenKey);
       await redisClient.del(usedRefreshTokensSetKey);
       // Respond with an error indicating session invalidation. Client must re-authenticate.
-      appExpress.response401(ErrorCode.SESSION_INVALIDATED, {
+      appExpress.response400(ErrorCode.SESSION_INVALIDATED, {
         message:
           'Your session has been invalidated due to suspicious activity. Please log in again.',
       });
@@ -229,7 +229,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
       // It could also happen if an attacker used the valid token, it got rotated,
       // and the legitimate user is now presenting the (now old) token.
       // The `isTokenReused` check above handles the more direct replay.
-      appExpress.response401(ErrorCode.INVALID_REFRESH_TOKEN, {
+      appExpress.response400(ErrorCode.INVALID_REFRESH_TOKEN, {
         message: 'Invalid or expired refresh token. Please log in again.',
       });
       return;

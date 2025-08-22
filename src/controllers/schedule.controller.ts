@@ -215,7 +215,7 @@ const create: RequestHandler = async (req, res, next) => {
       }
 
       // Generic error handling
-      return appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
         message: error.message,
       });
     } finally {
@@ -223,7 +223,7 @@ const create: RequestHandler = async (req, res, next) => {
       await session.endSession();
     }
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -243,7 +243,7 @@ const findByUserId: RequestHandler = async (req, res, next) => {
     });
     return appExpress.response200(schedules);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -276,7 +276,7 @@ const findById: RequestHandler = async (req, res, next) => {
     console.log('schedule', schedule);
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -292,7 +292,7 @@ const findMany: RequestHandler = async (req, res, next) => {
     const schedules = await scheduleService.findMany(options);
     return appExpress.response200(schedules);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -342,7 +342,7 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
     });
     return appExpress.response200(formattedSchedulesNew);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -400,7 +400,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
       }),
     );
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -428,7 +428,7 @@ const update: RequestHandler = async (req, res, next) => {
       return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
     }
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }

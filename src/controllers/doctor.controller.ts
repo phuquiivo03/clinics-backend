@@ -98,7 +98,7 @@ const getAllDoctors: RequestHandler = async (req, res, next) => {
     const doctors = await doctorService.findMany(options);
     appExpress.response200(doctors);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -161,7 +161,7 @@ const createDoctorProfile: RequestHandler = async (req, res, next) => {
     if (error instanceof z.ZodError) {
       appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, error.errors);
     } else {
-      appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+      appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
     }
   }
 };
@@ -212,7 +212,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
     const doctors = await doctorService.findMany(options);
     appExpress.response200(doctors);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 

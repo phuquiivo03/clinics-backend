@@ -33,7 +33,7 @@ const create: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid package data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -48,7 +48,7 @@ const createMany: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid package data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -80,7 +80,7 @@ const updateMany: RequestHandler = async (req, res, next) => {
   //     }),
   //   );
   // } catch (error) {
-  //   appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+  //   appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
   //     message: (error as Error).message,
   //   });
   // }
@@ -105,7 +105,7 @@ const findById: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -130,7 +130,7 @@ const findByIdWithFullDetails: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -145,7 +145,7 @@ const findAll: RequestHandler = async (req, res, next) => {
 
     appExpress.response200(consultationPackages);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -202,7 +202,7 @@ const findMany: RequestHandler = async (req, res, next) => {
     const consultationPackages = await consultationPackageService.findMany(options);
     appExpress.response200(consultationPackages);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
