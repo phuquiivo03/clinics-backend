@@ -47,7 +47,6 @@ export const checkOwnerOrRole =
       });
       return;
     }
-    console.log('Document found:', document);
     if (document[field].toString() !== user._id.toString() && !role.includes(user.role)) {
       // Check if the user is the owner or has the required role
       appExpress.response403(ErrorCode.FORBIDDEN, {

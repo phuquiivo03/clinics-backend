@@ -38,7 +38,7 @@ const create: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid package week data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -63,7 +63,7 @@ const findById: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -88,7 +88,7 @@ const findWithFullDetails: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -173,7 +173,7 @@ const update: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -205,7 +205,7 @@ const addDayPackage: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }

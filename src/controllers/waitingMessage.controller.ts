@@ -33,7 +33,7 @@ const create: RequestHandler = async (req, res, next) => {
 
     return appExpress.response201(message);
   } catch (error: any) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: error.message,
     });
   }
@@ -51,7 +51,7 @@ const findById: RequestHandler = async (req, res, next) => {
 
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -78,7 +78,7 @@ const findByUserId: RequestHandler = async (req, res, next) => {
 
     return appExpress.response200(messages);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -94,7 +94,7 @@ const findMany: RequestHandler = async (req, res, next) => {
     const messages = await waitingMessageService.findMany(options);
     return appExpress.response200(messages);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -123,7 +123,7 @@ const update: RequestHandler = async (req, res, next) => {
 
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -141,7 +141,7 @@ const remove: RequestHandler = async (req, res, next) => {
 
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Waiting message not found' });
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }

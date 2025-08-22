@@ -25,10 +25,15 @@ export const createScheduleSchema = z.object({
 
 // Schema for updating a schedule
 export const updateScheduleSchema = createScheduleSchema.partial().extend({
-  status: z.enum([ScheduleStatus.CANCELLED, ScheduleStatus.CHECKEDIN, ScheduleStatus.COMPLETED], {
-    message: 'Invalid status provided',
-  }),
+  status: z
+    .enum([ScheduleStatus.CANCELLED, ScheduleStatus.CHECKEDIN, ScheduleStatus.COMPLETED], {
+      message: 'Invalid status provided',
+    })
+    .optional(),
   userId: z.string().optional(),
+  services: z
+    .array(z.string().refine((val) => val.length > 0, 'At least one service ID is required'))
+    .optional(),
 });
 
 // Schema for finding a schedule by ID

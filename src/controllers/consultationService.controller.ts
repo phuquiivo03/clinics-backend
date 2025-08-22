@@ -37,7 +37,7 @@ const create: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid service data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -65,9 +65,9 @@ const findById: RequestHandler = async (req, res, next) => {
     if (consultationService) {
       return appExpress.response200(consultationService);
     }
-    appExpress.response404(ErrorCode.NOT_FOUND, {});
+    appExpress.response400(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -108,7 +108,7 @@ const createMany: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid service data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -132,7 +132,7 @@ const findAll: RequestHandler = async (req, res, next) => {
 
     appExpress.response200(result);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -196,7 +196,7 @@ const findMany: RequestHandler = async (req, res, next) => {
     const result = await consultationServiceService.findMany(options);
     appExpress.response200(result);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -224,7 +224,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
 
     appExpress.response200(result);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }

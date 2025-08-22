@@ -25,7 +25,7 @@ const create: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid room data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -39,7 +39,7 @@ const createMany: RequestHandler = async (req, res, next) => {
     }
     throw new Error('Invalid room data');
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -64,7 +64,7 @@ const update: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -87,7 +87,7 @@ const deleteRoom: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -110,7 +110,7 @@ const findById: RequestHandler = async (req, res, next) => {
     }
     appExpress.response404(ErrorCode.NOT_FOUND, {});
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 
@@ -120,7 +120,7 @@ const findAll: RequestHandler = async (req, res, next) => {
     const rooms = await roomService.findAll();
     appExpress.response200(rooms);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {});
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {});
   }
 };
 

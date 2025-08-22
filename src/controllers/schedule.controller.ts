@@ -215,7 +215,7 @@ const create: RequestHandler = async (req, res, next) => {
       }
 
       // Generic error handling
-      return appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+      return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
         message: error.message,
       });
     } finally {
@@ -223,7 +223,7 @@ const create: RequestHandler = async (req, res, next) => {
       await session.endSession();
     }
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -243,7 +243,7 @@ const findByUserId: RequestHandler = async (req, res, next) => {
     });
     return appExpress.response200(schedules);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -265,9 +265,8 @@ const findById: RequestHandler = async (req, res, next) => {
     const options: MongooseFindOneOptions = {
       populateOptions: {
         path: 'payments.payments',
-        
       },
-    }
+    };
     const schedule = await scheduleService.findById(id, options);
     if (schedule) {
       return appExpress.response200(schedule);
@@ -276,7 +275,7 @@ const findById: RequestHandler = async (req, res, next) => {
     console.log('schedule', schedule);
     appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -292,7 +291,7 @@ const findMany: RequestHandler = async (req, res, next) => {
     const schedules = await scheduleService.findMany(options);
     return appExpress.response200(schedules);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -342,7 +341,7 @@ const getCurrentWeek: RequestHandler = async (req, res, next) => {
     });
     return appExpress.response200(formattedSchedulesNew);
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -400,7 +399,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
       }),
     );
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -409,6 +408,7 @@ const findBySpecialization: RequestHandler = async (req, res, next) => {
 const update: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
+    console.log(0);
     // Validate the request body against schema
     const validationResult = updateScheduleSchema.safeParse(req.body);
     if (!validationResult.success) {
@@ -420,15 +420,122 @@ const update: RequestHandler = async (req, res, next) => {
     const scheduleData = validationResult.data as any;
     const id = req.params.id as unknown as ObjectId;
 
-    // Update schedule
-    const updatedSchedule = await scheduleService.update(id, scheduleData);
-    if (updatedSchedule) {
+    // Start transaction for service and payment updates
+    const session = await mongoose.startSession();
+    const paymentService = new PaymentService();
+
+    try {
+      session.startTransaction();
+
+      // Get current schedule to compare services
+      const currentSchedule = await scheduleService.findById(id, {
+        populateOptions: {
+          path: 'payments.payments services.service',
+        },
+      });
+
+      if (!currentSchedule) {
+        await session.abortTransaction();
+        return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
+      }
+
+      // Check if services are being updated
+      if (scheduleData.services && Array.isArray(scheduleData.services)) {
+        // Get current service IDs
+        const currentServiceIds = currentSchedule.services.map((s) =>
+          (s.service as ObjectId).toString(),
+        );
+
+        // Get new service IDs
+        const newServiceIds = scheduleData.services;
+
+        // Find newly added services
+        const addedServiceIds = newServiceIds.filter(
+          (serviceId: string) => !currentServiceIds.includes(serviceId),
+        );
+
+        // Update services list with default status for new services
+        const updatedServices: ScheduleService[] = [
+          // Keep existing services with their current status
+          ...currentSchedule.services,
+          // Add new services with default status
+          ...addedServiceIds.map((serviceId: string) => ({
+            service: serviceId as unknown as ObjectId,
+            status: ScheduleServiceStatus.PENDING,
+          })),
+        ];
+
+        scheduleData.services = updatedServices;
+
+        // Create payment records for new services and update payment info
+        if (addedServiceIds.length > 0) {
+          let additionalPrice = 0;
+          const newPaymentIds: ObjectId[] = [];
+
+          // Create payments for new services
+          for (const serviceId of addedServiceIds) {
+            const serviceDetails = await consultationServiceService.findById(
+              serviceId as unknown as ObjectId,
+            );
+
+            if (serviceDetails) {
+              additionalPrice += serviceDetails.price || 0;
+
+              // Create payment record for new service
+              const paymentData: Omit<Payment, '_id'> = {
+                schedule: id,
+                service: serviceId as unknown as ObjectId,
+                method: PaymentMethod.CASH,
+                amount: serviceDetails.price,
+                status: PaymentStatus.PENDING,
+                note: 'Added service payment',
+                user: req.user.id,
+                paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+                createdAt: new Date(),
+              };
+
+              const payment = await paymentService.create(paymentData);
+              if (payment && payment._id) {
+                newPaymentIds.push(payment._id as ObjectId);
+              }
+            }
+          }
+
+          // Update payment information
+          const currentPayments = currentSchedule.payments || {
+            payments: [],
+            totalPrice: 0,
+            totalPaid: 0,
+          };
+
+          const updatedPaymentInfo: SchedulePaymentInfo = {
+            payments: [...(currentPayments.payments as ObjectId[]), ...newPaymentIds],
+            totalPrice: currentPayments.totalPrice + additionalPrice,
+            totalPaid: currentPayments.totalPaid, // Keep current paid amount
+          };
+
+          scheduleData.payments = updatedPaymentInfo;
+        }
+      }
+
+      // Update schedule with new data
+      const updatedSchedule = await scheduleService.update(id, scheduleData, session);
+
+      if (!updatedSchedule) {
+        await session.abortTransaction();
+        return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
+      }
+
+      await session.commitTransaction();
       return appExpress.response200(updatedSchedule);
-    } else {
-      return appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Schedule not found' });
+    } catch (error: any) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
     }
   } catch (error) {
-    appExpress.response401(ErrorCode.INVALID_REQUEST_BODY, {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
       message: (error as Error).message,
     });
   }
@@ -468,9 +575,11 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
         message: 'Invalid date range',
       });
     }
-    console.log(typeof fullWeek)
-    const offsetConfig = fullWeek ? {$match: {}} : {$match: {dayOffset: parseInt(dayOffset as string, 10)}};
-    console.log(fullWeek,offsetConfig)
+    console.log(typeof fullWeek);
+    const offsetConfig = fullWeek
+      ? { $match: {} }
+      : { $match: { dayOffset: parseInt(dayOffset as string, 10) } };
+    console.log(fullWeek, offsetConfig);
     // find all schedules that are in the current week
     const matchOption = {
       $match: {
@@ -480,7 +589,6 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
         'weekPeriod.to': {
           $lte: new Date(to as string),
         },
-        
       },
     };
 
@@ -533,7 +641,7 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
               },
             },
             matchOption,
-            offsetConfig
+            offsetConfig,
           ],
           as: 'schedules',
         },
