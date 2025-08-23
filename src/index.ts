@@ -42,7 +42,7 @@ app.use(
       'http://localhost:3000',
       'http://localhost:5173',
       'https://health-care-fe-six.vercel.app',
-      'healthcareclinics.online'
+      'https://www.healthcareclinics.online'
     ],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials', 'Authorization'],
