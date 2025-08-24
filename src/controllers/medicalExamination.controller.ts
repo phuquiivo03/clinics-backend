@@ -9,7 +9,7 @@ import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import type { ObjectId, SortOrder } from 'mongoose';
 import type { MedicalExaminationResult, SubclinicalResult } from '../types/medicalExamination';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import waitingMessageService from '../services/waitingMessage.service';
 import { WaitingMessageStatus } from '../types/waitingMessage';
 
@@ -135,7 +135,13 @@ export class MedicalExaminationResultController {
           message: 'Medical examination ID is required',
         });
       }
-      const result = await this.service.findById(id);
+
+      const options: MongooseFindOneOptions = {
+        populateOptions: {
+          path: 'prescription',
+        },
+      };
+      const result = await this.service.findById(id, options);
       if (!result) {
         return appExpress.response404(ErrorCode.NOT_FOUND, {
           message: 'Medical examination result not found',
