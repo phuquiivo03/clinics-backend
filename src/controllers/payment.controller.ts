@@ -1,11 +1,14 @@
 import type { Request, Response, NextFunction } from 'express';
 import { PaymentService } from '../services/payment.service';
-import type { Payment } from '../types/payment';
+import type { IUpdatePaymentRequest, Payment } from '../types/payment';
 import { PaymentStatus } from '../types/payment';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, type ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import UtilsService from '../services/utils.service';
+import { updatePaymentSchema } from '../schemas/payment.schema';
+import { ZodError } from 'zod';
 
 export class PaymentController {
   private paymentService: PaymentService;
@@ -108,14 +111,31 @@ export class PaymentController {
         });
         return;
       }
-      const payment = await this.paymentService.update(new Schema.Types.ObjectId(id), req.body);
+
+      // Debug logging
+      console.log('Request body:', req.body);
+      console.log('Request body type:', typeof req.body);
+      console.log('Request headers:', req.headers);
+
+      const paymentData = UtilsService.validateBody<IUpdatePaymentRequest>(
+        updatePaymentSchema,
+        req.body,
+      );
+      if (paymentData instanceof ZodError) {
+        console.log('Validation error:', paymentData);
+        appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, paymentData);
+        return;
+      }
+      const payment = await this.paymentService.update(id as unknown as ObjectId, paymentData);
       if (!payment) {
         appExpress.response404(ErrorCode.NOT_FOUND, { message: 'Payment not found' });
         return;
       }
       appExpress.response200(payment);
     } catch (error) {
-      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
+        message: (error as Error).message,
+      });
     }
   }
 
@@ -177,3 +197,4 @@ export class PaymentController {
     }
   }
 }
+

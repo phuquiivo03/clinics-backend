@@ -36,8 +36,9 @@ export class PaymentService {
   }
 
   async update(id: ObjectId, payment: Partial<Payment>): Promise<Payment | null> {
+    console.log("PAYMENT::", payment);
     const updatedPayment = await this.paymentRepository.update(id, payment, { new: true });
-    
+    console.log("UPDATED PAYMENT::", updatedPayment);
     // If the payment was updated and either status or amount changed, update the schedule's totalPaid
     if (updatedPayment && (payment.status !== undefined || payment.amount !== undefined)) {
       const schedule = await scheduleService.findById(updatedPayment.schedule as ObjectId, {

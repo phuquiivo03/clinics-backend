@@ -29,3 +29,10 @@ export type Payment = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+
+export type IUpdatePaymentRequest = {
+  status?: PaymentStatus;
+  amount?: number;
+  method?: PaymentMethod;
+};
