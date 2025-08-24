@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import type { Payment } from '../types/payment';
 import { PaymentMethod, PaymentStatus } from '../types/payment';
+import { z } from 'zod';
 
 const paymentSchema = new Schema<Payment>(
   {
@@ -27,5 +28,11 @@ const paymentSchema = new Schema<Payment>(
     timestamps: true,
   },
 );
+
+export const updatePaymentSchema = z.object({
+  status: z.nativeEnum(PaymentStatus).optional(),
+  amount: z.number().optional(),
+  method: z.nativeEnum(PaymentMethod).optional(),
+});
 
 export const PaymentSchema = paymentSchema;
