@@ -5,7 +5,7 @@ import {
   type MedicalExaminationResultRepository,
 } from '../repositories/medicalExamination';
 import type { ObjectId } from 'mongoose';
-import type { MongooseFindManyOptions } from '../repositories/type';
+import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import type { AppResponse } from '../dto/response';
 
 class MedicalExaminationResultService {
@@ -37,9 +37,9 @@ class MedicalExaminationResultService {
     }
   }
 
-  async findById(id: string): Promise<MedicalExaminationResult> {
+  async findById(id: string, options?: MongooseFindOneOptions): Promise<MedicalExaminationResult> {
     try {
-      const result = await this.repository.findById(id as unknown as ObjectId);
+      const result = await this.repository.findById(id as unknown as ObjectId, options);
       if (!result) {
         throw new Error('Medical examination result not found');
       }
