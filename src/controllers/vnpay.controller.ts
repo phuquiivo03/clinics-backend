@@ -5,22 +5,70 @@ import type { RequestHandler } from 'express';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
 import redisClient from '../db/redis_connection';
+import { PaymentService } from '../services/payment.service';
+import { PaymentStatus, type IVNPayCreateRequest } from '../types/payment';
+import type { ObjectId } from 'mongoose';
+import { vnpayCreateSchema } from '../schemas/payment.schema';
+import UtilsService from '../services/utils.service';
+import { ZodError } from 'zod';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const { amount, orderId, orderInfo = 'Thanh toan don hang', paymentIds = [] } = req.body;
+
+  // Validate request body
+  const validationResult = UtilsService.validateBody<IVNPayCreateRequest>(vnpayCreateSchema, req.body);
+  if (validationResult instanceof ZodError) {
+    appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult);
+    return;
+  }
+
+  let { orderId, orderInfo, paymentIds } = validationResult;
+
+  // Auto-generate orderId if not provided
+  if (!orderId) {
+    orderId = Date.now().toString();
+  }
+
   if (redisClient) {
     await redisClient.set(`${orderId}`, JSON.stringify(paymentIds), { EX: 3600 });
   } else {
     console.log('** REDIS::NOTFOUND');
   }
+
+  let amount = 0;
+  // find payments and sum amount
+  const paymentService = new PaymentService();
+  const payments = await paymentService.findMany({
+    filter: {
+      _id: { $in: paymentIds },
+    },
+  });
+
+  if (!payments.data || payments.data.length === 0) {
+    appExpress.response400(ErrorCode.BAD_REQUEST, {
+      message: 'No valid payments found for the provided payment IDs',
+    });
+    return;
+  }
+
+  payments.data.forEach((payment) => {
+    amount += payment.amount;
+  });
+
+  if (amount <= 0) {
+    appExpress.response400(ErrorCode.BAD_REQUEST, {
+      message: 'Total payment amount must be greater than 0',
+    });
+    return;
+  }
+
   const vnp_TmnCode = process.env.VNP_TMN_CODE!;
   const vnp_HashSecret = process.env.VNP_HASH_SECRET!;
   const vnp_Url = process.env.VNP_URL!;
   const vnp_ReturnUrl = process.env.VNP_RETURN_URL!;
 
   const createDate = moment().format('YYYYMMDDHHmmss');
-  const txnRef = orderId || Date.now().toString();
+  const txnRef = orderId;
 
   const params: Record<string, string | number> = {
     vnp_Version: '2.1.0',
@@ -55,13 +103,24 @@ const create: RequestHandler = async (req, res, next) => {
 
 const returnUrl: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
+  const paymentService = new PaymentService();
   const url = new URL(`${process.env.SERVER_URL}/api/v1/payment${req.url}`);
   const query = Object.fromEntries(url.searchParams.entries());
   let ids = [];
   if (redisClient) {
-    if (query.vnp_TxnRef) {
+    if (query.vnp_TxnRef && query.vnp_ResponseCode === '00') { // payment successfull
       const idsString = await redisClient.get(query.vnp_TxnRef);
       ids = JSON.parse(idsString || '[]');
+      const updatedPayment = Promise.all(ids.map(async (id: string) =>
+        paymentService.update(id as unknown as ObjectId, {
+          status: PaymentStatus.PAID,
+        })
+      ));
+      
+      const result = await updatedPayment;
+      console.log('** RESULT::', result);
+      
+      
       await redisClient.del(query.vnp_TxnRef);
     } else {
       console.log('** QUERY[vnp_TxnRef]::NOTFOUND');
@@ -69,6 +128,7 @@ const returnUrl: RequestHandler = async (req, res, next) => {
   } else {
     console.log('** REDIS::NOTFOUND');
   }
+  try {
   const secureHash = query['vnp_SecureHash'];
   delete query['vnp_SecureHash'];
   delete query['vnp_SecureHashType'];
@@ -82,6 +142,11 @@ const returnUrl: RequestHandler = async (req, res, next) => {
   return appExpress.res.redirect(
     `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}&payments=${ids}`,
   );
+  } catch(e) {
+    return appExpress.res.redirect(
+      `${process.env.CLIENT_URL}/payment/result?code=XX&valid=${false}&payments=${ids}`,
+    );
+  }
 };
 
 const getIPN: RequestHandler = async (req, res, next) => {

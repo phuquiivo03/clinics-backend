@@ -112,17 +112,11 @@ export class PaymentController {
         return;
       }
 
-      // Debug logging
-      console.log('Request body:', req.body);
-      console.log('Request body type:', typeof req.body);
-      console.log('Request headers:', req.headers);
-
       const paymentData = UtilsService.validateBody<IUpdatePaymentRequest>(
         updatePaymentSchema,
         req.body,
       );
       if (paymentData instanceof ZodError) {
-        console.log('Validation error:', paymentData);
         appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, paymentData);
         return;
       }

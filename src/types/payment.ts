@@ -36,3 +36,9 @@ export type IUpdatePaymentRequest = {
   amount?: number;
   method?: PaymentMethod;
 };
+
+export type IVNPayCreateRequest = {
+  orderId?: string;
+  orderInfo: string;
+  paymentIds: string[];
+};

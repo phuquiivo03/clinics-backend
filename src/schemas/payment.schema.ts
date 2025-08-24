@@ -35,4 +35,10 @@ export const updatePaymentSchema = z.object({
   method: z.nativeEnum(PaymentMethod).optional(),
 });
 
+export const vnpayCreateSchema = z.object({
+  orderId: z.string().optional(),
+  orderInfo: z.string().default('Thanh toan don hang'),
+  paymentIds: z.array(z.string().min(1, 'Payment ID cannot be empty')).min(1, 'At least one payment ID is required'),
+});
+
 export const PaymentSchema = paymentSchema;
