@@ -416,6 +416,7 @@ const update: RequestHandler = async (req, res, next) => {
         ErrorCode.INVALID_REQUEST_BODY,
         validationResult.error.format(),
       );
+      
     }
     const scheduleData = validationResult.data as any;
     const id = req.params.id as unknown as ObjectId;
@@ -566,16 +567,15 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
       from = startOfWeek,
       to = endOfWeek,
       dayOffset = currentDayOffset,
-      fullWeek = false,
+      fullWeek: fullWeekStr = 'false',
     } = req.query;
-
+    const fullWeek = fullWeekStr === 'true';
     if (!new Date(from as string) || !new Date(to as string)) {
       console.log(from, to);
       return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
         message: 'Invalid date range',
       });
     }
-    console.log(typeof fullWeek);
     const offsetConfig = fullWeek
       ? { $match: {} }
       : { $match: { dayOffset: parseInt(dayOffset as string, 10) } };
