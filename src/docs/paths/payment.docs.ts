@@ -110,6 +110,71 @@
  *         code:
  *           type: number
  *           example: 200
+ *     VNPayCreateRequest:
+ *       type: object
+ *       required:
+ *         - amount
+ *         - orderId
+ *       properties:
+ *         amount:
+ *           type: number
+ *           description: Payment amount in VND
+ *           example: 500000
+ *         orderId:
+ *           type: string
+ *           description: Unique order identifier
+ *           example: "ORDER-1650432789-123"
+ *         orderInfo:
+ *           type: string
+ *           description: Order description
+ *           default: "Thanh toan don hang"
+ *           example: "Payment for medical consultation"
+ *         paymentIds:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Array of payment IDs to associate with this transaction
+ *           example: ["67e9180afb886c8bef80f7c3", "67e9180afb886c8bef80f7c4"]
+ *     VNPayCreateResponse:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           properties:
+ *             paymentUrl:
+ *               type: string
+ *               description: VNPay payment URL to redirect user
+ *               example: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?..."
+ *             txnRef:
+ *               type: string
+ *               description: Transaction reference number
+ *               example: "ORDER-1650432789-123"
+ *         msg:
+ *           type: string
+ *           example: "OK"
+ *         code:
+ *           type: number
+ *           example: 200
+ *     VNPayIPNResponse:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           properties:
+ *             RspCode:
+ *               type: string
+ *               description: Response code from VNPay
+ *               example: "00"
+ *             Message:
+ *               type: string
+ *               description: Response message
+ *               example: "Confirm Success"
+ *         msg:
+ *           type: string
+ *           example: "OK"
+ *         code:
+ *           type: number
+ *           example: 200
  */
 
 /**
@@ -394,6 +459,130 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /payment/vnpay/create:
+ *   post:
+ *     summary: Create VNPay payment URL
+ *     tags: [Payments]
+ *     description: Creates a VNPay payment URL for processing online payments
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VNPayCreateRequest'
+ *     responses:
+ *       200:
+ *         description: VNPay payment URL created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VNPayCreateResponse'
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /payment/vnpay/return:
+ *   get:
+ *     summary: VNPay payment return URL
+ *     tags: [Payments]
+ *     description: Handles the return from VNPay after payment processing. This endpoint redirects to the client application with payment results.
+ *     parameters:
+ *       - in: query
+ *         name: vnp_Amount
+ *         schema:
+ *           type: string
+ *         description: Payment amount from VNPay
+ *       - in: query
+ *         name: vnp_BankCode
+ *         schema:
+ *           type: string
+ *         description: Bank code used for payment
+ *       - in: query
+ *         name: vnp_ResponseCode
+ *         schema:
+ *           type: string
+ *         description: VNPay response code (00 = success)
+ *       - in: query
+ *         name: vnp_TxnRef
+ *         schema:
+ *           type: string
+ *         description: Transaction reference number
+ *       - in: query
+ *         name: vnp_SecureHash
+ *         schema:
+ *           type: string
+ *         description: Security hash for verification
+ *     responses:
+ *       302:
+ *         description: Redirects to client application with payment result
+ *       400:
+ *         description: Invalid payment verification
+ */
+
+/**
+ * @swagger
+ * /payment/vnpay/ipn:
+ *   get:
+ *     summary: VNPay Instant Payment Notification (IPN)
+ *     tags: [Payments]
+ *     description: Webhook endpoint for VNPay to notify payment status. This endpoint verifies the payment and updates the database accordingly.
+ *     parameters:
+ *       - in: query
+ *         name: vnp_Amount
+ *         schema:
+ *           type: string
+ *         description: Payment amount from VNPay
+ *       - in: query
+ *         name: vnp_BankCode
+ *         schema:
+ *           type: string
+ *         description: Bank code used for payment
+ *       - in: query
+ *         name: vnp_ResponseCode
+ *         schema:
+ *           type: string
+ *         description: VNPay response code (00 = success)
+ *       - in: query
+ *         name: vnp_TxnRef
+ *         schema:
+ *           type: string
+ *         description: Transaction reference number
+ *       - in: query
+ *         name: vnp_SecureHash
+ *         schema:
+ *           type: string
+ *         description: Security hash for verification
+ *     responses:
+ *       200:
+ *         description: Payment confirmation successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VNPayIPNResponse'
+ *       400:
+ *         description: Invalid signature or payment verification failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     RspCode:
+ *                       type: string
+ *                       example: "97"
+ *                     Message:
+ *                       type: string
+ *                       example: "Invalid signature"
+ */
+
 export const paymentPaths = {
   '/payment': {
     post: {
@@ -434,6 +623,180 @@ export const paymentPaths = {
             'application/json': {
               schema: {
                 $ref: '#/components/schemas/PaymentsResponse',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/payment/vnpay/create': {
+    post: {
+      tags: ['Payments'],
+      summary: 'Create VNPay payment URL',
+      description: 'Creates a VNPay payment URL for processing online payments',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/VNPayCreateRequest',
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'VNPay payment URL created successfully',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/VNPayCreateResponse',
+              },
+            },
+          },
+        },
+        400: {
+          description: 'Invalid request body',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/payment/vnpay/return': {
+    get: {
+      tags: ['Payments'],
+      summary: 'VNPay payment return URL',
+      description:
+        'Handles the return from VNPay after payment processing. This endpoint redirects to the client application with payment results.',
+      parameters: [
+        {
+          name: 'vnp_Amount',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Payment amount from VNPay',
+        },
+        {
+          name: 'vnp_BankCode',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Bank code used for payment',
+        },
+        {
+          name: 'vnp_ResponseCode',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'VNPay response code (00 = success)',
+        },
+        {
+          name: 'vnp_TxnRef',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Transaction reference number',
+        },
+        {
+          name: 'vnp_SecureHash',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Security hash for verification',
+        },
+      ],
+      responses: {
+        302: {
+          description: 'Redirects to client application with payment result',
+        },
+        400: {
+          description: 'Invalid payment verification',
+        },
+      },
+    },
+  },
+  '/payment/vnpay/ipn': {
+    get: {
+      tags: ['Payments'],
+      summary: 'VNPay Instant Payment Notification (IPN)',
+      description:
+        'Webhook endpoint for VNPay to notify payment status. This endpoint verifies the payment and updates the database accordingly.',
+      parameters: [
+        {
+          name: 'vnp_Amount',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Payment amount from VNPay',
+        },
+        {
+          name: 'vnp_BankCode',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Bank code used for payment',
+        },
+        {
+          name: 'vnp_ResponseCode',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'VNPay response code (00 = success)',
+        },
+        {
+          name: 'vnp_TxnRef',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Transaction reference number',
+        },
+        {
+          name: 'vnp_SecureHash',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Security hash for verification',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Payment confirmation successful',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/VNPayIPNResponse',
+              },
+            },
+          },
+        },
+        400: {
+          description: 'Invalid signature or payment verification failed',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  data: {
+                    type: 'object',
+                    properties: {
+                      RspCode: {
+                        type: 'string',
+                        example: '97',
+                      },
+                      Message: {
+                        type: 'string',
+                        example: 'Invalid signature',
+                      },
+                    },
+                  },
+                },
               },
             },
           },

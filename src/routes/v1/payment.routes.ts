@@ -2,9 +2,14 @@ import { Router } from 'express';
 import { PaymentController } from '../../controllers/payment.controller';
 import { authMiddleware, checkRole } from '../../middleware/auth';
 import { ROLE } from '../../types/user';
-
+import vnpayController from '../../controllers/vnpay.controller';
 const router = Router();
 const paymentController = new PaymentController();
+
+// VNPay routes (no authentication required for webhooks)
+router.post('/vnpay/create', vnpayController.create);
+router.get('/vnpay/return', vnpayController.returnUrl);
+router.get('/vnpay/ipn', vnpayController.getIPN);
 
 // Protected routes for all authenticated users
 router.use(authMiddleware);
