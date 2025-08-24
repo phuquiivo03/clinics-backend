@@ -117,6 +117,90 @@ const options: swaggerJsdoc.Options = {
         PrescriptionUpdate: PrescriptionSchema.PrescriptionUpdate,
         Schedule: ScheduleSchemas.Schedule,
         WaitingMessage: WaitingMessageSchemas.WaitingMessage,
+        VNPayCreateRequest: {
+          type: 'object',
+          required: ['amount', 'orderId'],
+          properties: {
+            amount: {
+              type: 'number',
+              description: 'Payment amount in VND',
+              example: 500000,
+            },
+            orderId: {
+              type: 'string',
+              description: 'Unique order identifier',
+              example: 'ORDER-1650432789-123',
+            },
+            orderInfo: {
+              type: 'string',
+              description: 'Order description',
+              default: 'Thanh toan don hang',
+              example: 'Payment for medical consultation',
+            },
+            paymentIds: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Array of payment IDs to associate with this transaction',
+              example: ['67e9180afb886c8bef80f7c3', '67e9180afb886c8bef80f7c4'],
+            },
+          },
+        },
+        VNPayCreateResponse: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'object',
+              properties: {
+                paymentUrl: {
+                  type: 'string',
+                  description: 'VNPay payment URL to redirect user',
+                  example: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?...',
+                },
+                txnRef: {
+                  type: 'string',
+                  description: 'Transaction reference number',
+                  example: 'ORDER-1650432789-123',
+                },
+              },
+            },
+            msg: {
+              type: 'string',
+              example: 'OK',
+            },
+            code: {
+              type: 'number',
+              example: 200,
+            },
+          },
+        },
+        VNPayIPNResponse: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'object',
+              properties: {
+                RspCode: {
+                  type: 'string',
+                  description: 'Response code from VNPay',
+                  example: '00',
+                },
+                Message: {
+                  type: 'string',
+                  description: 'Response message',
+                  example: 'Confirm Success',
+                },
+              },
+            },
+            msg: {
+              type: 'string',
+              example: 'OK',
+            },
+            code: {
+              type: 'number',
+              example: 200,
+            },
+          },
+        },
         Error: {
           type: 'object',
           properties: {

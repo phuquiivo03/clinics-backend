@@ -10,7 +10,6 @@ import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import type { IAuthenJWT } from '../types';
-import twilioService from '../services/twilio.service';
 
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
