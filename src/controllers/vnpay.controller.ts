@@ -4,11 +4,16 @@ import { signParams } from '../lib/vnpay';
 import type { RequestHandler } from 'express';
 import { CustomExpress } from '../pkg/app/response';
 import { ErrorCode } from '../pkg/e/code';
+import redisClient from '../db/redis_connection';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const { amount, orderId, orderInfo = 'Thanh toan don hang' } = req.body;
-
+  const { amount, orderId, orderInfo = 'Thanh toan don hang', paymentIds = [] } = req.body;
+  if (redisClient) {
+    await redisClient.set(`${orderId}`, JSON.stringify(paymentIds), { EX: 3600 });
+  } else {
+    console.log('** REDIS::NOTFOUND');
+  }
   const vnp_TmnCode = process.env.VNP_TMN_CODE!;
   const vnp_HashSecret = process.env.VNP_HASH_SECRET!;
   const vnp_Url = process.env.VNP_URL!;
@@ -52,7 +57,18 @@ const returnUrl: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   const url = new URL(`${process.env.SERVER_URL}/api/v1/payment${req.url}`);
   const query = Object.fromEntries(url.searchParams.entries());
-
+  let ids = [];
+  if (redisClient) {
+    if (query.vnp_TxnRef) {
+      const idsString = await redisClient.get(query.vnp_TxnRef);
+      ids = JSON.parse(idsString || '[]');
+      await redisClient.del(query.vnp_TxnRef);
+    } else {
+      console.log('** QUERY[vnp_TxnRef]::NOTFOUND');
+    }
+  } else {
+    console.log('** REDIS::NOTFOUND');
+  }
   const secureHash = query['vnp_SecureHash'];
   delete query['vnp_SecureHash'];
   delete query['vnp_SecureHashType'];
@@ -64,7 +80,7 @@ const returnUrl: RequestHandler = async (req, res, next) => {
     `${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
   );
   return appExpress.res.redirect(
-    `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
+    `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}&payments=${ids}`,
   );
 };
 
