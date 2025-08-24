@@ -8,6 +8,7 @@ const paymentController = new PaymentController();
 
 // Protected routes for all authenticated users
 router.post('/vnpay/create', vnpayController.create);
+router.get('/vnpay/return', vnpayController.returnUrl);
 router.use(authMiddleware);
 
 // Routes for regular users

@@ -50,7 +50,7 @@ const create: RequestHandler = async (req, res, next) => {
 
 const returnUrl: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
-  const url = new URL(req.url);
+  const url = new URL(`${process.env.SERVER_URL}/api/v1/payment${req.url}`);
   const query = Object.fromEntries(url.searchParams.entries());
 
   const secureHash = query['vnp_SecureHash'];
@@ -59,9 +59,12 @@ const returnUrl: RequestHandler = async (req, res, next) => {
 
   const checkHash = signParams(query, process.env.VNP_HASH_SECRET!);
   const isValid = secureHash === checkHash;
-
+  console.log(
+    'Payement result',
+    `${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
+  );
   return appExpress.res.redirect(
-    `/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
+    `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
   );
 };
 
