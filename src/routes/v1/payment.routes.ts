@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { PaymentController } from '../../controllers/payment.controller';
 import { authMiddleware, checkRole } from '../../middleware/auth';
 import { ROLE } from '../../types/user';
-
+import vnpayController from '../../controllers/vnpay.controller';
 const router = Router();
 const paymentController = new PaymentController();
 
 // Protected routes for all authenticated users
+router.post('/vnpay/create', vnpayController.create);
 router.use(authMiddleware);
 
 // Routes for regular users
