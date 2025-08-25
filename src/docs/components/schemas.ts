@@ -84,6 +84,7 @@
  *         - specialization
  *         - experience
  *         - consultationFee
+ *         - room
  *       properties:
  *         _id:
  *           type: string
@@ -166,6 +167,11 @@
  *           maximum: 5
  *           description: The average rating of the doctor based on reviews
  *           example: 0
+ *         room:
+ *           type: string
+ *           format: uid
+ *           description: Reference to the room where the doctor practices
+ *           example: "666666666666666666666666"
  *         createdAt:
  *           type: string
  *           format: date-time

@@ -3,4 +3,5 @@ export type ICreateDoctorRequest = {
   experience: number;
   qualifications: string[];
   consultationFee: number;
+  room: string;
 };

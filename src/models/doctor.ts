@@ -75,6 +75,11 @@ const doctorSchema = new Schema<Doctor>(
       type: Number,
       default: 0,
     },
+    room: {
+      type: Schema.Types.ObjectId,
+      ref: 'Room',
+      required: true,
+    },
   },
   {
     timestamps: true,

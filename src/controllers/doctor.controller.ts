@@ -34,8 +34,8 @@ const getAllDoctors: RequestHandler = async (req, res, next) => {
         // Ensure population is maintained if not explicitly provided
         if (!options.populateOptions) {
           options.populateOptions = {
-            path: 'specialization',
-            select: ['name', 'description'],
+            path: 'specialization room',
+            select: 'name description roomNumber roomFloor',
           };
         }
       } catch (error) {
@@ -89,8 +89,8 @@ const getAllDoctors: RequestHandler = async (req, res, next) => {
         },
         sort: { createdAt: -1 }, // Sort by creation date, newest first
         populateOptions: {
-          path: 'specialization',
-          select: ['name', 'description'],
+          path: 'specialization room',
+          select: 'name description roomNumber roomFloor',
         },
       };
     }
@@ -146,6 +146,7 @@ const createDoctorProfile: RequestHandler = async (req, res, next) => {
       user: req.user._id,
       ...doctorRequest,
       specialization: doctorRequest.specialization as unknown as ObjectId,
+      room: doctorRequest.room as unknown as ObjectId,
       averageRating: 0,
       reviews: [],
       availability: [],
@@ -170,7 +171,7 @@ const findOne: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   let options: MongooseFindOneOptions = {
     populateOptions: {
-      path: 'user specialization',
+      path: 'user specialization room',
     },
   };
 
@@ -181,7 +182,7 @@ const findOne: RequestHandler = async (req, res, next) => {
       // Ensure population is maintained if not explicitly provided
       if (!options.populateOptions) {
         options.populateOptions = {
-          path: 'user specialization',
+          path: 'user specialization room',
         };
       }
 
