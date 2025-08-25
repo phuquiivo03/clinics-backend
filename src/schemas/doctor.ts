@@ -6,6 +6,7 @@ export const createDoctorSchema = z.object({
   experience: z.number().min(0, 'Experience must be a positive number'),
   qualifications: z.array(z.string()),
   consultationFee: z.number().min(0, 'Consultation fee must be a positive number'),
+  room: z.string().refine(isValidObjectId, 'Invalid room ID format'),
 });
 
 export const updateDoctorSchema = createDoctorSchema.partial().extend({
@@ -13,4 +14,5 @@ export const updateDoctorSchema = createDoctorSchema.partial().extend({
   experience: z.number().min(0, 'Experience must be a positive number').optional(),
   qualifications: z.array(z.string()).optional(),
   consultationFee: z.number().min(0, 'Consultation fee must be a positive number').optional(),
+  room: z.string().refine(isValidObjectId, 'Invalid room ID format').optional(),
 });

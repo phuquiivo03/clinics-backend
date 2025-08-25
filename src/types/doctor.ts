@@ -1,5 +1,6 @@
 import type { ObjectId, Document } from 'mongoose';
 import type { Specialty } from './specialty';
+import type { Room } from './room';
 export interface Doctor extends Document {
   user: ObjectId;
   specialization: ObjectId | Specialty;
@@ -10,6 +11,7 @@ export interface Doctor extends Document {
   availability: IDoctorAvailability[];
   reviews: IDoctorReview[];
   averageRating: number;
+  room: ObjectId | Room;
 }
 
 export type IDoctorAvailability = {

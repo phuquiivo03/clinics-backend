@@ -28,6 +28,7 @@ import type { ConsultationService } from '../types';
 import { config } from '../config';
 import { PaymentMethod, PaymentStatus, type Payment } from '../types/payment';
 import { PaymentService } from '../services/payment.service';
+import { pipeline } from 'stream';
 
 const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -264,7 +265,7 @@ const findById: RequestHandler = async (req, res, next) => {
     const id = req.params.id as unknown as ObjectId;
     const options: MongooseFindOneOptions = {
       populateOptions: {
-        path: 'payments.payments',
+        path: 'payments.payments services.service',
       },
     };
     const schedule = await scheduleService.findById(id, options);
@@ -600,11 +601,25 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: 'ConsultationServices',
-          localField: 'specialization',
-          foreignField: 'specialization',
-          as: 'services',
-        },
+          from: "ConsultationServices",
+          let: { 
+            specializationId: "$specialization", 
+            roomId: "$room" 
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$specialization", "$$specializationId"] },
+                    { $eq: ["$room", "$$roomId"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "services"
+        }
       },
       {
         $addFields: {

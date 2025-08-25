@@ -141,58 +141,22 @@
  *               consultationFee:
  *                 type: number
  *                 minimum: 0
- *     responses:
- *       201:
- *         description: Doctor profile created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Doctor'
- *       400:
- *         description: Invalid input data or doctor profile already exists
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden - Admin access required
- */
-
-/**
- * @swagger
- * /api/v1/doctor/specialization/{specialization}:
- *   get:
- *     summary: Get doctors by specialization
- *     tags: [Doctors]
- *     security: []  # No authentication required to view doctors
- *     parameters:
- *       - in: path
- *         name: specialization
- *         required: true
- *         schema:
- *           type: string
- *         description: The specialization to filter doctors by
- *         example: "cardiology"
- *     responses:
- *       200:
- *         description: List of doctors with the specified specialization retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Doctor'
- *       404:
- *         description: No doctors found with the specified specialization
- *       500:
- *         description: Internal server error
+ *               room:
+ *                 type: string
+ *                 format: uid
+ *                 description: Reference to the room where the doctor practices
+ *             required:
+ *               - specialization
+ *               - experience
+ *               - qualifications
+ *               - consultationFee
+ *               - room
+ *             example:
+ *               specialization: "67e8411218eb67934f9947a9"
+ *               experience: 10
+ *               qualifications: ["MBBS", "MD - Cardiology"]
+ *               consultationFee: 150
+ *               room: "666666666666666666666666"
  */
 
 /**
@@ -280,12 +244,17 @@
  *                           endTime:
  *                             type: string
  *                             format: time
+ *               room:
+ *                 type: string
+ *                 format: uid
+ *                 description: Reference to the room where the doctor practices
  *             example:
  *               specialization: "Cardiologist"
  *               experience: 12
  *               qualifications: ["MBBS", "MD - Cardiology", "Fellowship in Interventional Cardiology"]
  *               bio: "Dr. John Smith is a board-certified cardiologist with over 12 years of experience."
  *               consultationFee: 175
+ *               room: "666666666666666666666666"
  *     responses:
  *       200:
  *         description: Doctor updated successfully
