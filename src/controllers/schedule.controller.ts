@@ -265,7 +265,7 @@ const findById: RequestHandler = async (req, res, next) => {
     const id = req.params.id as unknown as ObjectId;
     const options: MongooseFindOneOptions = {
       populateOptions: {
-        path: 'payments.payments',
+        path: 'payments.payments services.service',
       },
     };
     const schedule = await scheduleService.findById(id, options);
