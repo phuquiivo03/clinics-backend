@@ -16,7 +16,7 @@ import { jobScheduler } from './jobs';
 jobScheduler.start();
 
 app.use(express.json());
-// cookie setup..
+// cookie setup.
 app.use(cookieParser(config.cookie.secret));
 
 app.use(
@@ -42,7 +42,7 @@ app.use(
       'http://localhost:3000',
       'http://localhost:5173',
       'https://health-care-fe-six.vercel.app',
-      'https://www.healthcareclinics.online'
+      'https://www.healthcareclinics.online',
     ],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Cookie', 'Access-Control-Allow-Credentials', 'Authorization'],

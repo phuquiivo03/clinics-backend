@@ -43,11 +43,13 @@ const createUser: RequestHandler = async (req, res, next) => {
         message: 'Phone number already exists',
       });
       return;
-    } else if(user && !user.password) {
+    } else if (user && !user.password) {
       // usser account is created by doctor before
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(userRequest.password, salt);
-      const updatedUser = await userService.findAndUpdate(user._id as ObjectId, { password: hashedPassword });
+      const updatedUser = await userService.findAndUpdate(user._id as ObjectId, {
+        password: hashedPassword,
+      });
       if (!updatedUser || !updatedUser._id) {
         appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {
           message: 'Failed to update password.',
@@ -63,7 +65,7 @@ const createUser: RequestHandler = async (req, res, next) => {
         refreshToken,
       });
       return;
-    } 
+    }
 
     const data: User = {
       ...userRequest,
@@ -97,12 +99,14 @@ const createUser: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 const unsignupUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
     // Validate request body against schema
-    const userRequest = UtilsService.validateBody<IUnsignupUserRequest>(unsignupUserSchema, req.body);
+    const userRequest = UtilsService.validateBody<IUnsignupUserRequest>(
+      unsignupUserSchema,
+      req.body,
+    );
     if (userRequest instanceof ZodError) {
       return appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, {
         message: userRequest.message,
@@ -118,7 +122,6 @@ const unsignupUser: RequestHandler = async (req, res, next) => {
     }
 
     // check if phone number is verified
-   
 
     const data: User = {
       ...userRequest,
@@ -261,11 +264,7 @@ const getAllUsers: RequestHandler = async (req, res, next) => {
     console.error(error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
   }
-
-
-
 };
-
 
 const findOne: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
@@ -291,22 +290,19 @@ const findOne: RequestHandler = async (req, res, next) => {
           message: 'Invalid options format. Please provide a valid JSON string.',
         });
       }
-    } 
+    }
     const userData = await userService.findOne(options);
     if (!userData) {
       appExpress.response404(ErrorCode.NOT_FOUND, {});
       return;
     }
-    
-  appExpress.response200(userService.userWithoutPassword(userData));
+
+    appExpress.response200(userService.userWithoutPassword(userData));
   } catch (error) {
     console.error(error);
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
   }
-
-  
-
-}
+};
 
 export default {
   getUserProfile,
@@ -314,5 +310,5 @@ export default {
   unsignupUser,
   updateUserProfile,
   getAllUsers,
-  findOne
+  findOne,
 };
