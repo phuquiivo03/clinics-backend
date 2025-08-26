@@ -16,7 +16,10 @@ const create: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
 
   // Validate request body
-  const validationResult = UtilsService.validateBody<IVNPayCreateRequest>(vnpayCreateSchema, req.body);
+  const validationResult = UtilsService.validateBody<IVNPayCreateRequest>(
+    vnpayCreateSchema,
+    req.body,
+  );
   if (validationResult instanceof ZodError) {
     appExpress.response400(ErrorCode.INVALID_REQUEST_BODY, validationResult);
     return;
@@ -108,19 +111,21 @@ const returnUrl: RequestHandler = async (req, res, next) => {
   const query = Object.fromEntries(url.searchParams.entries());
   let ids = [];
   if (redisClient) {
-    if (query.vnp_TxnRef && query.vnp_ResponseCode === '00') { // payment successfull
+    if (query.vnp_TxnRef && query.vnp_ResponseCode === '00') {
+      // payment successfull
       const idsString = await redisClient.get(query.vnp_TxnRef);
       ids = JSON.parse(idsString || '[]');
-      const updatedPayment = Promise.all(ids.map(async (id: string) =>
-        paymentService.update(id as unknown as ObjectId, {
-          status: PaymentStatus.PAID,
-        })
-      ));
-      
+      const updatedPayment = Promise.all(
+        ids.map(async (id: string) =>
+          paymentService.update(id as unknown as ObjectId, {
+            status: PaymentStatus.PAID,
+          }),
+        ),
+      );
+
       const result = await updatedPayment;
       console.log('** RESULT::', result);
-      
-      
+
       await redisClient.del(query.vnp_TxnRef);
     } else {
       console.log('** QUERY[vnp_TxnRef]::NOTFOUND');
@@ -129,20 +134,20 @@ const returnUrl: RequestHandler = async (req, res, next) => {
     console.log('** REDIS::NOTFOUND');
   }
   try {
-  const secureHash = query['vnp_SecureHash'];
-  delete query['vnp_SecureHash'];
-  delete query['vnp_SecureHashType'];
+    const secureHash = query['vnp_SecureHash'];
+    delete query['vnp_SecureHash'];
+    delete query['vnp_SecureHashType'];
 
-  const checkHash = signParams(query, process.env.VNP_HASH_SECRET!);
-  const isValid = secureHash === checkHash;
-  console.log(
-    'Payement result',
-    `${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
-  );
-  return appExpress.res.redirect(
-    `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}&payments=${ids}`,
-  );
-  } catch(e) {
+    const checkHash = signParams(query, process.env.VNP_HASH_SECRET!);
+    const isValid = secureHash === checkHash;
+    console.log(
+      'Payement result',
+      `${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}`,
+    );
+    return appExpress.res.redirect(
+      `${process.env.CLIENT_URL}/payment/result?code=${query.vnp_ResponseCode}&valid=${isValid}&ref=${query.vnp_TxnRef}&payments=${ids}`,
+    );
+  } catch (e) {
     return appExpress.res.redirect(
       `${process.env.CLIENT_URL}/payment/result?code=XX&valid=${false}&payments=${ids}`,
     );
