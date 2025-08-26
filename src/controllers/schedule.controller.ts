@@ -76,10 +76,10 @@ const create: RequestHandler = async (req, res, next) => {
                   : [];
 
               // Calculate total price from services
-              let totalPrice = 0;
-              for (const serviceItem of selectedPackage.tests) {
-                totalPrice += (serviceItem as ConsultationService).price || 0;
-              }
+              const totalPrice = selectedPackage.price || 0;
+              // for (const serviceItem of selectedPackage.tests) {
+              //   totalPrice += (serviceItem as ConsultationService).price || 0;
+              // }
 
               // Create default payment info
               const paymentInfo: SchedulePaymentInfo = {
@@ -417,7 +417,6 @@ const update: RequestHandler = async (req, res, next) => {
         ErrorCode.INVALID_REQUEST_BODY,
         validationResult.error.format(),
       );
-      
     }
     const scheduleData = validationResult.data as any;
     const id = req.params.id as unknown as ObjectId;
@@ -601,25 +600,25 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "ConsultationServices",
-          let: { 
-            specializationId: "$specialization", 
-            roomId: "$room" 
+          from: 'ConsultationServices',
+          let: {
+            specializationId: '$specialization',
+            roomId: '$room',
           },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$specialization", "$$specializationId"] },
-                    { $eq: ["$room", "$$roomId"] }
-                  ]
-                }
-              }
-            }
+                    { $eq: ['$specialization', '$$specializationId'] },
+                    { $eq: ['$room', '$$roomId'] },
+                  ],
+                },
+              },
+            },
           ],
-          as: "services"
-        }
+          as: 'services',
+        },
       },
       {
         $addFields: {
