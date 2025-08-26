@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { type MedicalExaminationResult } from '../types/medicalExamination';
 
 const ICDCodeSchema = new Schema(
@@ -30,8 +30,8 @@ const MedicalExaminationResultSchema = new Schema<MedicalExaminationResult>(
     finalDiagnosis: [ICDCodeSchema],
     prescription: { type: Schema.Types.ObjectId, ref: 'Prescription' },
     followUp: {
-      nextVisit: { type: String },
       notes: { type: String },
+      schedule: { type: Schema.Types.ObjectId, ref: 'Schedule' },
     },
   },
   { timestamps: true },

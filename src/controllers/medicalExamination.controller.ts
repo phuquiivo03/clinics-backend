@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { MedicalExaminationResultService } from '../services/medicalExamination.service';
 import {
+  MedicalExaminationAddFollowUpSchema,
   MedicalExaminationResultCreateSchema,
   MedicalExaminationResultUpdateSchema,
 } from '../schemas/medicalExamination';
@@ -12,6 +13,18 @@ import type { MedicalExaminationResult, SubclinicalResult } from '../types/medic
 import type { MongooseFindManyOptions, MongooseFindOneOptions } from '../repositories/type';
 import waitingMessageService from '../services/waitingMessage.service';
 import { WaitingMessageStatus } from '../types/waitingMessage';
+import {
+  ScheduleServiceStatus,
+  ScheduleStatus,
+  type Schedule,
+  type SchedulePaymentInfo,
+  type ScheduleService,
+} from '../types/schedules';
+import consultationServiceService from '../services/consultationService.service';
+import { config } from '../config';
+import { PaymentMethod, PaymentStatus, type Payment } from '../types/payment';
+import scheduleService from '../services/schedule.service';
+import { PaymentService } from '../services/payment.service';
 
 export class MedicalExaminationResultController {
   private service: MedicalExaminationResultService;
@@ -155,8 +168,6 @@ export class MedicalExaminationResultController {
     }
   };
 
-  
-
   findByPatientId: RequestHandler = async (req, res, next) => {
     const appExpress = new CustomExpress(req, res, next);
     try {
@@ -265,6 +276,136 @@ export class MedicalExaminationResultController {
       }
 
       return appExpress.response200(result);
+    } catch (error) {
+      return appExpress.response400(ErrorCode.BAD_REQUEST, {
+        message: (error as Error).message,
+      });
+    }
+  };
+
+  addFollowUp: RequestHandler = async (req, res, next) => {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return appExpress.response400(ErrorCode.INVALID_REQUEST_PARAMS, {
+          message: 'Medical examination ID is required',
+        });
+      }
+      const validatedData = MedicalExaminationAddFollowUpSchema.parse(req.body);
+      if (!validatedData) {
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Invalid data',
+        });
+      }
+      let followup: { notes: string; schedule?: Schedule } = {
+        notes: validatedData.notes || '',
+      };
+      if (validatedData.schedule) {
+        // For service type, fetch services to calculate price
+        const serviceIds = validatedData.schedule.services || [];
+        const services: ScheduleService[] = serviceIds.map((svc: string) => {
+          return {
+            service: svc as unknown as ObjectId,
+            status: ScheduleServiceStatus.PENDING,
+          } as ScheduleService;
+        });
+
+        // Calculate total price from services
+        let totalPrice = 0;
+        for (const serviceItem of services) {
+          const serviceDetails = await consultationServiceService.findById(
+            serviceItem.service as ObjectId,
+          );
+          if (serviceDetails) {
+            totalPrice += serviceDetails.price || 0;
+          }
+        }
+
+        // Create default payment info
+        const paymentInfo: SchedulePaymentInfo = {
+          payments: [],
+          totalPrice,
+          totalPaid: 0,
+        };
+
+        followup.schedule = {
+          weekPeriod: {
+            from: new Date(validatedData.schedule.weekPeriod.from),
+            to: new Date(validatedData.schedule.weekPeriod.to),
+          },
+          dayOffset: validatedData.schedule.dayOffset,
+          timeOffset: validatedData.schedule.timeOffset as 0 | 1,
+          services,
+          type: 'services',
+          userId: validatedData.schedule.userId as unknown as ObjectId,
+          status: ScheduleStatus.CONFIRMED,
+          packageInfo: config.customPackage as unknown as ObjectId,
+          payments: paymentInfo,
+        };
+
+        const createdSchedule = await scheduleService.create(followup.schedule);
+        if (!createdSchedule) {
+          return appExpress.response400(ErrorCode.BAD_REQUEST, {
+            message: 'Failed to create schedule',
+          });
+        }
+        console.log('services', createdSchedule.services);
+        let amount = 0;
+        for (const serviceItem of createdSchedule.services) {
+          // Get service details to get the price
+          const serviceDetails = await consultationServiceService.findById(
+            serviceItem.service as unknown as ObjectId,
+          );
+
+          if (serviceDetails) {
+            amount += serviceDetails.price || 0;
+            // Create a default payment for this service
+            const paymentData: Omit<Payment, '_id'> = {
+              schedule: createdSchedule._id as ObjectId,
+              service: serviceItem.service as ObjectId,
+              method: PaymentMethod.CASH,
+              amount: serviceDetails.price,
+              status: PaymentStatus.PENDING,
+              note: '',
+              user: req.user.id,
+              paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+              createdAt: new Date(),
+            };
+            const paymentService = new PaymentService();
+            // Create payment record
+            const payment = await paymentService.create(paymentData);
+            if (payment && payment._id) {
+              // Add payment ID to schedule's payments array
+              createdSchedule.payments = {
+                payments: [],
+                totalPrice: 0,
+                totalPaid: 0,
+              };
+              (createdSchedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
+              // schedule.payments.totalPaid += payment.amount;
+            }
+          }
+        }
+        createdSchedule.payments.totalPrice = amount;
+        // Update the schedule with payment IDs
+        if (createdSchedule.payments && createdSchedule.payments.payments.length > 0) {
+          await scheduleService.update(createdSchedule._id as ObjectId, {
+            payments: createdSchedule.payments,
+          });
+
+          followup.schedule._id = createdSchedule._id as unknown as ObjectId;
+          const updatedResult = await this.service.update(id, { followUp: followup });
+          if (updatedResult) {
+            return appExpress.response200(updatedResult);
+          }
+        }
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Failed to create schedule',
+        });
+      }
+      const updated = await this.service.update(id, { followUp: followup });
+      return appExpress.response200(updated);
     } catch (error) {
       return appExpress.response400(ErrorCode.BAD_REQUEST, {
         message: (error as Error).message,

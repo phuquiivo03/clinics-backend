@@ -23,8 +23,28 @@ export const MedicalExaminationResultCreateSchema = z.object({
   prescription: z.string().optional(),
   followUp: z
     .object({
-      nextVisit: z.string().optional(),
       notes: z.string().optional(),
+      schedule: z.string().optional(),
+    })
+    .optional(),
+});
+
+export const MedicalExaminationAddFollowUpSchema = z.object({
+  notes: z.string().optional(),
+  schedule: z
+    .object({
+      userId: z.string(),
+      services: z.array(z.string()),
+      dayOffset: z.number().int().min(0, 'Day offset must be a non-negative integer'),
+      timeOffset: z
+        .number()
+        .int()
+        .min(0, 'Time offset must be a non-negative integer')
+        .max(1, 'Time offset must be 0 or 1'),
+      weekPeriod: z.object({
+        from: z.string(),
+        to: z.string(),
+      }),
     })
     .optional(),
 });

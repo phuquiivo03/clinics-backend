@@ -59,6 +59,7 @@ const options: swaggerJsdoc.Options = {
           MedicalExaminationResultSchema.MedicalExaminationResultCreate,
         MedicalExaminationResultUpdate:
           MedicalExaminationResultSchema.MedicalExaminationResultUpdate,
+        MedicalExaminationAddFollowUp: MedicalExaminationResultSchema.MedicalExaminationAddFollowUp,
         Medication: PrescriptionSchema.Medication,
         Prescription: PrescriptionSchema.Prescription,
         PrescriptionCreate: PrescriptionSchema.PrescriptionCreate,

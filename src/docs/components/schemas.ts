@@ -624,13 +624,14 @@ export const MedicalExaminationResultSchema = {
       followUp: {
         type: 'object',
         properties: {
-          nextVisit: {
-            type: 'string',
-            example: '2023-06-30',
-          },
           notes: {
             type: 'string',
             example: 'Follow up in two weeks to check progress',
+          },
+          schedule: {
+            type: 'string',
+            example: '60d21b4667d0d8992e610c90',
+            description: 'Schedule ID for follow-up appointment',
           },
         },
       },
@@ -692,13 +693,14 @@ export const MedicalExaminationResultSchema = {
       followUp: {
         type: 'object',
         properties: {
-          nextVisit: {
-            type: 'string',
-            example: '2023-06-30',
-          },
           notes: {
             type: 'string',
             example: 'Follow up in two weeks to check progress',
+          },
+          schedule: {
+            type: 'string',
+            example: '60d21b4667d0d8992e610c90',
+            description: 'Schedule ID for follow-up appointment',
           },
         },
       },
@@ -749,17 +751,90 @@ export const MedicalExaminationResultSchema = {
       followUp: {
         type: 'object',
         properties: {
-          nextVisit: {
-            type: 'string',
-            example: '2023-06-30',
-          },
           notes: {
             type: 'string',
             example: 'Follow up in two weeks to check progress',
           },
+          schedule: {
+            type: 'string',
+            example: '60d21b4667d0d8992e610c90',
+            description: 'Schedule ID for follow-up appointment',
+          },
         },
       },
     },
+  },
+  MedicalExaminationAddFollowUp: {
+    type: 'object',
+    properties: {
+      notes: {
+        type: 'string',
+        example: 'Tai kham',
+        description: 'Additional notes for the follow-up',
+      },
+      schedule: {
+        type: 'object',
+        properties: {
+          userId: {
+            type: 'string',
+            example: '67e9180afb886c8bef80f7c3',
+            description: 'User ID for the follow-up appointment',
+          },
+          services: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            example: ['684d6b3a9f8e1d2c3b4a5e1d'],
+            description: 'Array of consultation service IDs for the follow-up',
+          },
+          dayOffset: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+            description: 'Day offset for the appointment (0=Monday, 1=Tuesday, etc.)',
+          },
+          timeOffset: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 1,
+            example: 1,
+            description: 'Time offset for the appointment (0=morning, 1=afternoon)',
+          },
+          weekPeriod: {
+            type: 'object',
+            properties: {
+              from: {
+                type: 'string',
+                format: 'date-time',
+                example: '2024-04-15T00:00:00.000Z',
+                description: 'Start date of the week period',
+              },
+              to: {
+                type: 'string',
+                format: 'date-time',
+                example: '2024-04-15T00:00:00.000Z',
+                description: 'End date of the week period',
+              },
+            },
+            required: ['from', 'to'],
+          },
+        },
+        required: ['userId', 'services', 'dayOffset', 'timeOffset', 'weekPeriod'],
+        description: 'Schedule information for the follow-up appointment',
+        example: {
+          userId: '67e9180afb886c8bef80f7c3',
+          dayOffset: 1,
+          timeOffset: 1,
+          services: ['684d6b3a9f8e1d2c3b4a5e1d'],
+          weekPeriod: {
+            from: '2024-04-15T00:00:00.000Z',
+            to: '2024-04-15T00:00:00.000Z',
+          },
+        },
+      },
+    },
+    description: 'Schema for adding follow-up information to a medical examination result',
   },
 };
 
