@@ -76,10 +76,10 @@ const create: RequestHandler = async (req, res, next) => {
                   : [];
 
               // Calculate total price from services
-              let totalPrice = 0;
-              for (const serviceItem of selectedPackage.tests) {
-                totalPrice += (serviceItem as ConsultationService).price || 0;
-              }
+              const totalPrice = selectedPackage.price || 0;
+              // for (const serviceItem of selectedPackage.tests) {
+              //   totalPrice += (serviceItem as ConsultationService).price || 0;
+              // }
 
               // Create default payment info
               const paymentInfo: SchedulePaymentInfo = {
@@ -136,60 +136,98 @@ const create: RequestHandler = async (req, res, next) => {
 
       const scheduleDataToCreate = await getScheduleData();
       const schedule = await scheduleService.create(scheduleDataToCreate, session);
-
       if (!schedule) {
         await session.abortTransaction();
-        return appExpress.response404(ErrorCode.NOT_FOUND, {
-          message: 'Schedule not found',
+        return appExpress.response400(ErrorCode.BAD_REQUEST, {
+          message: 'Failed to create schedule',
         });
       }
 
       // Create default payment entries for each service
-      for (const serviceItem of schedule.services) {
-        // Get service details to get the price
-        const serviceDetails = await consultationServiceService.findById(
-          serviceItem.service as ObjectId,
-        );
+      if (schedule.type === 'services') {
+        for (const serviceItem of schedule.services) {
+          // Get service details to get the price
+          const serviceDetails = await consultationServiceService.findById(
+            serviceItem.service as ObjectId,
+          );
 
-        if (serviceDetails) {
-          // Create a default payment for this service
-          const paymentData: Omit<Payment, '_id'> = {
-            schedule: schedule._id as ObjectId,
-            service: serviceItem.service as ObjectId,
-            method: PaymentMethod.CASH,
-            amount: serviceDetails.price,
-            status: PaymentStatus.PENDING,
-            note: '',
-            user: req.user.id,
-            paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-            createdAt: new Date(),
-          };
+          if (serviceDetails) {
+            // Create a default payment for this service
+            const paymentData: Omit<Payment, '_id'> = {
+              schedule: schedule._id as ObjectId,
+              service: serviceItem.service as ObjectId,
+              method: PaymentMethod.CASH,
+              amount: serviceDetails.price,
+              status: PaymentStatus.PENDING,
+              note: '',
+              user: req.user.id,
+              paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+              createdAt: new Date(),
+            };
 
-          // Create payment record
-          const payment = await paymentService.create(paymentData);
-          if (payment && payment._id) {
-            // Add payment ID to schedule's payments array
-            if (!schedule.payments) {
-              schedule.payments = {
-                payments: [],
-                totalPrice: 0,
-                totalPaid: 0,
-              };
+            // Create payment record
+            const payment = await paymentService.create(paymentData);
+            if (payment && payment._id) {
+              // Add payment ID to schedule's payments array
+              if (!schedule.payments) {
+                schedule.payments = {
+                  payments: [],
+                  totalPrice: 0,
+                  totalPaid: 0,
+                };
+              }
+              (schedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
+              // schedule.payments.totalPaid += payment.amount;
             }
-            (schedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
-            // schedule.payments.totalPaid += payment.amount;
           }
         }
-      }
-      // Update the schedule with payment IDs
-      if (schedule.payments && schedule.payments.payments.length > 0) {
-        await scheduleService.update(
-          schedule._id as ObjectId,
-          {
-            payments: schedule.payments,
-          },
-          session,
-        );
+        // Update the schedule with payment IDs
+        if (schedule.payments && schedule.payments.payments.length > 0) {
+          await scheduleService.update(
+            schedule._id as ObjectId,
+            {
+              payments: schedule.payments,
+            },
+            session,
+          );
+        }
+      } else {
+        const paymentData: Omit<Payment, '_id'> = {
+          schedule: schedule._id as ObjectId,
+          // @ts-ignore
+          service: schedule.services[0].service as ObjectId,
+          method: PaymentMethod.CASH,
+          amount: schedule.payments.totalPrice || 0,
+          status: PaymentStatus.PENDING,
+          note: '',
+          user: req.user.id,
+          paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          createdAt: new Date(),
+        };
+
+        // Create payment record
+        const payment = await paymentService.create(paymentData);
+        if (payment && payment._id) {
+          // Add payment ID to schedule's payments array
+          if (!schedule.payments) {
+            schedule.payments = {
+              payments: [],
+              totalPrice: 0,
+              totalPaid: 0,
+            };
+          }
+          (schedule.payments.payments as ObjectId[]).push(payment._id as ObjectId);
+          if (schedule.payments && schedule.payments.payments.length > 0) {
+            await scheduleService.update(
+              schedule._id as ObjectId,
+              {
+                payments: schedule.payments,
+              },
+              session,
+            );
+          }
+          // schedule.payments.totalPaid += payment.amount;
+        }
       }
 
       await session.commitTransaction();
@@ -417,7 +455,6 @@ const update: RequestHandler = async (req, res, next) => {
         ErrorCode.INVALID_REQUEST_BODY,
         validationResult.error.format(),
       );
-      
     }
     const scheduleData = validationResult.data as any;
     const id = req.params.id as unknown as ObjectId;
@@ -601,25 +638,25 @@ const findByDoctorId: RequestHandler = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "ConsultationServices",
-          let: { 
-            specializationId: "$specialization", 
-            roomId: "$room" 
+          from: 'ConsultationServices',
+          let: {
+            specializationId: '$specialization',
+            roomId: '$room',
           },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$specialization", "$$specializationId"] },
-                    { $eq: ["$room", "$$roomId"] }
-                  ]
-                }
-              }
-            }
+                    { $eq: ['$specialization', '$$specializationId'] },
+                    { $eq: ['$room', '$$roomId'] },
+                  ],
+                },
+              },
+            },
           ],
-          as: "services"
-        }
+          as: 'services',
+        },
       },
       {
         $addFields: {

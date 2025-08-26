@@ -3,6 +3,7 @@ import type { User } from './user';
 import type { Doctor } from './doctor';
 import type { Prescription } from './prescription';
 import type { ConsultationService } from './consultationService';
+import type { Schedule } from './schedules';
 
 export type MedicalExaminationResult = {
   _id?: ObjectId;
@@ -13,9 +14,10 @@ export type MedicalExaminationResult = {
   services: ConsultationService[] | ObjectId[];
   finalDiagnosis?: ICDCode[];
   prescription?: Prescription | ObjectId;
+
   followUp?: {
-    nextVisit?: string;
     notes?: string;
+    schedule?: Schedule | ObjectId;
   };
 };
 

@@ -62,8 +62,13 @@ jobs:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           PINATA_JWT: ${{ secrets.PINATA_JWT }}
           GATEWAY_URL: ${{ secrets.GATEWAY_URL }}
-          SECRET: ${{ secrets.SECRET }}
-          
+          VNP_TMN_CODE: ${{ secrets.VNP_TMN_CODE }}
+          VNP_HASH_SECRET: ${{ secrets.VNP_HASH_SECRET }}
+          VNP_URL: ${{ secrets.VNP_URL }}
+          VNP_RETURN_URL: ${{ secrets.VNP_RETURN_URL }}
+          VNP_LOCALE: ${{ secrets.VNP_LOCALE }}
+          VNP_CURR: ${{ secrets.VNP_CURR }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
@@ -92,6 +97,13 @@ jobs:
             -e REDIS_PORT=${REDIS_PORT} \
             -e REDIS_USERNAME=${REDIS_USERNAME} \
             -e REDIS_PASSWORD=${REDIS_PASSWORD} \
+            -e VNP_TMN_CODE=${VNP_TMN_CODE} \
+            -e VNP_HASH_SECRET=${VNP_HASH_SECRET} \
+            -e VNP_URL=${VNP_URL} \
+            -e VNP_RETURN_URL=${VNP_RETURN_URL} \
+            -e VNP_LOCALE=${VNP_LOCALE} \
+            -e VNP_CURR=${VNP_CURR} \
+            -e CLIENT_URL=${CLIENT_URL} \
             -e LETSENCRYPT_HOST=\"devq-be0x7.site\" \
             -e LETSENCRYPT_EMAIL=\"phuquivo03.cb@gmail.com\" \
             phuquivo03/clinics-management-backend
