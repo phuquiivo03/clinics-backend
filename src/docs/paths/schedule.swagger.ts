@@ -82,6 +82,18 @@
  *               format: date-time
  *               description: End date of the week period
  *               example: "2024-04-21T23:59:59.999Z"
+ *         services:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: |
+ *             Array of service IDs to update the schedule with.
+ *             - Adding new services: Include new service IDs in the array. New payment records will be created automatically.
+ *             - Removing services: Exclude service IDs from the array. Associated PENDING payments will be removed automatically.
+ *             - Orphaned payment cleanup: Any payments referencing services not in the schedule will be automatically removed (PENDING only).
+ *             - PAID payments are preserved for audit purposes even when services are removed or orphaned.
+ *             - Total price is automatically recalculated based on added/removed/orphaned services.
+ *           example: ["65fb32a9c5844e123f6789ef", "65fb32a9c5844e123f6789eg"]
  *     ScheduleResponse:
  *       type: object
  *       properties:
@@ -656,7 +668,8 @@ export const schedulePaths = {
     patch: {
       tags: ['Schedule'],
       summary: 'Update schedule by ID',
-      description: 'Updates a specific schedule. User must be the owner or have admin/doctor role.',
+      description:
+        'Updates a specific schedule including adding/removing services, automatic payment management, and orphaned payment cleanup. User must be the owner or have admin/doctor role.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -771,8 +784,9 @@ export const schedulePaths = {
             format: 'date-time',
           },
           description: 'Start date of the week period (ISO format)',
-          example: '2025-07-11T00:00:00.000Z'
-        }, {
+          example: '2025-07-11T00:00:00.000Z',
+        },
+        {
           in: 'query',
           name: 'to',
           require: false,
@@ -781,8 +795,9 @@ export const schedulePaths = {
             format: 'date-time',
           },
           description: 'End date of the week period (ISO format)',
-          example: '2025-08-17T23:59:59.999Z'
-        },{
+          example: '2025-08-17T23:59:59.999Z',
+        },
+        {
           in: 'query',
           name: 'dayOffset',
           require: false,
@@ -790,17 +805,19 @@ export const schedulePaths = {
             type: 'number',
           },
           description: 'Day of week (0 = Monday, 6 = Sunday)',
-          example: 4
-        }, {
+          example: 4,
+        },
+        {
           in: 'query',
           name: 'fullWeek',
           require: false,
           schema: {
             type: 'boolean',
           },
-          description: 'Whether to fetch the full week\'s schedule **if value is false -> do not pass this param**',
-          example: true
-        }
+          description:
+            "Whether to fetch the full week's schedule **if value is false -> do not pass this param**",
+          example: true,
+        },
       ],
       responses: {
         200: {

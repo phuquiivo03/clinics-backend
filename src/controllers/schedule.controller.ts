@@ -230,6 +230,55 @@ const create: RequestHandler = async (req, res, next) => {
         }
       }
 
+      // Final validation: Check for orphaned payments in the created schedule
+      // This ensures data consistency even if there were any issues during creation
+      const finalSchedule = await scheduleService.findById(schedule._id as ObjectId, {
+        populateOptions: {
+          path: 'payments.payments services.service',
+        },
+      });
+
+      if (finalSchedule) {
+        const scheduleServiceIds = finalSchedule.services.map((s) =>
+          (s.service as ObjectId).toString(),
+        );
+        const orphanedPayments: ObjectId[] = [];
+        let orphanedPrice = 0;
+
+        const payments = (finalSchedule.payments?.payments as Payment[]) || [];
+        for (const payment of payments) {
+          const paymentServiceId = (payment.service as ObjectId).toString();
+
+          if (
+            !scheduleServiceIds.includes(paymentServiceId) &&
+            payment.status === PaymentStatus.PENDING
+          ) {
+            orphanedPayments.push(payment._id as ObjectId);
+            orphanedPrice += payment.amount;
+            await paymentService.delete(payment._id as ObjectId);
+          }
+        }
+
+        // Update schedule if orphaned payments were found
+        if (orphanedPayments.length > 0) {
+          const cleanedPaymentIds = (finalSchedule.payments.payments as ObjectId[]).filter(
+            (paymentId) => !orphanedPayments.includes(paymentId),
+          );
+
+          await scheduleService.update(
+            schedule._id as ObjectId,
+            {
+              payments: {
+                payments: cleanedPaymentIds,
+                totalPrice: finalSchedule.payments.totalPrice - orphanedPrice,
+                totalPaid: finalSchedule.payments.totalPaid,
+              },
+            },
+            session,
+          );
+        }
+      }
+
       await session.commitTransaction();
 
       // If we get here, everything succeeded
@@ -479,6 +528,9 @@ const update: RequestHandler = async (req, res, next) => {
       }
 
       // Check if services are being updated
+      // This handles both adding new services and removing existing services
+      // When services are removed, their associated PENDING payments are also removed
+      // PAID payments are kept to maintain payment history
       if (scheduleData.services && Array.isArray(scheduleData.services)) {
         // Get current service IDs
         const currentServiceIds = currentSchedule.services.map((s) =>
@@ -493,10 +545,17 @@ const update: RequestHandler = async (req, res, next) => {
           (serviceId: string) => !currentServiceIds.includes(serviceId),
         );
 
-        // Update services list with default status for new services
+        // Find removed services
+        const removedServiceIds = currentServiceIds.filter(
+          (serviceId: string) => !newServiceIds.includes(serviceId),
+        );
+
+        // Update services list - keep existing services that are still in the new list, add new ones
         const updatedServices: ScheduleService[] = [
-          // Keep existing services with their current status
-          ...currentSchedule.services,
+          // Keep existing services that are still in the new list
+          ...currentSchedule.services.filter((s) =>
+            newServiceIds.includes((s.service as ObjectId).toString()),
+          ),
           // Add new services with default status
           ...addedServiceIds.map((serviceId: string) => ({
             service: serviceId as unknown as ObjectId,
@@ -505,57 +564,110 @@ const update: RequestHandler = async (req, res, next) => {
         ];
 
         scheduleData.services = updatedServices;
+        // Handle payment updates for added and removed services
+        // if (addedServiceIds.length > 0 || removedServiceIds.length > 0) {
+        //   let additionalPrice = 0;
+        //   let removedPrice = 0;
+        //   const newPaymentIds: ObjectId[] = [];
+        //   const paymentsToRemove: ObjectId[] = [];
 
-        // Create payment records for new services and update payment info
-        if (addedServiceIds.length > 0) {
-          let additionalPrice = 0;
-          const newPaymentIds: ObjectId[] = [];
+        //   // Create payments for new services
+        //   for (const serviceId of addedServiceIds) {
+        //     const serviceDetails = await consultationServiceService.findById(
+        //       serviceId as unknown as ObjectId,
+        //     );
 
-          // Create payments for new services
-          for (const serviceId of addedServiceIds) {
-            const serviceDetails = await consultationServiceService.findById(
-              serviceId as unknown as ObjectId,
-            );
+        //     if (serviceDetails) {
+        //       additionalPrice += serviceDetails.price || 0;
 
-            if (serviceDetails) {
-              additionalPrice += serviceDetails.price || 0;
+        //       // Create payment record for new service
+        //       const paymentData: Omit<Payment, '_id'> = {
+        //         schedule: id,
+        //         service: serviceId as unknown as ObjectId,
+        //         method: PaymentMethod.CASH,
+        //         amount: serviceDetails.price,
+        //         status: PaymentStatus.PENDING,
+        //         note: 'Added service payment',
+        //         user: req.user.id,
+        //         paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        //         createdAt: new Date(),
+        //       };
 
-              // Create payment record for new service
-              const paymentData: Omit<Payment, '_id'> = {
-                schedule: id,
-                service: serviceId as unknown as ObjectId,
-                method: PaymentMethod.CASH,
-                amount: serviceDetails.price,
-                status: PaymentStatus.PENDING,
-                note: 'Added service payment',
-                user: req.user.id,
-                paymentId: `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-                createdAt: new Date(),
-              };
+        //       const payment = await paymentService.create(paymentData);
+        //       if (payment && payment._id) {
+        //         newPaymentIds.push(payment._id as ObjectId);
+        //       }
+        //     }
+        //   }
 
-              const payment = await paymentService.create(paymentData);
-              if (payment && payment._id) {
-                newPaymentIds.push(payment._id as ObjectId);
-              }
-            }
-          }
+        //   // Update payment information
+        //   const currentPayments = currentSchedule.payments || {
+        //     payments: [],
+        //     totalPrice: 0,
+        //     totalPaid: 0,
+        //   };
 
-          // Update payment information
-          const currentPayments = currentSchedule.payments || {
-            payments: [],
-            totalPrice: 0,
-            totalPaid: 0,
-          };
+        //   // Filter out removed payments and add new ones
+        //   const remainingPaymentIds = (currentPayments.payments as ObjectId[]).filter(
+        //     (paymentId) => !paymentsToRemove.includes(paymentId),
+        //   );
 
-          const updatedPaymentInfo: SchedulePaymentInfo = {
-            payments: [...(currentPayments.payments as ObjectId[]), ...newPaymentIds],
-            totalPrice: currentPayments.totalPrice + additionalPrice,
-            totalPaid: currentPayments.totalPaid, // Keep current paid amount
-          };
+        //   const updatedPaymentInfo: SchedulePaymentInfo = {
+        //     payments: [...remainingPaymentIds, ...newPaymentIds],
+        //     totalPrice: currentPayments.totalPrice + additionalPrice - removedPrice,
+        //     totalPaid: currentPayments.totalPaid, // Keep current paid amount
+        //   };
 
-          scheduleData.payments = updatedPaymentInfo;
-        }
+        //   scheduleData.payments = updatedPaymentInfo;
+        // }
       }
+
+      // Check for orphaned payments (payments referencing services not in the schedule)
+      // This handles cases where payments exist for services that are no longer in the schedule
+      // const finalServiceIds = scheduleData.services
+      //   ? scheduleData.services.map((s: any) => (s.service || s).toString())
+      //   : currentSchedule.services.map((s) => (s.service as ObjectId).toString());
+
+      // const currentPayments = (currentSchedule.payments?.payments as Payment[]) || [];
+      // const orphanedPayments: ObjectId[] = [];
+      // let orphanedPrice = 0;
+
+      // for (const payment of currentPayments) {
+      //   const paymentServiceId = (payment.service as ObjectId).toString();
+
+      //   // If payment references a service not in the final service list
+      //   if (!finalServiceIds.includes(paymentServiceId)) {
+      //     // Only remove PENDING payments, keep PAID for audit purposes
+      //     if (payment.status === PaymentStatus.PENDING) {
+      //       orphanedPayments.push(payment._id as ObjectId);
+      //       orphanedPrice += payment.amount;
+
+      //       // Delete the orphaned payment
+      //       await paymentService.delete(payment._id as ObjectId);
+      //     }
+      //   }
+      // }
+
+      // Update payment info if orphaned payments were found
+      // if (orphanedPayments.length > 0) {
+      //   const currentPaymentInfo = scheduleData.payments ||
+      //     currentSchedule.payments || {
+      //       payments: [],
+      //       totalPrice: 0,
+      //       totalPaid: 0,
+      //     };
+
+      //   // Filter out orphaned payments from the payments array
+      //   const cleanedPaymentIds = (currentPaymentInfo.payments as ObjectId[]).filter(
+      //     (paymentId) => !orphanedPayments.includes(paymentId),
+      //   );
+
+      //   scheduleData.payments = {
+      //     payments: cleanedPaymentIds,
+      //     totalPrice: currentPaymentInfo.totalPrice - orphanedPrice,
+      //     totalPaid: currentPaymentInfo.totalPaid, // Keep paid amount
+      //   };
+      // }
 
       // Update schedule with new data
       const updatedSchedule = await scheduleService.update(id, scheduleData, session);
@@ -566,6 +678,9 @@ const update: RequestHandler = async (req, res, next) => {
       }
 
       await session.commitTransaction();
+      if (scheduleData.services) {
+        await scheduleService.recalculateTotalPaid(id);
+      }
       return appExpress.response200(updatedSchedule);
     } catch (error: any) {
       await session.abortTransaction();
