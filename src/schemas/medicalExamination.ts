@@ -21,6 +21,7 @@ export const MedicalExaminationResultCreateSchema = z.object({
   services: z.array(z.string()).optional(), // Array of ConsultationService IDs
   finalDiagnosis: z.array(ICDCodeSchema).optional(),
   prescription: z.string().optional(),
+  scheduleReferrence: z.string().optional(),
   followUp: z
     .object({
       notes: z.string().optional(),

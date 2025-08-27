@@ -58,6 +58,9 @@ export class MedicalExaminationResultController {
         prescription: validatedData.prescription
           ? (validatedData.prescription as unknown as ObjectId)
           : undefined,
+        scheduleReferrence: validatedData.scheduleReferrence
+          ? (validatedData.scheduleReferrence as unknown as ObjectId)
+          : undefined,
       };
 
       const result = await this.service.create(medicalExamData as MedicalExaminationResult);
@@ -151,7 +154,7 @@ export class MedicalExaminationResultController {
 
       const options: MongooseFindOneOptions = {
         populateOptions: {
-          path: 'prescription',
+          path: 'prescription scheduleReferrence',
         },
       };
       const result = await this.service.findById(id, options);
@@ -241,6 +244,10 @@ export class MedicalExaminationResultController {
 
       if (validatedData.prescription) {
         updateData.prescription = validatedData.prescription as unknown as ObjectId;
+      }
+
+      if (validatedData.scheduleReferrence) {
+        updateData.scheduleReferrence = validatedData.scheduleReferrence as unknown as ObjectId;
       }
 
       // Handle services array with proper typing

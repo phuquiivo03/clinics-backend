@@ -14,6 +14,7 @@ export type MedicalExaminationResult = {
   services: ConsultationService[] | ObjectId[];
   finalDiagnosis?: ICDCode[];
   prescription?: Prescription | ObjectId;
+  scheduleReferrence?: Schedule | ObjectId;
 
   followUp?: {
     notes?: string;

@@ -621,6 +621,11 @@ export const MedicalExaminationResultSchema = {
         type: 'string',
         example: '60d21b4667d0d8992e610c89',
       },
+      scheduleReferrence: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c92',
+        description: 'Reference to the schedule that this examination is related to',
+      },
       followUp: {
         type: 'object',
         properties: {
@@ -690,6 +695,11 @@ export const MedicalExaminationResultSchema = {
         type: 'string',
         example: '60d21b4667d0d8992e610c89',
       },
+      scheduleReferrence: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c92',
+        description: 'Reference to the schedule that this examination is related to',
+      },
       followUp: {
         type: 'object',
         properties: {
@@ -747,6 +757,11 @@ export const MedicalExaminationResultSchema = {
       prescription: {
         type: 'string',
         example: '60d21b4667d0d8992e610c89',
+      },
+      scheduleReferrence: {
+        type: 'string',
+        example: '60d21b4667d0d8992e610c92',
+        description: 'Reference to the schedule that this examination is related to',
       },
       followUp: {
         type: 'object',

@@ -29,6 +29,7 @@ const MedicalExaminationResultSchema = new Schema<MedicalExaminationResult>(
     services: [{ type: Schema.Types.ObjectId, ref: 'ConsultationService' }],
     finalDiagnosis: [ICDCodeSchema],
     prescription: { type: Schema.Types.ObjectId, ref: 'Prescription' },
+    scheduleReferrence: { type: Schema.Types.ObjectId, ref: 'Schedule' },
     followUp: {
       notes: { type: String },
       schedule: { type: Schema.Types.ObjectId, ref: 'Schedule' },

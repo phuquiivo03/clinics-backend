@@ -24,7 +24,7 @@ class MedicalExaminationResultRepositoryImpl
     const options: MongooseFindManyOptions = {
       filter: { patient: patientId },
       populateOptions: {
-        path: 'patient followUp.schedule prescription',
+        path: 'patient followUp.schedule prescription scheduleReferrence',
         select: 'name email phoneNumber address gender dateOfBirth  description price',
       },
     };
