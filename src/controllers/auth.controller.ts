@@ -91,10 +91,8 @@ const loginUser: RequestHandler = async (req, res, next) => {
       // remove old refresh token
       const oldToken = await redisClient.get(config.redis.key.refreshToken(result._id.toString()));
       await redisClient.del(config.redis.key.refreshToken(result._id.toString()));
-      console.log('LOGIN::OLD_REFRESH_TOKEN', oldToken);
       // generate new token
       const { authenToken, refreshToken } = UtilsService.generateToken(result._id.toString());
-      console.log('LOGIN::NEW_REFRESH_TOKEN', refreshToken);
       await redisClient.set(
         config.redis.key.refreshToken(result._id as unknown as string),
         refreshToken,
