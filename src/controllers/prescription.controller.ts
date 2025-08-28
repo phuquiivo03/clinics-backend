@@ -26,21 +26,36 @@ const create: RequestHandler = async (req, res) => {
         return new Types.ObjectId(med) as unknown as ObjectId;
       } else {
         // It's a Medication object, convert medicine field to ObjectId if it's a string
+        // Set default values for missing required fields
         const medication: Medication = {
           ...med,
           medicine:
             typeof med.medicine === 'string'
               ? (new Types.ObjectId(med.medicine) as unknown as ObjectId)
               : med.medicine,
+          frequency: med.frequency || '1 lần/ngày', // Default frequency
+          duration: med.duration || '7 ngày', // Default duration
         };
         return medication;
       }
     });
 
+    // Validate patient ID format
+    if (!validatedData.patient || validatedData.patient.trim() === '') {
+      res.status(400).json({ message: 'Patient ID is required and cannot be empty' });
+      return;
+    }
+
+    // Validate that patient ID is a valid ObjectId format
+    if (!Types.ObjectId.isValid(validatedData.patient)) {
+      res.status(400).json({ message: 'Invalid patient ID format' });
+      return;
+    }
+
     const prescriptionData: Prescription = {
       ...validatedData,
       _id: new Types.ObjectId().toString(),
-      patient: validatedData.patient as unknown as ObjectId,
+      patient: new Types.ObjectId(validatedData.patient) as unknown as ObjectId,
       medications,
       doctor: doctor._id as ObjectId,
       dateIssued: new Date().toISOString(),
@@ -141,12 +156,15 @@ const updatePrescription: RequestHandler = async (req, res) => {
           return new Types.ObjectId(med) as unknown as ObjectId;
         } else {
           // It's a Medication object, convert medicine field to ObjectId if it's a string
+          // Set default values for missing required fields
           const medication: Medication = {
             ...med,
             medicine:
               typeof med.medicine === 'string'
                 ? (new Types.ObjectId(med.medicine) as unknown as ObjectId)
                 : med.medicine,
+            frequency: med.frequency || '1 lần/ngày', // Default frequency
+            duration: med.duration || '7 ngày', // Default duration
           };
           return medication;
         }

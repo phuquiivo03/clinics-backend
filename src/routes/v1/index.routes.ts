@@ -18,6 +18,8 @@ import medicalExaminationRoutes from './medicalExamination.routes';
 import paymentRouter from './payment.routes';
 import waitingMessageRouter from './waitingMessage.routes';
 import chatRouter from './chat.route';
+import medicationRouter from './medication.routes';
+import medicineRouter from './medicine.routes';
 import { logMiddleware } from '../../middleware/log';
 
 const router = Router();
@@ -41,5 +43,7 @@ router.use('/prescriptions', prescriptionRouter);
 router.use('/medical-examinations', medicalExaminationRoutes);
 router.use('/payment', paymentRouter);
 router.use('/waiting-message', waitingMessageRouter);
+router.use('/medications', medicationRouter);
+router.use('/medicines', medicineRouter);
 
 export default router;

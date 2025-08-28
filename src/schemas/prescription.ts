@@ -9,6 +9,13 @@ export const prescriptionSchema = z.object({
     .array(
       z.union([
         z.string(), // ObjectId as string
+        z.object({
+          medicine: z.string(),
+          quantity: z.number().min(1),
+          frequency: z.string().min(1).optional(),
+          duration: z.string().min(1).optional(),
+          instruction: z.string().optional(),
+        }),
         medicationSchema, // Full medication object
       ]),
     )
@@ -23,6 +30,13 @@ export const updatePrescriptionSchema = z.object({
     .array(
       z.union([
         z.string(), // ObjectId as string
+        z.object({
+          medicine: z.string(),
+          quantity: z.number().min(1),
+          frequency: z.string().min(1).optional(),
+          duration: z.string().min(1).optional(),
+          instruction: z.string().optional(),
+        }),
         medicationSchema, // Full medication object
       ]),
     )
