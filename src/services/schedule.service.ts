@@ -57,10 +57,15 @@ class ScheduleService {
       const services = schedule?.services as ScheduleServiceType[];
       let payments = paymentObject.payments as Payment[];
       const paymentIds = payments.map((payment) => payment._id as ObjectId);
-      const serviceIds = services.map((service) => service.service as ObjectId);
-      const newServices = services.filter(
-        (service) => !paymentIds.includes(service.service as ObjectId),
+      const serviceIdInPayment = payments.map((payment) => String(payment.service as ObjectId));
+      const serviceIds = services.map((service) =>
+        String((service.service as ConsultationService)._id as ObjectId),
       );
+      const newServices = services.filter((service) => {
+        return !serviceIdInPayment.includes(
+          String((service.service as ConsultationService)._id as ObjectId),
+        );
+      });
 
       // create payment for new service
       const createdPaymentsPromise = await Promise.all(
@@ -68,7 +73,7 @@ class ScheduleService {
           // Tạo dữ liệu payment
           const paymentData: Omit<Payment, '_id'> = {
             schedule: id,
-            service: svc.service as ObjectId,
+            service: (svc.service as ConsultationService)._id as ObjectId,
             method: PaymentMethod.CASH,
             amount: (svc.service as ConsultationService).price,
             status: PaymentStatus.PENDING,
@@ -82,17 +87,16 @@ class ScheduleService {
           if (!createdPayment) {
             throw new Error('Failed to create payment');
           }
-
           return createdPayment;
         }),
       );
       const paymentsCreated = await Promise.all(createdPaymentsPromise);
       payments = [...payments, ...paymentsCreated];
       // remove payment for removed service
-
       const removedPaymentIds = payments
-        .filter((payment) => !serviceIds.includes(payment.service as ObjectId))
+        .filter((payment) => !serviceIds.includes(String(payment.service as ObjectId)))
         .map((payment) => payment._id as ObjectId);
+      console.log;
       removedPaymentIds.forEach(async (paymentId) => {
         payments = payments.filter((payment) => {
           if (payment._id?.toString() === paymentId.toString()) {
@@ -105,12 +109,14 @@ class ScheduleService {
       });
 
       //calculate the totalPrice
-      const total = payments.reduce((acc, payment) => acc + payment.amount, 0);
+      const total = payments.reduce(
+        (acc, payment) => (payment.status != PaymentStatus.PAID ? acc + payment.amount : acc),
+        0,
+      );
 
       // update schedule
       paymentObject.payments = payments;
       paymentObject.totalPrice = total;
-      console.log('PAYMENT::', paymentObject);
       return await this.update(id, {
         payments: paymentObject,
       });
