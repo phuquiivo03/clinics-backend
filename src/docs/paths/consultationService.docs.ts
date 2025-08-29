@@ -410,3 +410,150 @@
  *          403:
  *              description: Forbidden - Admin access required
  */
+
+/**
+ * @swagger
+ * /api/v1/consultation-service/createMany:
+ *   post:
+ *     summary: Create multiple consultation services
+ *     description: Create multiple consultation services at once
+ *     tags: [Consultation Service]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - name
+ *                 - description
+ *                 - duration
+ *                 - room
+ *                 - doctor
+ *                 - price
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: "Blood Test"
+ *                 description:
+ *                   type: string
+ *                   example: "Complete blood count and analysis"
+ *                 duration:
+ *                   type: integer
+ *                   minimum: 1
+ *                   example: 30
+ *                 room:
+ *                   type: string
+ *                   format: uid
+ *                   example: "67f2519ec765019a3fd5ec9a"
+ *                 doctor:
+ *                   type: string
+ *                   format: uid
+ *                   example: "67e9180afb886c8bef80f7c3"
+ *                 price:
+ *                   type: number
+ *                   minimum: 0
+ *                   example: 50000
+ *                 specialization:
+ *                   type: string
+ *                   format: uid
+ *                   example: "67e9180afb886c8bef80f7c3"
+ *     responses:
+ *       201:
+ *         description: Consultation services created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ConsultationService'
+ *                 message:
+ *                   type: string
+ *                   example: "Consultation services created successfully"
+ *       400:
+ *         description: Invalid request body
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin or Doctor access required
+ */
+
+/**
+ * @swagger
+ * /api/v1/consultation-service/many:
+ *   put:
+ *     summary: Update multiple consultation services
+ *     description: Update multiple consultation services with the same data
+ *     tags: [Consultation Service]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - ids
+ *               - data
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: uid
+ *                 example: ["67f2519ec765019a3fd5ec9a", "67f2519ec765019a3fd5ec9b"]
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     example: "Updated Service Name"
+ *                   description:
+ *                     type: string
+ *                     example: "Updated description"
+ *                   duration:
+ *                     type: integer
+ *                     minimum: 1
+ *                     example: 45
+ *                   room:
+ *                     type: string
+ *                     format: uid
+ *                     example: "67f2519ec765019a3fd5ec9a"
+ *                   doctor:
+ *                     type: string
+ *                     format: uid
+ *                     example: "67e9180afb886c8bef80f7c3"
+ *                   price:
+ *                     type: number
+ *                     minimum: 0
+ *                     example: 95000
+ *                   specialization:
+ *                     type: string
+ *                     format: uid
+ *                     example: "67e9180afb886c8bef80f7c3"
+ *     responses:
+ *       200:
+ *         description: Consultation services updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ConsultationService'
+ *       400:
+ *         description: Invalid request body or consultation service IDs
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin or Doctor access required
+ *       404:
+ *         description: One or more consultation services not found
+ */

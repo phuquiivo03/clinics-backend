@@ -1,4 +1,4 @@
-import type { Medication, Medicine } from '../types';
+import type { Medicine } from '../types/medication';
 import { BaseRepositoryImpl, type BaseRepository } from './base';
 import { medicineModel } from '../models';
 

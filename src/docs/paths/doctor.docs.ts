@@ -121,7 +121,8 @@
  *   post:
  *     summary: Create a new doctor
  *     tags: [Doctors]
- *     security: []
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
