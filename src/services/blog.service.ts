@@ -2,6 +2,7 @@ import type { Blog } from '../types/blogs';
 import { type BlogRepository, BlogRepositoryImpl } from '../repositories';
 import type { ObjectId } from 'mongoose';
 import type { MongooseFindManyOptions } from '../repositories/type';
+import type { AppResponse } from '../dto/response';
 
 class BlogService {
   private blogRepository: BlogRepository;
@@ -30,11 +31,11 @@ class BlogService {
     return await this.blogRepository.findById(id);
   }
 
-  async findAll(): Promise<Blog[]> {
+  async findAll(): Promise<AppResponse<Blog[]>> {
     return await this.blogRepository.findAll();
   }
 
-  async findMany(options?: MongooseFindManyOptions): Promise<Blog[]> {
+  async findMany(options?: MongooseFindManyOptions): Promise<AppResponse<Blog[]>> {
     return await this.blogRepository.findMany(options);
   }
 
@@ -51,6 +52,31 @@ class BlogService {
     if (!blog) return null;
 
     return await this.blogRepository.update(id, { active: !blog.active }, { new: true });
+  }
+
+  async search(searchTerm: string, options?: { page?: number; limit?: number; activeOnly?: boolean }): Promise<AppResponse<Blog[]>> {  
+    const { page = 1, limit = 10, activeOnly = true } = options || {};
+    console.log("search key", searchTerm.replaceAll("\"", ''))
+    const filter: Record<string, any> = {
+      $or: [
+        { title: { $regex: searchTerm.replaceAll("\"", ''), $options: 'i' } },
+        { content: { $regex: searchTerm.replaceAll("\"", ''), $options: 'i' } }
+      ]
+    };
+    
+    if (activeOnly) {
+      filter.active = true;
+    }
+    
+    const searchOptions: MongooseFindManyOptions = {
+      filter,
+      pagination: { page, limit },
+      sort: { createdAt: -1 },
+      selectFields: ['_id', 'title', 'content', 'coverImage', 'author', 'createdAt', 'updatedAt']
+    };
+    
+    
+    return await this.blogRepository.findMany(searchOptions);
   }
 }
 

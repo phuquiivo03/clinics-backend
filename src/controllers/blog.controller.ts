@@ -228,4 +228,32 @@ export class BlogController {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { error });
     }
   }
+
+  async search(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const appExpress = new CustomExpress(req, res, next);
+    try {
+      // At this point, req.query is already validated by the middleware
+      const { q: searchTerm, page = 1, limit = 10, activeOnly = true } = req.query as any;
+      
+      // Check Redis cache first
+      const redisKey = `blogs:search:${searchTerm}:${page}:${limit}:${activeOnly}`;
+      const cachedResults = await redisClient.get(redisKey);
+      
+      if (cachedResults) {
+        appExpress.response200(JSON.parse(cachedResults));
+        return;
+      }
+      
+      const blogs = await blogService.search(searchTerm, { page, limit, activeOnly });
+      
+      // Cache the results for 5 minutes
+      await redisClient.set(redisKey, JSON.stringify(blogs), { EX: 300 });
+      
+      appExpress.response200(blogs);
+    } catch (error) {
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { 
+        error: (error as Error).message 
+      });
+    }
+  }
 }
