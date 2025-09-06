@@ -28,11 +28,12 @@ const createUser: RequestHandler = async (req, res, next) => {
     }
 
     // check if phone number is verified
-    const cacheKey = config.redis.key.phoneNumberVerified(userRequest.phoneNumber);
+        const cacheKey = config.redis.key.emailVerified(userRequest.email);
+
     const isVerified = await redisClient.get(cacheKey);
     if (!isVerified) {
       appExpress.response400(ErrorCode.BAD_REQUEST, {
-        message: 'Phone number is not verified',
+        message: 'Email is not verified',
       });
       return;
     }

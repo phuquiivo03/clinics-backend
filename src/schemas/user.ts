@@ -32,6 +32,7 @@ export const createUserSchema = z.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
       'Password must contain at least 1 lowercase letter, 1 uppercase letter, and 1 number',
     ),
+    email: z.string().email('Invalid email format'),
 });
 
 

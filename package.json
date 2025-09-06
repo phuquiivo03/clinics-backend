@@ -44,6 +44,7 @@
     "node-cron": "^4.2.1",
     "pinata": "^2.3.0",
     "redis": "^4.7.0",
+    "resend": "^6.0.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui": "^5.20.8",
     "swagger-ui-dist": "^5.20.8",

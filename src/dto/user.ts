@@ -3,6 +3,7 @@ import { GENDER } from '../types';
 export type ICreateUserRequest = {
   phoneNumber: string;
   password: string;
+  email: string;
 };
 
 export type IUnsignupUserRequest = {

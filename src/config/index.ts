@@ -1,6 +1,9 @@
 import type { Config } from './types';
 
 export const config: Config = {
+  resend: {
+    apiKey: process.env.RESEND_API_KEY || '',
+  },
   aiService: {
     url: process.env.AI_SERVICE_URL || 'http://localhost:3000',
   },
@@ -34,6 +37,7 @@ export const config: Config = {
     cache: {
       expireTime: 60,
       phoneNumberVerified: 60 * 5, // 5 minutes
+      emailVerified: 60 * 5, // 5 minutes
       refreshToken: 60 * 60 * 24 * 30, // 30 days
       authenToken: 60 * 10, // 10 minutes
       usedRefreshTokenTTL: 60 * 5, // 5 minutes, for the set of used tokens
@@ -41,6 +45,9 @@ export const config: Config = {
     key: {
       phoneNumberVerified: (phoneNumber: string) => {
         return `verified_${phoneNumber}`;
+      },
+      emailVerified: (email: string) => {
+        return `verified_email_${email}`;
       },
       refreshToken: (userId: string) => {
         return `refresh_${userId}`;

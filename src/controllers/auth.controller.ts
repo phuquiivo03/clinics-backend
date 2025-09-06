@@ -10,12 +10,14 @@ import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import type { IAuthenJWT } from '../types';
+import { Resend, type CreateEmailResponseSuccess } from 'resend';
+import otp from '../models/otp';
 
 // Register User
 const registerUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const userRequest = UtilsService.validateBody<{ phoneNumber: string }>(
+    const userRequest = UtilsService.validateBody<{ email: string }>(
       registerSchema,
       req.body,
     );
@@ -25,27 +27,29 @@ const registerUser: RequestHandler = async (req, res, next) => {
       });
       return;
     }
-    const phoneNumber: string = userRequest.phoneNumber;
+    const email: string = userRequest.email;
     //check if phone number already exists
-    const user = await userService.findOne({ filter: { phoneNumber } });
+    const user = await userService.findOne({ filter: { email } });
     if (user && user.password) {
       appExpress.response400(ErrorCode.BAD_REQUEST, {
-        message: 'Phone number already exists',
+        message: 'Email already exists',
       });
       return;
     }
     // create OTP
-    const createdOtp = await otpService.create(phoneNumber);
+    const createdOtp = await otpService.create(email);
     if (!createdOtp) {
       appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
       return;
     }
 
-    const formatPhoneNumber = `+84${phoneNumber.slice(1)}`;
 
     // send OTP to phone number
     // await twilioService.sendSMS(formatPhoneNumber, `Your OTP is ${createdOtp?.code}`);
-
+    const sendOtpResult = await sendOtp(email,`${createdOtp?.code}`)
+    if(!sendOtpResult){
+      appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {message: 'Failed to send OTP'});
+    }
     appExpress.response201({ message: 'OTP created: ' + createdOtp?.code });
   } catch (e) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
@@ -55,7 +59,7 @@ const registerUser: RequestHandler = async (req, res, next) => {
 const verifyOTP: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);
   try {
-    const userRequest = UtilsService.validateBody<{ phoneNumber: string; code: string }>(
+    const userRequest = UtilsService.validateBody<{ email: string; code: string }>(
       verifyOTPSchema,
       req.body,
     );
@@ -65,15 +69,15 @@ const verifyOTP: RequestHandler = async (req, res, next) => {
       });
       return;
     }
-    const { phoneNumber, code } = userRequest;
-    const isValid = await otpService.verify(phoneNumber, code);
+    const { email, code } = userRequest;
+    const isValid = await otpService.verify(email, code);
     if (!isValid) {
       appExpress.response400(ErrorCode.OTP_INVALID, {});
       return;
     }
-    // create cache for phone number
-    const cacheKey = config.redis.key.phoneNumberVerified(phoneNumber);
-    await redisClient.set(cacheKey, 'true', { EX: config.redis.cache.phoneNumberVerified });
+    // create cache for email
+    const cacheKey = config.redis.key.emailVerified(email);
+    await redisClient.set(cacheKey, 'true', { EX: config.redis.cache.emailVerified });
     appExpress.response201({ message: 'OTP verified!' });
   } catch (error) {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, {});
@@ -112,6 +116,59 @@ const loginUser: RequestHandler = async (req, res, next) => {
     appExpress.response500(ErrorCode.INTERNAL_SERVER_ERROR, { message: (error as Error).message });
   }
 };
+
+const sendOtp = async (to: string, otp: string): Promise<CreateEmailResponseSuccess> => {
+  const resend = new Resend(config.resend.apiKey);
+  const { data, error } = await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to,
+    subject: 'OTP Verification',
+    html: `<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OTP Verification</title>
+<meta name="color-scheme" content="light dark"/>
+<style>
+  body { margin:0; background:#f6f7fb; font-family:-apple-system, Segoe UI, Roboto, Arial, sans-serif; padding:24px; }
+  .container { max-width:640px; margin:0 auto; background:#fff; border-radius:14px; padding:24px; }
+  h1 { margin:0 0 8px; font-size:20px; }
+  p { margin:0 0 12px; line-height:1.6; color:#333; }
+  .otp { font-size:28px; letter-spacing:.35em; font-weight:700; background:#f2f3f7; padding:12px 16px; border-radius:10px; display:inline-block; }
+  .btn { display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; background:#111; color:#fff; font-weight:600; }
+  .muted { color:#666; font-size:12px; }
+  .divider { height:1px; background:#e9e9ef; margin:16px 0; }
+  code { background:#f2f3f7; padding:2px 6px; border-radius:6px; }
+  @media (prefers-color-scheme: dark) {
+    body { background:#0b0b0c; }
+    .container { background:#161618; }
+    p, .muted { color:#ddd; }
+    .otp { background:#1f2023; color:#fff; }
+    .btn { background:#eaeaea; color:#111; }
+    .divider { background:#2a2a2e; }
+    code { background:#1f2023; color:#fff; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Xác thực đăng nhập</h1>
+    <p>Mã OTP của bạn:</p>
+    <div class="otp" aria-label="Mã OTP">${otp}</div>
+    <p>Mã sẽ <strong>hết hạn sau 5 phút</strong>. </p>
+    <div class="divider"></div>
+    <div class="divider"></div>
+    <p class="muted">Vì lý do bảo mật, <strong>không chia sẻ</strong> mã này cho bất kỳ ai (kể cả người tự xưng là nhân viên).</p>
+    <p class="muted">Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email hoặc liên hệ hỗ trợ: <a href="mailto: wemicallabs@gmail.com">wemicallabs@gmail.com</a>.</p>
+  </div>
+</body>
+</html>`
+  });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
 
 const logoutUser: RequestHandler = async (req, res, next) => {
   const appExpress = new CustomExpress(req, res, next);

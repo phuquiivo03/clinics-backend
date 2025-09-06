@@ -9,7 +9,7 @@ const otpSchema = new Schema<OTP>({
     type: String,
     required: true,
   },
-  phoneNumber: {
+  email: {
     type: String,
     required: true,
   },

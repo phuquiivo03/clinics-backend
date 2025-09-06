@@ -29,6 +29,7 @@ export interface CookieConfig {
 export interface RedisCacheConfig {
   expireTime: number;
   phoneNumberVerified: number;
+  emailVerified: number;
   refreshToken: number;
   authenToken: number;
   usedRefreshTokenTTL: number; // Added for the TTL of the used refresh token set
@@ -36,6 +37,7 @@ export interface RedisCacheConfig {
 
 export interface RedisKeyConfig {
   phoneNumberVerified: (phoneNumber: string) => string;
+  emailVerified: (email: string) => string;
   refreshToken: (userId: string) => string;
   usedRefreshTokensSet: (userId: string) => string; // Added for the set of used refresh tokens
   authenToken: (authenToken: string) => string;
@@ -69,6 +71,7 @@ export interface Config {
   customPackage: string;
   aiService: AIServiceConfig;
   twilio: TwilioConfig;
+  resend: ResendConfig;
 }
 
 export interface TwilioConfig {
@@ -76,6 +79,9 @@ export interface TwilioConfig {
   authToken: string;
 }
 
+export interface ResendConfig {
+  apiKey: string;
+}
 export interface AIServiceConfig {
   url: string;
 }
