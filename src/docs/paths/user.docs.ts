@@ -3,6 +3,10 @@
  * /user:
  *   post:
  *     summary: Create a new user with password
+ *     description: |
+ *       Create a new user account with phone number and password.
+ *       **Note:** This is separate from the email-based OTP registration flow.
+ *       This endpoint requires phone number verification through a separate process.
  *     tags: [Users]
  *     security: []  # No authentication required for user creation
  *     requestBody:
@@ -11,27 +15,74 @@
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - phoneNumber
+ *               - password
+ *               - email
  *             properties:
  *               phoneNumber:
  *                 type: string
- *                 description: The phone number of the user
+ *                 description: The phone number of the user (must be verified)
+ *                 example: '01234567890'
  *               password:
  *                 type: string
  *                 description: The password of the user
+ *                 minLength: 8
+ *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'
+ *                 example: 'Password123'
+ *               email:
+ *                 type: string
+ *                 description: The email of the user (must be verified)
+ *                 example: 'user@gmail.com'
  *             example:
- *               phoneNumber: 01234567890
- *               password: Password123
+ *               phoneNumber: '01234567890'
+ *               password: 'Password123'
+ *               email: 'nva@gmail.com'
  *     responses:
  *       201:
  *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: 'success'
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *                     authenToken:
+ *                       type: string
+ *                       description: Authentication token
+ *                     refreshToken:
+ *                       type: string
+ *                       description: Refresh token
  *       400:
- *         description: Invalid input data
- *       409:
- *         description: Email already exists
+ *         description: |
+ *           Bad request - Invalid input data, phone number not verified, 
+ *           or phone number already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: 'error'
+ *                 error:
+ *                   type: object
+ *                   properties:
+ *                     code:
+ *                       type: string
+ *                       example: 'BAD_REQUEST'
+ *                     message:
+ *                       type: string
+ *                       example: 'Phone number is not verified'
+ *       500:
+ *         description: Internal server error
  */
 
 /**

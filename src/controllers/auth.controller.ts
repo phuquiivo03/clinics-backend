@@ -153,9 +153,14 @@ const sendOtp = async (to: string, otp: string): Promise<CreateEmailResponseSucc
 </head>
 <body>
   <div class="container">
-    <h1>Xác thực đăng nhập</h1>
+    <h1 style="
+    color:#000;
+  ">Xác thực đăng nhập</h1>
     <p>Mã OTP của bạn:</p>
-    <div class="otp" aria-label="Mã OTP">${otp}</div>
+    <div style="
+    background:#24ae7c; 
+    color:#fff;
+  " class="otp" aria-label="Mã OTP">${otp}</div>
     <p>Mã sẽ <strong>hết hạn sau 5 phút</strong>. </p>
     <div class="divider"></div>
     <div class="divider"></div>

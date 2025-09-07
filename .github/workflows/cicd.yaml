@@ -54,6 +54,7 @@ jobs:
           NOSQL_DB_HOST: ${{ vars.NOSQL_DB_HOST }}
           NOSQL_DB_NAME: ${{ vars.NOSQL_DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRED: ${{ secrets.JWT_EXPIRED }}
           COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
           COOKIE_MAX_AGE: ${{ vars.COOKIE_MAX_AGE }}
           REDIS_URL: ${{ secrets.REDIS_URL }}

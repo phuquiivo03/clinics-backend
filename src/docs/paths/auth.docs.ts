@@ -1,4 +1,16 @@
 /**
+ * Authentication API Documentation
+ * 
+ * The authentication system has two main flows:
+ * 1. Email-based OTP verification (auth/register and auth/verify-otp)
+ * 2. Phone-based user creation (user endpoint - separate from auth)
+ * 3. Standard login with phone number and password
+ * 
+ * The email OTP flow is used for email verification, while the user creation
+ * flow handles actual account setup with phone numbers.
+ */
+
+/**
  * @swagger
  * /auth/login:
  *   post:
@@ -42,14 +54,14 @@
  *           schema:
  *             type: object
  *             properties:
- *               phoneNumber:
+ *               email:
  *                 type: string
- *                 description: The phone number of the user
+ *                 description: The email address of the user
  *               code:
  *                 type: string
  *                 description: The OTP code
  *             example:
- *               phoneNumber: "0712345689"
+ *               email: "user@example.com"
  *               code: "123456"
  *     responses:
  *       200:
@@ -61,7 +73,7 @@
  * /auth/register:
  *   post:
  *     summary: Register a new user
- *     description: Register a new user with phone number, this api will send a OTP to the user's phone number
+ *     description: Register a new user with email, this api will send an OTP to the user's email
  *     tags: [Auth]
  *     security: []
  *     requestBody:
@@ -71,11 +83,11 @@
  *           schema:
  *             type: object
  *             properties:
- *               phoneNumber:
+ *               email:
  *                 type: string
- *                 description: The phone number of the user
+ *                 description: The email address of the user
  *             example:
- *               phoneNumber: "0712345689"
+ *               email: "user@example.com"
  *     responses:
  *       200:
  *         description: User registered successfully
@@ -210,19 +222,20 @@ export const authPaths = {
       tags: ['Auth'],
       summary: 'Register a new user',
       description:
-        "Register a new user with phone number. This API will send an OTP to the user's phone number.",
+        "Register a new user with email address. This API will send an OTP to the user's email.",
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
               type: 'object',
-              required: ['phoneNumber'],
+              required: ['email'],
               properties: {
-                phoneNumber: {
+                email: {
                   type: 'string',
-                  description: 'The phone number of the user',
-                  example: '0712345689',
+                  format: 'email',
+                  description: 'The email address of the user',
+                  example: 'user@example.com',
                 },
               },
             },
@@ -231,7 +244,7 @@ export const authPaths = {
       },
       responses: {
         201: {
-          description: 'User registered successfully, OTP sent',
+          description: 'User registered successfully, OTP sent to email',
           content: {
             'application/json': {
               schema: {
@@ -257,7 +270,7 @@ export const authPaths = {
           },
         },
         400: {
-          description: 'Bad request - Invalid phone number or phone number already exists',
+          description: 'Bad request - Invalid email or email already exists',
           content: {
             'application/json': {
               schema: {
@@ -276,7 +289,7 @@ export const authPaths = {
                       },
                       message: {
                         type: 'string',
-                        example: 'Phone number already exists',
+                        example: 'Email already exists',
                       },
                     },
                   },
@@ -302,23 +315,24 @@ export const authPaths = {
     post: {
       tags: ['Auth'],
       summary: 'Verify OTP',
-      description: "Verify the OTP sent to the user's phone number during registration",
+      description: "Verify the OTP sent to the user's email address during registration",
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
               type: 'object',
-              required: ['phoneNumber', 'code'],
+              required: ['email', 'code'],
               properties: {
-                phoneNumber: {
+                email: {
                   type: 'string',
-                  description: 'The phone number of the user',
-                  example: '0712345689',
+                  format: 'email',
+                  description: 'The email address of the user',
+                  example: 'user@example.com',
                 },
                 code: {
                   type: 'string',
-                  description: 'The OTP code received',
+                  description: 'The OTP code received via email',
                   example: '123456',
                 },
               },
