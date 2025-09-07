@@ -20,6 +20,7 @@ import waitingMessageRouter from './waitingMessage.routes';
 import chatRouter from './chat.route';
 import medicationRouter from './medication.routes';
 import medicineRouter from './medicine.routes';
+import icdRouter from './icd.routes';
 import { logMiddleware } from '../../middleware/log';
 
 const router = Router();
@@ -45,5 +46,6 @@ router.use('/payment', paymentRouter);
 router.use('/waiting-message', waitingMessageRouter);
 router.use('/medications', medicationRouter);
 router.use('/medicines', medicineRouter);
+router.use('/icd', icdRouter);
 
 export default router;

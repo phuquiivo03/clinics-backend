@@ -11,3 +11,4 @@ export * from './periodPackage';
 export * from './prescription';
 export * from './medicalExamination';
 export * from './medication';
+export * from './icd';

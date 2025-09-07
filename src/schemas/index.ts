@@ -13,3 +13,4 @@ export * from './medication';
 export * from './medicalExamination';
 export * from './payment.schema';
 export * from './waitingMessage.schema';
+export * from './icd';

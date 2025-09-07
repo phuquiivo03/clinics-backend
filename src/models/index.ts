@@ -16,6 +16,7 @@ import medicationModel from './medication';
 import { MedicalExaminationResultModel } from './medicalExamination';
 import { PaymentModel } from './payment.model';
 import waitingMessageModel from './waitingMessage';
+import icdModel from './icd';
 export {
   userModel,
   doctorModel,
@@ -35,4 +36,5 @@ export {
   MedicalExaminationResultModel,
   PaymentModel,
   waitingMessageModel,
+  icdModel,
 };

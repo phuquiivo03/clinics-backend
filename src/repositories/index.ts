@@ -11,6 +11,7 @@ export * from './packageWeek';
 export * from './blog';
 export * from './medicalExamination';
 export * from './payment';
+export * from './icd';
 
 import scheduleRepository from './schedule';
 import roomRepository from './room';
