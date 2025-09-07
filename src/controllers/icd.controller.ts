@@ -162,11 +162,10 @@ const getAllICDs: RequestHandler = async (req, res) => {
 // Search ICDs by code, title, or range
 const searchICDs: RequestHandler = async (req, res) => {
   try {
-    const validatedData = searchIcdSchema.parse(req.body);
-    const { query } = validatedData;
 
     // Parse additional options from query parameters
     const {
+        q="",
       page = 1,
       limit = 10,
       sortBy = 'code',
@@ -185,7 +184,7 @@ const searchICDs: RequestHandler = async (req, res) => {
       sort: sortObj,
     };
 
-    const icds = await icdService.searchByCodeOrTitle(query, options);
+    const icds = await icdService.searchByCodeOrTitle(q as string, options);
     res.json(icds);
   } catch (error) {
     if (error instanceof z.ZodError) {

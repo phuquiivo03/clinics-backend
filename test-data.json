@@ -1,1002 +1,1002 @@
 [
   {
     "code": "A00",
-    "range": "A00-A01",
-    "title": "Bệnh giả định 1"
+    "range": "A00-A09",
+    "title": "Dịch tả (Cholera)"
   },
   {
     "code": "A01",
-    "range": "A01-A02",
-    "title": "Bệnh giả định 2"
+    "range": "A00-A09",
+    "title": "Thương hàn và phó thương hàn"
   },
   {
     "code": "A02",
-    "range": "A02-A03",
-    "title": "Bệnh giả định 3"
+    "range": "A00-A09",
+    "title": "Nhiễm Salmonella khác"
   },
   {
     "code": "A03",
-    "range": "A03-A04",
-    "title": "Bệnh giả định 4"
+    "range": "A00-A09",
+    "title": "Lỵ do Shigella"
   },
   {
     "code": "A04",
-    "range": "A04-A05",
-    "title": "Bệnh giả định 5"
+    "range": "A00-A09",
+    "title": "Nhiễm trùng ruột do vi khuẩn khác"
   },
   {
     "code": "A05",
-    "range": "A05-A06",
-    "title": "Bệnh giả định 6"
+    "range": "A00-A09",
+    "title": "Ngộ độc thực phẩm do vi khuẩn khác"
   },
   {
     "code": "A06",
-    "range": "A06-A07",
-    "title": "Bệnh giả định 7"
+    "range": "A00-A09",
+    "title": "Lỵ amíp"
   },
   {
     "code": "A07",
-    "range": "A07-A08",
-    "title": "Bệnh giả định 8"
+    "range": "A00-A09",
+    "title": "Bệnh đường ruột do ký sinh trùng khác"
   },
   {
     "code": "A08",
-    "range": "A08-A09",
-    "title": "Bệnh giả định 9"
+    "range": "A00-A09",
+    "title": "Viêm dạ dày ruột do virus"
   },
   {
     "code": "A09",
-    "range": "A09-A10",
-    "title": "Bệnh giả định 10"
-  },
-  {
-    "code": "A10",
-    "range": "A10-A11",
-    "title": "Bệnh giả định 11"
-  },
-  {
-    "code": "A11",
-    "range": "A11-A12",
-    "title": "Bệnh giả định 12"
-  },
-  {
-    "code": "A12",
-    "range": "A12-A13",
-    "title": "Bệnh giả định 13"
-  },
-  {
-    "code": "A13",
-    "range": "A13-A14",
-    "title": "Bệnh giả định 14"
-  },
-  {
-    "code": "A14",
-    "range": "A14-A15",
-    "title": "Bệnh giả định 15"
+    "range": "A00-A09",
+    "title": "Tiêu chảy & viêm dạ dày ruột nghi do nhiễm trùng"
   },
   {
     "code": "A15",
-    "range": "A15-A16",
-    "title": "Bệnh giả định 16"
+    "range": "A15-A19",
+    "title": "Lao đường hô hấp, xác định bằng xét nghiệm"
   },
   {
     "code": "A16",
-    "range": "A16-A17",
-    "title": "Bệnh giả định 17"
+    "range": "A15-A19",
+    "title": "Lao đường hô hấp, không xác định bằng xét nghiệm"
   },
   {
     "code": "A17",
-    "range": "A17-A18",
-    "title": "Bệnh giả định 18"
+    "range": "A15-A19",
+    "title": "Lao hệ thần kinh"
   },
   {
     "code": "A18",
-    "range": "A18-A19",
-    "title": "Bệnh giả định 19"
+    "range": "A15-A19",
+    "title": "Lao cơ quan khác"
   },
   {
     "code": "A19",
-    "range": "A19-A20",
-    "title": "Bệnh giả định 20"
-  },
-  {
-    "code": "A20",
-    "range": "A20-A21",
-    "title": "Bệnh giả định 21"
-  },
-  {
-    "code": "A21",
-    "range": "A21-A22",
-    "title": "Bệnh giả định 22"
-  },
-  {
-    "code": "A22",
-    "range": "A22-A23",
-    "title": "Bệnh giả định 23"
-  },
-  {
-    "code": "A23",
-    "range": "A23-A24",
-    "title": "Bệnh giả định 24"
-  },
-  {
-    "code": "A24",
-    "range": "A24-A25",
-    "title": "Bệnh giả định 25"
-  },
-  {
-    "code": "A25",
-    "range": "A25-A26",
-    "title": "Bệnh giả định 26"
-  },
-  {
-    "code": "A26",
-    "range": "A26-A27",
-    "title": "Bệnh giả định 27"
-  },
-  {
-    "code": "A27",
-    "range": "A27-A28",
-    "title": "Bệnh giả định 28"
-  },
-  {
-    "code": "A28",
-    "range": "A28-A29",
-    "title": "Bệnh giả định 29"
-  },
-  {
-    "code": "A29",
-    "range": "A29-A30",
-    "title": "Bệnh giả định 30"
-  },
-  {
-    "code": "A30",
-    "range": "A30-A31",
-    "title": "Bệnh giả định 31"
-  },
-  {
-    "code": "A31",
-    "range": "A31-A32",
-    "title": "Bệnh giả định 32"
-  },
-  {
-    "code": "A32",
-    "range": "A32-A33",
-    "title": "Bệnh giả định 33"
-  },
-  {
-    "code": "A33",
-    "range": "A33-A34",
-    "title": "Bệnh giả định 34"
-  },
-  {
-    "code": "A34",
-    "range": "A34-A35",
-    "title": "Bệnh giả định 35"
-  },
-  {
-    "code": "A35",
-    "range": "A35-A36",
-    "title": "Bệnh giả định 36"
-  },
-  {
-    "code": "A36",
-    "range": "A36-A37",
-    "title": "Bệnh giả định 37"
-  },
-  {
-    "code": "A37",
-    "range": "A37-A38",
-    "title": "Bệnh giả định 38"
-  },
-  {
-    "code": "A38",
-    "range": "A38-A39",
-    "title": "Bệnh giả định 39"
-  },
-  {
-    "code": "A39",
-    "range": "A39-A40",
-    "title": "Bệnh giả định 40"
-  },
-  {
-    "code": "A40",
-    "range": "A40-A41",
-    "title": "Bệnh giả định 41"
-  },
-  {
-    "code": "A41",
-    "range": "A41-A42",
-    "title": "Bệnh giả định 42"
-  },
-  {
-    "code": "A42",
-    "range": "A42-A43",
-    "title": "Bệnh giả định 43"
-  },
-  {
-    "code": "A43",
-    "range": "A43-A44",
-    "title": "Bệnh giả định 44"
-  },
-  {
-    "code": "A44",
-    "range": "A44-A45",
-    "title": "Bệnh giả định 45"
-  },
-  {
-    "code": "A45",
-    "range": "A45-A46",
-    "title": "Bệnh giả định 46"
-  },
-  {
-    "code": "A46",
-    "range": "A46-A47",
-    "title": "Bệnh giả định 47"
-  },
-  {
-    "code": "A47",
-    "range": "A47-A48",
-    "title": "Bệnh giả định 48"
-  },
-  {
-    "code": "A48",
-    "range": "A48-A49",
-    "title": "Bệnh giả định 49"
-  },
-  {
-    "code": "A49",
-    "range": "A49-A50",
-    "title": "Bệnh giả định 50"
-  },
-  {
-    "code": "A50",
-    "range": "A50-A51",
-    "title": "Bệnh giả định 51"
-  },
-  {
-    "code": "A51",
-    "range": "A51-A52",
-    "title": "Bệnh giả định 52"
-  },
-  {
-    "code": "A52",
-    "range": "A52-A53",
-    "title": "Bệnh giả định 53"
-  },
-  {
-    "code": "A53",
-    "range": "A53-A54",
-    "title": "Bệnh giả định 54"
-  },
-  {
-    "code": "A54",
-    "range": "A54-A55",
-    "title": "Bệnh giả định 55"
-  },
-  {
-    "code": "A55",
-    "range": "A55-A56",
-    "title": "Bệnh giả định 56"
-  },
-  {
-    "code": "A56",
-    "range": "A56-A57",
-    "title": "Bệnh giả định 57"
-  },
-  {
-    "code": "A57",
-    "range": "A57-A58",
-    "title": "Bệnh giả định 58"
-  },
-  {
-    "code": "A58",
-    "range": "A58-A59",
-    "title": "Bệnh giả định 59"
-  },
-  {
-    "code": "A59",
-    "range": "A59-A60",
-    "title": "Bệnh giả định 60"
-  },
-  {
-    "code": "A60",
-    "range": "A60-A61",
-    "title": "Bệnh giả định 61"
-  },
-  {
-    "code": "A61",
-    "range": "A61-A62",
-    "title": "Bệnh giả định 62"
-  },
-  {
-    "code": "A62",
-    "range": "A62-A63",
-    "title": "Bệnh giả định 63"
-  },
-  {
-    "code": "A63",
-    "range": "A63-A64",
-    "title": "Bệnh giả định 64"
-  },
-  {
-    "code": "A64",
-    "range": "A64-A65",
-    "title": "Bệnh giả định 65"
-  },
-  {
-    "code": "A65",
-    "range": "A65-A66",
-    "title": "Bệnh giả định 66"
-  },
-  {
-    "code": "A66",
-    "range": "A66-A67",
-    "title": "Bệnh giả định 67"
-  },
-  {
-    "code": "A67",
-    "range": "A67-A68",
-    "title": "Bệnh giả định 68"
-  },
-  {
-    "code": "A68",
-    "range": "A68-A69",
-    "title": "Bệnh giả định 69"
-  },
-  {
-    "code": "A69",
-    "range": "A69-A70",
-    "title": "Bệnh giả định 70"
-  },
-  {
-    "code": "A70",
-    "range": "A70-A71",
-    "title": "Bệnh giả định 71"
-  },
-  {
-    "code": "A71",
-    "range": "A71-A72",
-    "title": "Bệnh giả định 72"
-  },
-  {
-    "code": "A72",
-    "range": "A72-A73",
-    "title": "Bệnh giả định 73"
-  },
-  {
-    "code": "A73",
-    "range": "A73-A74",
-    "title": "Bệnh giả định 74"
-  },
-  {
-    "code": "A74",
-    "range": "A74-A75",
-    "title": "Bệnh giả định 75"
-  },
-  {
-    "code": "A75",
-    "range": "A75-A76",
-    "title": "Bệnh giả định 76"
-  },
-  {
-    "code": "A76",
-    "range": "A76-A77",
-    "title": "Bệnh giả định 77"
-  },
-  {
-    "code": "A77",
-    "range": "A77-A78",
-    "title": "Bệnh giả định 78"
-  },
-  {
-    "code": "A78",
-    "range": "A78-A79",
-    "title": "Bệnh giả định 79"
-  },
-  {
-    "code": "A79",
-    "range": "A79-A80",
-    "title": "Bệnh giả định 80"
-  },
-  {
-    "code": "A80",
-    "range": "A80-A81",
-    "title": "Bệnh giả định 81"
-  },
-  {
-    "code": "A81",
-    "range": "A81-A82",
-    "title": "Bệnh giả định 82"
-  },
-  {
-    "code": "A82",
-    "range": "A82-A83",
-    "title": "Bệnh giả định 83"
-  },
-  {
-    "code": "A83",
-    "range": "A83-A84",
-    "title": "Bệnh giả định 84"
-  },
-  {
-    "code": "A84",
-    "range": "A84-A85",
-    "title": "Bệnh giả định 85"
-  },
-  {
-    "code": "A85",
-    "range": "A85-A86",
-    "title": "Bệnh giả định 86"
-  },
-  {
-    "code": "A86",
-    "range": "A86-A87",
-    "title": "Bệnh giả định 87"
-  },
-  {
-    "code": "A87",
-    "range": "A87-A88",
-    "title": "Bệnh giả định 88"
-  },
-  {
-    "code": "A88",
-    "range": "A88-A89",
-    "title": "Bệnh giả định 89"
-  },
-  {
-    "code": "A89",
-    "range": "A89-A90",
-    "title": "Bệnh giả định 90"
+    "range": "A15-A19",
+    "title": "Lao kê"
   },
   {
     "code": "A90",
     "range": "A90-A91",
-    "title": "Bệnh giả định 91"
+    "title": "Sốt xuất huyết Dengue (cổ điển)"
   },
   {
     "code": "A91",
-    "range": "A91-A92",
-    "title": "Bệnh giả định 92"
+    "range": "A90-A91",
+    "title": "Sốt xuất huyết Dengue thể xuất huyết"
   },
   {
     "code": "A92",
-    "range": "A92-A93",
-    "title": "Bệnh giả định 93"
+    "range": "A92-A94",
+    "title": "Các sốt virus do muỗi khác"
   },
   {
     "code": "A93",
-    "range": "A93-A94",
-    "title": "Bệnh giả định 94"
+    "range": "A92-A94",
+    "title": "Các sốt virus do côn trùng khác"
   },
   {
     "code": "A94",
-    "range": "A94-A95",
-    "title": "Bệnh giả định 95"
+    "range": "A92-A94",
+    "title": "Sốt virus do côn trùng, không xác định"
   },
   {
-    "code": "A95",
-    "range": "A95-A96",
-    "title": "Bệnh giả định 96"
+    "code": "A50",
+    "range": "A50-A64",
+    "title": "Giang mai bẩm sinh"
   },
   {
-    "code": "A96",
-    "range": "A96-A97",
-    "title": "Bệnh giả định 97"
+    "code": "A51",
+    "range": "A50-A64",
+    "title": "Giang mai tiên phát"
   },
   {
-    "code": "A97",
-    "range": "A97-A98",
-    "title": "Bệnh giả định 98"
+    "code": "A54",
+    "range": "A50-A64",
+    "title": "Lậu (Gonorrhoea)"
   },
   {
-    "code": "A98",
-    "range": "A98-A99",
-    "title": "Bệnh giả định 99"
+    "code": "A56",
+    "range": "A50-A64",
+    "title": "Nhiễm Chlamydia đường sinh dục"
   },
   {
-    "code": "A99",
-    "range": "A99-A100",
-    "title": "Bệnh giả định 100"
+    "code": "A59",
+    "range": "A50-A64",
+    "title": "Trichomonas đường sinh dục"
   },
   {
-    "code": "A100",
-    "range": "A100-A101",
-    "title": "Bệnh giả định 101"
+    "code": "A63",
+    "range": "A63-A64",
+    "title": "Các bệnh lây qua đường tình dục khác"
   },
   {
-    "code": "A101",
-    "range": "A101-A102",
-    "title": "Bệnh giả định 102"
+    "code": "A64",
+    "range": "A63-A64",
+    "title": "Bệnh lây qua đường tình dục, không xác định"
   },
   {
-    "code": "A102",
-    "range": "A102-A103",
-    "title": "Bệnh giả định 103"
+    "code": "B15",
+    "range": "B15-B19",
+    "title": "Viêm gan virus A cấp"
   },
   {
-    "code": "A103",
-    "range": "A103-A104",
-    "title": "Bệnh giả định 104"
+    "code": "B16",
+    "range": "B15-B19",
+    "title": "Viêm gan virus B cấp"
   },
   {
-    "code": "A104",
-    "range": "A104-A105",
-    "title": "Bệnh giả định 105"
+    "code": "B17",
+    "range": "B15-B19",
+    "title": "Viêm gan virus cấp khác"
   },
   {
-    "code": "A105",
-    "range": "A105-A106",
-    "title": "Bệnh giả định 106"
+    "code": "B18",
+    "range": "B15-B19",
+    "title": "Viêm gan virus mạn (B, C...)"
   },
   {
-    "code": "A106",
-    "range": "A106-A107",
-    "title": "Bệnh giả định 107"
+    "code": "B19",
+    "range": "B15-B19",
+    "title": "Viêm gan virus không xác định"
   },
   {
-    "code": "A107",
-    "range": "A107-A108",
-    "title": "Bệnh giả định 108"
+    "code": "B20",
+    "range": "B20-B24",
+    "title": "Bệnh do HIV với bệnh nhiễm trùng/khối u"
   },
   {
-    "code": "A108",
-    "range": "A108-A109",
-    "title": "Bệnh giả định 109"
+    "code": "B24",
+    "range": "B20-B24",
+    "title": "Bệnh do HIV, không xác định"
   },
   {
-    "code": "A109",
-    "range": "A109-A110",
-    "title": "Bệnh giả định 110"
+    "code": "B05",
+    "range": "B05-B06",
+    "title": "Sởi (Measles)"
   },
   {
-    "code": "A110",
-    "range": "A110-A111",
-    "title": "Bệnh giả định 111"
+    "code": "B06",
+    "range": "B05-B06",
+    "title": "Rubella"
   },
   {
-    "code": "A111",
-    "range": "A111-A112",
-    "title": "Bệnh giả định 112"
+    "code": "A37",
+    "range": "A36-A37",
+    "title": "Ho gà (Pertussis)"
   },
   {
-    "code": "A112",
-    "range": "A112-A113",
-    "title": "Bệnh giả định 113"
+    "code": "A36",
+    "range": "A36-A37",
+    "title": "Bạch hầu (Diphtheria)"
   },
   {
-    "code": "A113",
-    "range": "A113-A114",
-    "title": "Bệnh giả định 114"
+    "code": "A80",
+    "range": "A80",
+    "title": "Bại liệt cấp (Poliomyelitis)"
   },
   {
-    "code": "A114",
-    "range": "A114-A115",
-    "title": "Bệnh giả định 115"
+    "code": "B26",
+    "range": "B26",
+    "title": "Quai bị (Mumps)"
   },
   {
-    "code": "A115",
-    "range": "A115-A116",
-    "title": "Bệnh giả định 116"
+    "code": "J00",
+    "range": "J00-J06",
+    "title": "Viêm mũi họng cấp (Cảm lạnh)"
   },
   {
-    "code": "A116",
-    "range": "A116-A117",
-    "title": "Bệnh giả định 117"
+    "code": "J02",
+    "range": "J00-J06",
+    "title": "Viêm họng cấp"
   },
   {
-    "code": "A117",
-    "range": "A117-A118",
-    "title": "Bệnh giả định 118"
+    "code": "J03",
+    "range": "J00-J06",
+    "title": "Viêm amidan cấp"
   },
   {
-    "code": "A118",
-    "range": "A118-A119",
-    "title": "Bệnh giả định 119"
+    "code": "J06",
+    "range": "J00-J06",
+    "title": "Nhiễm trùng đường hô hấp trên cấp, khác"
   },
   {
-    "code": "A119",
-    "range": "A119-A120",
-    "title": "Bệnh giả định 120"
+    "code": "J10",
+    "range": "J09-J11",
+    "title": "Cúm do virus xác định"
   },
   {
-    "code": "A120",
-    "range": "A120-A121",
-    "title": "Bệnh giả định 121"
+    "code": "J11",
+    "range": "J09-J11",
+    "title": "Cúm, virus chưa xác định"
   },
   {
-    "code": "A121",
-    "range": "A121-A122",
-    "title": "Bệnh giả định 122"
+    "code": "J12",
+    "range": "J12-J18",
+    "title": "Viêm phổi do virus"
   },
   {
-    "code": "A122",
-    "range": "A122-A123",
-    "title": "Bệnh giả định 123"
+    "code": "J13",
+    "range": "J12-J18",
+    "title": "Viêm phổi do Streptococcus pneumoniae"
   },
   {
-    "code": "A123",
-    "range": "A123-A124",
-    "title": "Bệnh giả định 124"
+    "code": "J15",
+    "range": "J12-J18",
+    "title": "Viêm phổi do vi khuẩn khác"
   },
   {
-    "code": "A124",
-    "range": "A124-A125",
-    "title": "Bệnh giả định 125"
+    "code": "J18",
+    "range": "J12-J18",
+    "title": "Viêm phổi không xác định căn nguyên"
   },
   {
-    "code": "A125",
-    "range": "A125-A126",
-    "title": "Bệnh giả định 126"
+    "code": "J20",
+    "range": "J20-J22",
+    "title": "Viêm phế quản cấp"
   },
   {
-    "code": "A126",
-    "range": "A126-A127",
-    "title": "Bệnh giả định 127"
+    "code": "J21",
+    "range": "J20-J22",
+    "title": "Viêm tiểu phế quản cấp"
   },
   {
-    "code": "A127",
-    "range": "A127-A128",
-    "title": "Bệnh giả định 128"
+    "code": "J22",
+    "range": "J20-J22",
+    "title": "Nhiễm trùng hô hấp dưới cấp, không xác định"
   },
   {
-    "code": "A128",
-    "range": "A128-A129",
-    "title": "Bệnh giả định 129"
+    "code": "J44",
+    "range": "J40-J44",
+    "title": "Bệnh phổi tắc nghẽn mạn tính (COPD)"
   },
   {
-    "code": "A129",
-    "range": "A129-A130",
-    "title": "Bệnh giả định 130"
+    "code": "J45",
+    "range": "J45",
+    "title": "Hen phế quản (Asthma)"
   },
   {
-    "code": "A130",
-    "range": "A130-A131",
-    "title": "Bệnh giả định 131"
+    "code": "I10",
+    "range": "I10-I15",
+    "title": "Tăng huyết áp nguyên phát"
   },
   {
-    "code": "A131",
-    "range": "A131-A132",
-    "title": "Bệnh giả định 132"
+    "code": "I11",
+    "range": "I10-I15",
+    "title": "Bệnh tim do tăng huyết áp"
   },
   {
-    "code": "A132",
-    "range": "A132-A133",
-    "title": "Bệnh giả định 133"
+    "code": "I20",
+    "range": "I20-I25",
+    "title": "Cơn đau thắt ngực (Angina)"
   },
   {
-    "code": "A133",
-    "range": "A133-A134",
-    "title": "Bệnh giả định 134"
+    "code": "I21",
+    "range": "I20-I25",
+    "title": "Nhồi máu cơ tim cấp"
   },
   {
-    "code": "A134",
-    "range": "A134-A135",
-    "title": "Bệnh giả định 135"
+    "code": "I25",
+    "range": "I20-I25",
+    "title": "Bệnh tim thiếu máu cục bộ mạn"
   },
   {
-    "code": "A135",
-    "range": "A135-A136",
-    "title": "Bệnh giả định 136"
+    "code": "I50",
+    "range": "I50",
+    "title": "Suy tim (Heart failure)"
   },
   {
-    "code": "A136",
-    "range": "A136-A137",
-    "title": "Bệnh giả định 137"
+    "code": "I60",
+    "range": "I60-I69",
+    "title": "Xuất huyết dưới nhện"
   },
   {
-    "code": "A137",
-    "range": "A137-A138",
-    "title": "Bệnh giả định 138"
+    "code": "I61",
+    "range": "I60-I69",
+    "title": "Xuất huyết nội sọ"
   },
   {
-    "code": "A138",
-    "range": "A138-A139",
-    "title": "Bệnh giả định 139"
+    "code": "I63",
+    "range": "I60-I69",
+    "title": "Nhồi máu não (Đột quỵ thiếu máu)"
   },
   {
-    "code": "A139",
-    "range": "A139-A140",
-    "title": "Bệnh giả định 140"
+    "code": "I64",
+    "range": "I60-I69",
+    "title": "Đột quỵ, không xác định là xuất huyết hay thiếu máu"
   },
   {
-    "code": "A140",
-    "range": "A140-A141",
-    "title": "Bệnh giả định 141"
+    "code": "I69",
+    "range": "I60-I69",
+    "title": "Di chứng của bệnh mạch não"
   },
   {
-    "code": "A141",
-    "range": "A141-A142",
-    "title": "Bệnh giả định 142"
+    "code": "I71",
+    "range": "I70-I79",
+    "title": "Phình tách động mạch chủ"
   },
   {
-    "code": "A142",
-    "range": "A142-A143",
-    "title": "Bệnh giả định 143"
+    "code": "E10",
+    "range": "E10-E14",
+    "title": "Đái tháo đường type 1"
   },
   {
-    "code": "A143",
-    "range": "A143-A144",
-    "title": "Bệnh giả định 144"
+    "code": "E11",
+    "range": "E10-E14",
+    "title": "Đái tháo đường type 2"
   },
   {
-    "code": "A144",
-    "range": "A144-A145",
-    "title": "Bệnh giả định 145"
+    "code": "E14",
+    "range": "E10-E14",
+    "title": "Đái tháo đường, không xác định"
   },
   {
-    "code": "A145",
-    "range": "A145-A146",
-    "title": "Bệnh giả định 146"
+    "code": "E66",
+    "range": "E65-E68",
+    "title": "Béo phì (Obesity)"
   },
   {
-    "code": "A146",
-    "range": "A146-A147",
-    "title": "Bệnh giả định 147"
+    "code": "E78",
+    "range": "E78",
+    "title": "Rối loạn lipoprotein (Tăng mỡ máu)"
   },
   {
-    "code": "A147",
-    "range": "A147-A148",
-    "title": "Bệnh giả định 148"
+    "code": "E03",
+    "range": "E00-E07",
+    "title": "Suy giáp (Hypothyroidism)"
   },
   {
-    "code": "A148",
-    "range": "A148-A149",
-    "title": "Bệnh giả định 149"
+    "code": "E05",
+    "range": "E00-E07",
+    "title": "Cường giáp (Hyperthyroidism)"
   },
   {
-    "code": "A149",
-    "range": "A149-A150",
-    "title": "Bệnh giả định 150"
+    "code": "E86",
+    "range": "E86",
+    "title": "Mất nước (Dehydration)"
   },
   {
-    "code": "A150",
-    "range": "A150-A151",
-    "title": "Bệnh giả định 151"
+    "code": "C15",
+    "range": "C15",
+    "title": "Ung thư thực quản"
   },
   {
-    "code": "A151",
-    "range": "A151-A152",
-    "title": "Bệnh giả định 152"
+    "code": "C16",
+    "range": "C16",
+    "title": "Ung thư dạ dày"
   },
   {
-    "code": "A152",
-    "range": "A152-A153",
-    "title": "Bệnh giả định 153"
+    "code": "C18",
+    "range": "C18",
+    "title": "Ung thư đại tràng"
   },
   {
-    "code": "A153",
-    "range": "A153-A154",
-    "title": "Bệnh giả định 154"
+    "code": "C20",
+    "range": "C20",
+    "title": "Ung thư trực tràng"
   },
   {
-    "code": "A154",
-    "range": "A154-A155",
-    "title": "Bệnh giả định 155"
+    "code": "C22",
+    "range": "C22",
+    "title": "Ung thư gan và ống mật trong gan"
   },
   {
-    "code": "A155",
-    "range": "A155-A156",
-    "title": "Bệnh giả định 156"
+    "code": "C25",
+    "range": "C25",
+    "title": "Ung thư tụy"
   },
   {
-    "code": "A156",
-    "range": "A156-A157",
-    "title": "Bệnh giả định 157"
+    "code": "C34",
+    "range": "C34",
+    "title": "Ung thư phổi"
   },
   {
-    "code": "A157",
-    "range": "A157-A158",
-    "title": "Bệnh giả định 158"
+    "code": "C43",
+    "range": "C43",
+    "title": "U hắc tố ác tính (Melanoma)"
   },
   {
-    "code": "A158",
-    "range": "A158-A159",
-    "title": "Bệnh giả định 159"
+    "code": "C50",
+    "range": "C50",
+    "title": "Ung thư vú"
   },
   {
-    "code": "A159",
-    "range": "A159-A160",
-    "title": "Bệnh giả định 160"
+    "code": "C53",
+    "range": "C53",
+    "title": "Ung thư cổ tử cung"
   },
   {
-    "code": "A160",
-    "range": "A160-A161",
-    "title": "Bệnh giả định 161"
+    "code": "C61",
+    "range": "C61",
+    "title": "Ung thư tuyến tiền liệt"
   },
   {
-    "code": "A161",
-    "range": "A161-A162",
-    "title": "Bệnh giả định 162"
+    "code": "C64",
+    "range": "C64",
+    "title": "Ung thư thận"
   },
   {
-    "code": "A162",
-    "range": "A162-A163",
-    "title": "Bệnh giả định 163"
+    "code": "C67",
+    "range": "C67",
+    "title": "Ung thư bàng quang"
   },
   {
-    "code": "A163",
-    "range": "A163-A164",
-    "title": "Bệnh giả định 164"
+    "code": "C71",
+    "range": "C71",
+    "title": "U ác tính não"
   },
   {
-    "code": "A164",
-    "range": "A164-A165",
-    "title": "Bệnh giả định 165"
+    "code": "K21",
+    "range": "K21",
+    "title": "Trào ngược dạ dày-thực quản (GERD)"
   },
   {
-    "code": "A165",
-    "range": "A165-A166",
-    "title": "Bệnh giả định 166"
+    "code": "K25",
+    "range": "K25",
+    "title": "Loét dạ dày"
   },
   {
-    "code": "A166",
-    "range": "A166-A167",
-    "title": "Bệnh giả định 167"
+    "code": "K26",
+    "range": "K26",
+    "title": "Loét tá tràng"
   },
   {
-    "code": "A167",
-    "range": "A167-A168",
-    "title": "Bệnh giả định 168"
+    "code": "K27",
+    "range": "K27",
+    "title": "Loét dạ dày-tá tràng, không xác định"
   },
   {
-    "code": "A168",
-    "range": "A168-A169",
-    "title": "Bệnh giả định 169"
+    "code": "K29",
+    "range": "K29",
+    "title": "Viêm dạ dày"
   },
   {
-    "code": "A169",
-    "range": "A169-A170",
-    "title": "Bệnh giả định 170"
+    "code": "K35",
+    "range": "K35",
+    "title": "Viêm ruột thừa cấp"
   },
   {
-    "code": "A170",
-    "range": "A170-A171",
-    "title": "Bệnh giả định 171"
+    "code": "K40",
+    "range": "K40",
+    "title": "Thoát vị bẹn"
   },
   {
-    "code": "A171",
-    "range": "A171-A172",
-    "title": "Bệnh giả định 172"
+    "code": "K52",
+    "range": "K52",
+    "title": "Viêm dạ dày ruột và viêm đại tràng không do nhiễm"
   },
   {
-    "code": "A172",
-    "range": "A172-A173",
-    "title": "Bệnh giả định 173"
+    "code": "K70",
+    "range": "K70",
+    "title": "Bệnh gan do rượu"
   },
   {
-    "code": "A173",
-    "range": "A173-A174",
-    "title": "Bệnh giả định 174"
+    "code": "K73",
+    "range": "K73",
+    "title": "Viêm gan mạn, không phân loại khác"
   },
   {
-    "code": "A174",
-    "range": "A174-A175",
-    "title": "Bệnh giả định 175"
+    "code": "K74",
+    "range": "K74",
+    "title": "Xơ hóa và xơ gan gan"
   },
   {
-    "code": "A175",
-    "range": "A175-A176",
-    "title": "Bệnh giả định 176"
+    "code": "K80",
+    "range": "K80",
+    "title": "Sỏi mật (Cholelithiasis)"
   },
   {
-    "code": "A176",
-    "range": "A176-A177",
-    "title": "Bệnh giả định 177"
+    "code": "K81",
+    "range": "K81",
+    "title": "Viêm túi mật"
   },
   {
-    "code": "A177",
-    "range": "A177-A178",
-    "title": "Bệnh giả định 178"
+    "code": "K85",
+    "range": "K85",
+    "title": "Viêm tụy cấp"
   },
   {
-    "code": "A178",
-    "range": "A178-A179",
-    "title": "Bệnh giả định 179"
+    "code": "K86",
+    "range": "K86",
+    "title": "Bệnh tụy khác (mạn, rối loạn)"
   },
   {
-    "code": "A179",
-    "range": "A179-A180",
-    "title": "Bệnh giả định 180"
+    "code": "N18",
+    "range": "N18",
+    "title": "Bệnh thận mạn (CKD)"
   },
   {
-    "code": "A180",
-    "range": "A180-A181",
-    "title": "Bệnh giả định 181"
+    "code": "N19",
+    "range": "N19",
+    "title": "Suy thận, không xác định"
   },
   {
-    "code": "A181",
-    "range": "A181-A182",
-    "title": "Bệnh giả định 182"
+    "code": "N20",
+    "range": "N20",
+    "title": "Sỏi thận và niệu quản"
   },
   {
-    "code": "A182",
-    "range": "A182-A183",
-    "title": "Bệnh giả định 183"
+    "code": "N30",
+    "range": "N30",
+    "title": "Viêm bàng quang (Cystitis)"
   },
   {
-    "code": "A183",
-    "range": "A183-A184",
-    "title": "Bệnh giả định 184"
+    "code": "N39",
+    "range": "N39",
+    "title": "Rối loạn đường tiết niệu khác (bao gồm N39.0 UTI)"
   },
   {
-    "code": "A184",
-    "range": "A184-A185",
-    "title": "Bệnh giả định 185"
+    "code": "N40",
+    "range": "N40",
+    "title": "Phì đại tuyến tiền liệt lành tính (BPH)"
   },
   {
-    "code": "A185",
-    "range": "A185-A186",
-    "title": "Bệnh giả định 186"
+    "code": "N76",
+    "range": "N76",
+    "title": "Viêm âm hộ-âm đạo"
   },
   {
-    "code": "A186",
-    "range": "A186-A187",
-    "title": "Bệnh giả định 187"
+    "code": "M10",
+    "range": "M10",
+    "title": "Gút (Gout)"
   },
   {
-    "code": "A187",
-    "range": "A187-A188",
-    "title": "Bệnh giả định 188"
+    "code": "M15",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp đa vị trí"
   },
   {
-    "code": "A188",
-    "range": "A188-A189",
-    "title": "Bệnh giả định 189"
+    "code": "M16",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp háng"
   },
   {
-    "code": "A189",
-    "range": "A189-A190",
-    "title": "Bệnh giả định 190"
+    "code": "M17",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp gối"
   },
   {
-    "code": "A190",
-    "range": "A190-A191",
-    "title": "Bệnh giả định 191"
+    "code": "M25",
+    "range": "M25",
+    "title": "Rối loạn khớp khác"
   },
   {
-    "code": "A191",
-    "range": "A191-A192",
-    "title": "Bệnh giả định 192"
+    "code": "M54",
+    "range": "M54",
+    "title": "Đau lưng (Dorsalgia)"
   },
   {
-    "code": "A192",
-    "range": "A192-A193",
-    "title": "Bệnh giả định 193"
+    "code": "M65",
+    "range": "M65",
+    "title": "Viêm bao gân (Tenosynovitis)"
   },
   {
-    "code": "A193",
-    "range": "A193-A194",
-    "title": "Bệnh giả định 194"
+    "code": "M79",
+    "range": "M79",
+    "title": "Đau phần mềm khác"
   },
   {
-    "code": "A194",
-    "range": "A194-A195",
-    "title": "Bệnh giả định 195"
+    "code": "L01",
+    "range": "L00-L08",
+    "title": "Chốc (Impetigo)"
   },
   {
-    "code": "A195",
-    "range": "A195-A196",
-    "title": "Bệnh giả định 196"
+    "code": "L02",
+    "range": "L00-L08",
+    "title": "Nhọt, ổ áp-xe da"
   },
   {
-    "code": "A196",
-    "range": "A196-A197",
-    "title": "Bệnh giả định 197"
+    "code": "L03",
+    "range": "L00-L08",
+    "title": "Viêm mô tế bào"
   },
   {
-    "code": "A197",
-    "range": "A197-A198",
-    "title": "Bệnh giả định 198"
+    "code": "L20",
+    "range": "L20-L30",
+    "title": "Viêm da cơ địa (Atopic dermatitis)"
   },
   {
-    "code": "A198",
-    "range": "A198-A199",
-    "title": "Bệnh giả định 199"
+    "code": "L23",
+    "range": "L20-L30",
+    "title": "Viêm da tiếp xúc dị ứng"
   },
   {
-    "code": "A199",
-    "range": "A199-A200",
-    "title": "Bệnh giả định 200"
+    "code": "L24",
+    "range": "L20-L30",
+    "title": "Viêm da tiếp xúc kích ứng"
+  },
+  {
+    "code": "L30",
+    "range": "L20-L30",
+    "title": "Viêm da khác, không đặc hiệu"
+  },
+  {
+    "code": "B35",
+    "range": "B35-B49",
+    "title": "Nấm da (Dermatophytosis)"
+  },
+  {
+    "code": "B86",
+    "range": "B86",
+    "title": "Ghẻ (Scabies)"
+  },
+  {
+    "code": "H10",
+    "range": "H10",
+    "title": "Viêm kết mạc (Conjunctivitis)"
+  },
+  {
+    "code": "H66",
+    "range": "H65-H67",
+    "title": "Viêm tai giữa mủ"
+  },
+  {
+    "code": "J31",
+    "range": "J30-J39",
+    "title": "Viêm mũi họng mạn, không đặc hiệu"
+  },
+  {
+    "code": "J32",
+    "range": "J30-J39",
+    "title": "Viêm xoang mạn"
+  },
+  {
+    "code": "G40",
+    "range": "G40",
+    "title": "Động kinh (Epilepsy)"
+  },
+  {
+    "code": "G43",
+    "range": "G43",
+    "title": "Đau nửa đầu (Migraine)"
+  },
+  {
+    "code": "G44",
+    "range": "G44",
+    "title": "Các hội chứng đau đầu khác"
+  },
+  {
+    "code": "F32",
+    "range": "F32",
+    "title": "Giai đoạn trầm cảm (Depressive episode)"
+  },
+  {
+    "code": "F33",
+    "range": "F33",
+    "title": "Trầm cảm tái diễn"
+  },
+  {
+    "code": "F41",
+    "range": "F41",
+    "title": "Rối loạn lo âu (Anxiety disorders)"
+  },
+  {
+    "code": "F43",
+    "range": "F43",
+    "title": "Phản ứng stress nặng và rối loạn thích nghi"
+  },
+  {
+    "code": "F10",
+    "range": "F10",
+    "title": "Rối loạn liên quan rượu"
+  },
+  {
+    "code": "O14",
+    "range": "O10-O16",
+    "title": "Tiền sản giật"
+  },
+  {
+    "code": "O15",
+    "range": "O10-O16",
+    "title": "Sản giật"
+  },
+  {
+    "code": "O80",
+    "range": "O80-O84",
+    "title": "Sinh thường (đủ tháng, ngôi chỏm)"
+  },
+  {
+    "code": "O82",
+    "range": "O80-O84",
+    "title": "Sinh mổ (Phẫu thuật lấy thai)"
+  },
+  {
+    "code": "O99",
+    "range": "O94-O99",
+    "title": "Rối loạn mẹ kèm thai nghén, sinh nở, hậu sản"
+  },
+  {
+    "code": "P07",
+    "range": "P05-P08",
+    "title": "Trẻ đẻ non và nhẹ cân"
+  },
+  {
+    "code": "P22",
+    "range": "P20-P29",
+    "title": "Suy hô hấp ở trẻ sơ sinh"
+  },
+  {
+    "code": "P36",
+    "range": "P36",
+    "title": "Nhiễm khuẩn huyết ở trẻ sơ sinh"
+  },
+  {
+    "code": "D50",
+    "range": "D50-D53",
+    "title": "Thiếu máu do thiếu sắt"
+  },
+  {
+    "code": "D64",
+    "range": "D60-D64",
+    "title": "Thiếu máu khác"
+  },
+  {
+    "code": "E40",
+    "range": "E40-E46",
+    "title": "Suy dinh dưỡng nặng (Kwashiorkor/Marasmus)"
+  },
+  {
+    "code": "E46",
+    "range": "E40-E46",
+    "title": "Suy dinh dưỡng, không xác định mức độ"
+  },
+  {
+    "code": "E55",
+    "range": "E55",
+    "title": "Thiếu vitamin D"
+  },
+  {
+    "code": "E61",
+    "range": "E61",
+    "title": "Thiếu vi chất khác (kẽm, đồng, i-ốt...)"
+  },
+  {
+    "code": "X44",
+    "range": "X40-X49",
+    "title": "Ngộ độc vô tình do thuốc, dược phẩm"
+  },
+  {
+    "code": "X49",
+    "range": "X40-X49",
+    "title": "Ngộ độc vô tình do chất khác"
+  },
+  {
+    "code": "T63",
+    "range": "T63",
+    "title": "Tác hại chất độc từ động vật (rắn, côn trùng...)"
+  },
+  {
+    "code": "W19",
+    "range": "W19",
+    "title": "Ngã, không xác định"
+  },
+  {
+    "code": "V89",
+    "range": "V80-V89",
+    "title": "Tai nạn giao thông đường bộ, loại khác"
+  },
+  {
+    "code": "R05",
+    "range": "R05",
+    "title": "Ho"
+  },
+  {
+    "code": "R06",
+    "range": "R06",
+    "title": "Khó thở, bất thường hô hấp"
+  },
+  {
+    "code": "R10",
+    "range": "R10",
+    "title": "Đau bụng"
+  },
+  {
+    "code": "R11",
+    "range": "R11",
+    "title": "Buồn nôn và nôn"
+  },
+  {
+    "code": "R19",
+    "range": "R19",
+    "title": "Triệu chứng tiêu hoá khác (đầy, chướng, tiêu chảy)"
+  },
+  {
+    "code": "R50",
+    "range": "R50",
+    "title": "Sốt, không xác định nguyên nhân"
+  },
+  {
+    "code": "R51",
+    "range": "R51",
+    "title": "Đau đầu"
+  },
+  {
+    "code": "R52",
+    "range": "R52",
+    "title": "Đau mạn/đau dai dẳng"
+  },
+  {
+    "code": "Z00",
+    "range": "Z00-Z13",
+    "title": "Khám sức khoẻ tổng quát"
+  },
+  {
+    "code": "Z23",
+    "range": "Z20-Z29",
+    "title": "Nhu cầu tiêm chủng"
+  },
+  {
+    "code": "Z72",
+    "range": "Z72",
+    "title": "Vấn đề liên quan lối sống (hút thuốc, rượu, ít vận động)"
+  },
+  {
+    "code": "J30",
+    "range": "J30-J39",
+    "title": "Viêm mũi dị ứng"
+  },
+  {
+    "code": "J34",
+    "range": "J30-J39",
+    "title": "Rối loạn mũi và xoang khác"
+  },
+  {
+    "code": "J35",
+    "range": "J30-J39",
+    "title": "Bệnh amidan và VA mạn"
+  },
+  {
+    "code": "J39",
+    "range": "J30-J39",
+    "title": "Bệnh khác vùng đường hô hấp trên"
+  },
+  {
+    "code": "J41",
+    "range": "J40-J44",
+    "title": "Viêm phế quản mạn dạng đơn giản"
+  },
+  {
+    "code": "J42",
+    "range": "J40-J44",
+    "title": "Viêm phế quản mạn, không xác định"
+  },
+  {
+    "code": "J47",
+    "range": "J47",
+    "title": "Giãn phế quản"
+  },
+  {
+    "code": "I70",
+    "range": "I70-I79",
+    "title": "Xơ vữa động mạch"
+  },
+  {
+    "code": "I73",
+    "range": "I70-I79",
+    "title": "Bệnh mạch máu ngoại biên khác"
+  },
+  {
+    "code": "I84",
+    "range": "I80-I89",
+    "title": "Trĩ"
+  },
+  {
+    "code": "I87",
+    "range": "I80-I89",
+    "title": "Rối loạn tĩnh mạch khác"
+  },
+  {
+    "code": "E53",
+    "range": "E50-E64",
+    "title": "Thiếu vitamin nhóm B khác"
+  },
+  {
+    "code": "E64",
+    "range": "E50-E64",
+    "title": "Di chứng suy dinh dưỡng và thiếu vitamin"
+  },
+  {
+    "code": "E72",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá amino acid khác"
+  },
+  {
+    "code": "E73",
+    "range": "E70-E90",
+    "title": "Không dung nạp lactose"
+  },
+  {
+    "code": "E74",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá carbohydrate khác"
+  },
+  {
+    "code": "E79",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá purin và pyrimidin (tăng acid uric)"
+  },
+  {
+    "code": "K58",
+    "range": "K55-K63",
+    "title": "Hội chứng ruột kích thích"
+  },
+  {
+    "code": "K59",
+    "range": "K55-K63",
+    "title": "Táo bón và rối loạn chức năng ruột khác"
+  },
+  {
+    "code": "K60",
+    "range": "K60-K62",
+    "title": "Bệnh vùng hậu môn (nứt kẽ, rò)"
+  },
+  {
+    "code": "K62",
+    "range": "K60-K62",
+    "title": "Rối loạn khác của trực tràng và hậu môn"
+  },
+  {
+    "code": "K65",
+    "range": "K65-K67",
+    "title": "Viêm phúc mạc"
+  },
+  {
+    "code": "K66",
+    "range": "K65-K67",
+    "title": "Rối loạn màng bụng khác"
+  },
+  {
+    "code": "K72",
+    "range": "K70-K77",
+    "title": "Suy gan"
+  },
+  {
+    "code": "K76",
+    "range": "K70-K77",
+    "title": "Bệnh gan khác, bao gồm gan nhiễm mỡ"
+  },
+  {
+    "code": "N10",
+    "range": "N10-N12",
+    "title": "Viêm ống thận - mô kẽ cấp"
+  },
+  {
+    "code": "N12",
+    "range": "N10-N12",
+    "title": "Viêm thận - mô kẽ, không xác định cấp hay mạn"
+  },
+  {
+    "code": "N17",
+    "range": "N17",
+    "title": "Suy thận cấp"
+  },
+  {
+    "code": "N89",
+    "range": "N80-N98",
+    "title": "Rối loạn âm đạo khác"
+  },
+  {
+    "code": "N92",
+    "range": "N80-N98",
+    "title": "Kinh nguyệt thừa/không đều"
   }
 ]

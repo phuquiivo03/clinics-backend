@@ -34,11 +34,12 @@ class ICDService {
   }
 
   async searchByCodeOrTitle(query: string, options?: any): Promise<any> {
+    const queryString = query.toLowerCase().trim().replaceAll("\"", '');
     const searchFilter = {
       $or: [
-        { code: { $regex: query, $options: 'i' } },
-        { title: { $regex: query, $options: 'i' } },
-        { range: { $regex: query, $options: 'i' } },
+        { code: { $regex: queryString, $options: 'i' } },
+        { title: { $regex: queryString, $options: 'i' } },
+        { range: { $regex: queryString, $options: 'i' } },
       ],
     };
 
