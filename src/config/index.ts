@@ -18,7 +18,7 @@ export const config: Config = {
   jwt: {
     authen: {
       secret: process.env.JWT_SECRET || 'default_secret',
-      expiresIn: process.env.JWT_EXPIRED || '10m',
+      expiresIn:  '24h',
     },
     refresh: {
       expiresIn: process.env.JWT_REFRESH_EXPIRED || '30d',
