@@ -1,19 +1,20 @@
-
 import express from 'express';
-import { userController } from '../../controllers';
-import { authMiddleware, adminMiddleware } from '../../middleware/auth';
-
+import { userController } from '../../controllers/index.controller';
+import { authMiddleware, checkRole } from '../../middleware/auth';
+import multer from 'multer';
+import { ROLE } from '../../types';
+const upload = multer({ dest: 'uploads/' });
 const router = express.Router();
 
-// Public routes
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-// // // Protected routes
-// router.get('/profile', authMiddleware, userController.getUserProfile);
-// router.put('/profile', authMiddleware, userController.updateUserProfile);
+router.post('/', userController.createUser);
+router.post('/unsignup', authMiddleware, checkRole([ROLE.DOCTOR, ROLE.ADMIN]), userController.unsignupUser);
 
-// // Admin routes
-// router.get('/', authMiddleware, adminMiddleware, userController.getAllUsers);
-// router.delete('/:id', authMiddleware, adminMiddleware, userController.deleteUser);
+router.patch('/', authMiddleware, upload.single('avatar'), userController.updateUserProfile);
+
+router.get('/profile', authMiddleware, userController.getUserProfile);
+
+// Add route for getting all users - requires authentication
+router.get('/', authMiddleware, checkRole([ROLE.ADMIN]), userController.getAllUsers);
+router.get('/:id', authMiddleware, checkRole([ROLE.ADMIN, ROLE.DOCTOR]), userController.findOne);
 
 export default router;

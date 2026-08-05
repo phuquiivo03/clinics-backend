@@ -1,11 +1,11 @@
-import { type PopulateOptions } from "mongoose";
+import { type ClientSession, type PopulateOptions } from 'mongoose';
 
 const SORT_ASC = 1;
 const SORT_DESC = -1;
 
 type SortOrder = typeof SORT_ASC | typeof SORT_DESC;
 
-type MongooseSelectFields = string; // e.g. 'name age'
+type MongooseSelectFields = string[]; // e.g. 'name age'
 
 export interface MongooseQueryOptions {
   // apply()
@@ -16,6 +16,7 @@ export interface MongooseFindOneOptions {
   selectFields?: MongooseSelectFields;
   filter?: Record<string, any>;
   sort?: Record<string, SortOrder>;
+  session?: ClientSession;
 }
 
 export interface MongooseFindManyOptions {
@@ -23,8 +24,16 @@ export interface MongooseFindManyOptions {
   selectFields?: MongooseSelectFields;
   filter?: Record<string, any>;
   sort?: Record<string, SortOrder>;
-  limit?: number;
-  offset?: number;
+  pagination?: {
+    page?: number;
+    limit?: number;
+  };
+}
+
+export interface MongooseFindOneOptions {
+  populateOptions?: PopulateOptions;
+  selectFields?: MongooseSelectFields;
+  filter?: Record<string, any>;
 }
 
 export interface MongooseFindPageOptions {
@@ -32,11 +41,12 @@ export interface MongooseFindPageOptions {
   selectFields?: MongooseSelectFields;
   sort?: Record<string, SortOrder>;
   page?: number;
-  perPage?: number;
+  limit?: number;
 }
 
 export interface MongooseUpdateOptions {
   // QueryOptions
   upsert?: boolean;
   new?: boolean;
+  session?: ClientSession;
 }

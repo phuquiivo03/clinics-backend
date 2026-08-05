@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { config } from "../config";
+import mongoose from 'mongoose';
+import { config } from '../config';
 
 class Database {
   private static instance: Database;
@@ -9,8 +9,8 @@ class Database {
   }
 
   connect() {
-    mongoose.set("debug", true);
-    mongoose.set("debug", {
+    mongoose.set('debug', true);
+    mongoose.set('debug', {
       color: true,
     });
 
@@ -22,10 +22,10 @@ class Database {
         },
       )
       .then(() => {
-        console.log("Connected to MongoDB", config.nosqlDb.name);
+        console.log('Connected to MongoDB', config.nosqlDb.name);
       })
       .catch((err) => {
-        console.error("Failed to connect to MongoDB", err);
+        console.error('Failed to connect to MongoDB', err);
       });
   }
 
