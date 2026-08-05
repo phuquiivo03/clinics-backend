@@ -27,7 +27,6 @@ jobs:
           tags: phuquivo03/clinics-management-backend:latest
           labels: phuquivo03/clinics-management-backend:latest
 
-
   ec2_deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
@@ -47,29 +46,66 @@ jobs:
         env:
           SSH_HOST: ${{ vars.EC2_HOST }}
           SSH_USER: ${{ vars.EC2_USER }}
-          
+          PORT: ${{vars.PORT}}
+          AI_SERVICE_URL: ${{ vars.AI_SERVICE_URL }}
           NOSQL_DB_TYPE: ${{ vars.NOSQL_DB_TYPE }}
           NOSQL_DB_USER: ${{ vars.NOSQL_DB_USER }}
           NOSQL_DB_PASSWORD: ${{ secrets.NOSQL_DB_PASSWORD }}
           NOSQL_DB_HOST: ${{ vars.NOSQL_DB_HOST }}
           NOSQL_DB_NAME: ${{ vars.NOSQL_DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRED: ${{ secrets.JWT_EXPIRED }}
           COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
           COOKIE_MAX_AGE: ${{ vars.COOKIE_MAX_AGE }}
-          
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
+          GATEWAY_URL: ${{ secrets.GATEWAY_URL }}
+          VNP_TMN_CODE: ${{ secrets.VNP_TMN_CODE }}
+          VNP_HASH_SECRET: ${{ secrets.VNP_HASH_SECRET }}
+          VNP_URL: ${{ secrets.VNP_URL }}
+          VNP_RETURN_URL: ${{ secrets.VNP_RETURN_URL }}
+          VNP_LOCALE: ${{ secrets.VNP_LOCALE }}
+          VNP_CURR: ${{ secrets.VNP_CURR }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.key ${SSH_USER}@${SSH_HOST} "
-            docker rm -f clinics-management-backend || true
-            docker rmi phuquivo03/clinics-management-backend:latest || true
-            docker run -it -d \
+            sudo docker rm -f clinics-management-backend || true
+            sudo docker rmi phuquivo03/clinics-management-backend:latest || true
+            sudo docker run -d \
             --name clinics-management-backend \
+            --network docker-compose-scripts_web \
+            --expose 8081 \
+            -e PORT='${PORT}' \
+            -e SERVER_URL=\"https://devq-be0x7.site\" \
             -e NODE_ENV=\"dev\" \
             -e SECRET='${SECRET}' \
+            -e PINATA_JWT='${PINATA_JWT}' \
+            -e GATEWAY_URL='${GATEWAY_URL}' \
+            -e AI_SERVICE_URL='${AI_SERVICE_URL}' \
+            -e JWT_SECRET='${JWT_SECRET}' \
             -e NOSQL_DB_TYPE=\"mongodb+srv\" \
             -e NOSQL_DB_USER='${NOSQL_DB_USER}' \
             -e NOSQL_DB_PASSWORD='${NOSQL_DB_PASSWORD}' \
             -e NOSQL_DB_HOST='${NOSQL_DB_HOST}' \
             -e NOSQL_DB_NAME='${NOSQL_DB_NAME}' \
+            -e VIRTUAL_HOST=\"devq-be0x7.site\" \
+            -e VIRTUAL_PORT=8081 \
+            -e REDIS_URL=\"${REDIS_URL}\" \
+            -e REDIS_PORT=${REDIS_PORT} \
+            -e REDIS_USERNAME=${REDIS_USERNAME} \
+            -e REDIS_PASSWORD=${REDIS_PASSWORD} \
+            -e VNP_TMN_CODE=${VNP_TMN_CODE} \
+            -e VNP_HASH_SECRET=${VNP_HASH_SECRET} \
+            -e VNP_URL=${VNP_URL} \
+            -e VNP_RETURN_URL=${VNP_RETURN_URL} \
+            -e VNP_LOCALE=${VNP_LOCALE} \
+            -e VNP_CURR=${VNP_CURR} \
+            -e CLIENT_URL=${CLIENT_URL} \
+            -e LETSENCRYPT_HOST=\"devq-be0x7.site\" \
+            -e LETSENCRYPT_EMAIL=\"phuquivo03.cb@gmail.com\" \
             phuquivo03/clinics-management-backend
           "

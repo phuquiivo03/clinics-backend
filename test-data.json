@@ -1,0 +1,1002 @@
+[
+  {
+    "code": "A00",
+    "range": "A00-A09",
+    "title": "Dịch tả (Cholera)"
+  },
+  {
+    "code": "A01",
+    "range": "A00-A09",
+    "title": "Thương hàn và phó thương hàn"
+  },
+  {
+    "code": "A02",
+    "range": "A00-A09",
+    "title": "Nhiễm Salmonella khác"
+  },
+  {
+    "code": "A03",
+    "range": "A00-A09",
+    "title": "Lỵ do Shigella"
+  },
+  {
+    "code": "A04",
+    "range": "A00-A09",
+    "title": "Nhiễm trùng ruột do vi khuẩn khác"
+  },
+  {
+    "code": "A05",
+    "range": "A00-A09",
+    "title": "Ngộ độc thực phẩm do vi khuẩn khác"
+  },
+  {
+    "code": "A06",
+    "range": "A00-A09",
+    "title": "Lỵ amíp"
+  },
+  {
+    "code": "A07",
+    "range": "A00-A09",
+    "title": "Bệnh đường ruột do ký sinh trùng khác"
+  },
+  {
+    "code": "A08",
+    "range": "A00-A09",
+    "title": "Viêm dạ dày ruột do virus"
+  },
+  {
+    "code": "A09",
+    "range": "A00-A09",
+    "title": "Tiêu chảy & viêm dạ dày ruột nghi do nhiễm trùng"
+  },
+  {
+    "code": "A15",
+    "range": "A15-A19",
+    "title": "Lao đường hô hấp, xác định bằng xét nghiệm"
+  },
+  {
+    "code": "A16",
+    "range": "A15-A19",
+    "title": "Lao đường hô hấp, không xác định bằng xét nghiệm"
+  },
+  {
+    "code": "A17",
+    "range": "A15-A19",
+    "title": "Lao hệ thần kinh"
+  },
+  {
+    "code": "A18",
+    "range": "A15-A19",
+    "title": "Lao cơ quan khác"
+  },
+  {
+    "code": "A19",
+    "range": "A15-A19",
+    "title": "Lao kê"
+  },
+  {
+    "code": "A90",
+    "range": "A90-A91",
+    "title": "Sốt xuất huyết Dengue (cổ điển)"
+  },
+  {
+    "code": "A91",
+    "range": "A90-A91",
+    "title": "Sốt xuất huyết Dengue thể xuất huyết"
+  },
+  {
+    "code": "A92",
+    "range": "A92-A94",
+    "title": "Các sốt virus do muỗi khác"
+  },
+  {
+    "code": "A93",
+    "range": "A92-A94",
+    "title": "Các sốt virus do côn trùng khác"
+  },
+  {
+    "code": "A94",
+    "range": "A92-A94",
+    "title": "Sốt virus do côn trùng, không xác định"
+  },
+  {
+    "code": "A50",
+    "range": "A50-A64",
+    "title": "Giang mai bẩm sinh"
+  },
+  {
+    "code": "A51",
+    "range": "A50-A64",
+    "title": "Giang mai tiên phát"
+  },
+  {
+    "code": "A54",
+    "range": "A50-A64",
+    "title": "Lậu (Gonorrhoea)"
+  },
+  {
+    "code": "A56",
+    "range": "A50-A64",
+    "title": "Nhiễm Chlamydia đường sinh dục"
+  },
+  {
+    "code": "A59",
+    "range": "A50-A64",
+    "title": "Trichomonas đường sinh dục"
+  },
+  {
+    "code": "A63",
+    "range": "A63-A64",
+    "title": "Các bệnh lây qua đường tình dục khác"
+  },
+  {
+    "code": "A64",
+    "range": "A63-A64",
+    "title": "Bệnh lây qua đường tình dục, không xác định"
+  },
+  {
+    "code": "B15",
+    "range": "B15-B19",
+    "title": "Viêm gan virus A cấp"
+  },
+  {
+    "code": "B16",
+    "range": "B15-B19",
+    "title": "Viêm gan virus B cấp"
+  },
+  {
+    "code": "B17",
+    "range": "B15-B19",
+    "title": "Viêm gan virus cấp khác"
+  },
+  {
+    "code": "B18",
+    "range": "B15-B19",
+    "title": "Viêm gan virus mạn (B, C...)"
+  },
+  {
+    "code": "B19",
+    "range": "B15-B19",
+    "title": "Viêm gan virus không xác định"
+  },
+  {
+    "code": "B20",
+    "range": "B20-B24",
+    "title": "Bệnh do HIV với bệnh nhiễm trùng/khối u"
+  },
+  {
+    "code": "B24",
+    "range": "B20-B24",
+    "title": "Bệnh do HIV, không xác định"
+  },
+  {
+    "code": "B05",
+    "range": "B05-B06",
+    "title": "Sởi (Measles)"
+  },
+  {
+    "code": "B06",
+    "range": "B05-B06",
+    "title": "Rubella"
+  },
+  {
+    "code": "A37",
+    "range": "A36-A37",
+    "title": "Ho gà (Pertussis)"
+  },
+  {
+    "code": "A36",
+    "range": "A36-A37",
+    "title": "Bạch hầu (Diphtheria)"
+  },
+  {
+    "code": "A80",
+    "range": "A80",
+    "title": "Bại liệt cấp (Poliomyelitis)"
+  },
+  {
+    "code": "B26",
+    "range": "B26",
+    "title": "Quai bị (Mumps)"
+  },
+  {
+    "code": "J00",
+    "range": "J00-J06",
+    "title": "Viêm mũi họng cấp (Cảm lạnh)"
+  },
+  {
+    "code": "J02",
+    "range": "J00-J06",
+    "title": "Viêm họng cấp"
+  },
+  {
+    "code": "J03",
+    "range": "J00-J06",
+    "title": "Viêm amidan cấp"
+  },
+  {
+    "code": "J06",
+    "range": "J00-J06",
+    "title": "Nhiễm trùng đường hô hấp trên cấp, khác"
+  },
+  {
+    "code": "J10",
+    "range": "J09-J11",
+    "title": "Cúm do virus xác định"
+  },
+  {
+    "code": "J11",
+    "range": "J09-J11",
+    "title": "Cúm, virus chưa xác định"
+  },
+  {
+    "code": "J12",
+    "range": "J12-J18",
+    "title": "Viêm phổi do virus"
+  },
+  {
+    "code": "J13",
+    "range": "J12-J18",
+    "title": "Viêm phổi do Streptococcus pneumoniae"
+  },
+  {
+    "code": "J15",
+    "range": "J12-J18",
+    "title": "Viêm phổi do vi khuẩn khác"
+  },
+  {
+    "code": "J18",
+    "range": "J12-J18",
+    "title": "Viêm phổi không xác định căn nguyên"
+  },
+  {
+    "code": "J20",
+    "range": "J20-J22",
+    "title": "Viêm phế quản cấp"
+  },
+  {
+    "code": "J21",
+    "range": "J20-J22",
+    "title": "Viêm tiểu phế quản cấp"
+  },
+  {
+    "code": "J22",
+    "range": "J20-J22",
+    "title": "Nhiễm trùng hô hấp dưới cấp, không xác định"
+  },
+  {
+    "code": "J44",
+    "range": "J40-J44",
+    "title": "Bệnh phổi tắc nghẽn mạn tính (COPD)"
+  },
+  {
+    "code": "J45",
+    "range": "J45",
+    "title": "Hen phế quản (Asthma)"
+  },
+  {
+    "code": "I10",
+    "range": "I10-I15",
+    "title": "Tăng huyết áp nguyên phát"
+  },
+  {
+    "code": "I11",
+    "range": "I10-I15",
+    "title": "Bệnh tim do tăng huyết áp"
+  },
+  {
+    "code": "I20",
+    "range": "I20-I25",
+    "title": "Cơn đau thắt ngực (Angina)"
+  },
+  {
+    "code": "I21",
+    "range": "I20-I25",
+    "title": "Nhồi máu cơ tim cấp"
+  },
+  {
+    "code": "I25",
+    "range": "I20-I25",
+    "title": "Bệnh tim thiếu máu cục bộ mạn"
+  },
+  {
+    "code": "I50",
+    "range": "I50",
+    "title": "Suy tim (Heart failure)"
+  },
+  {
+    "code": "I60",
+    "range": "I60-I69",
+    "title": "Xuất huyết dưới nhện"
+  },
+  {
+    "code": "I61",
+    "range": "I60-I69",
+    "title": "Xuất huyết nội sọ"
+  },
+  {
+    "code": "I63",
+    "range": "I60-I69",
+    "title": "Nhồi máu não (Đột quỵ thiếu máu)"
+  },
+  {
+    "code": "I64",
+    "range": "I60-I69",
+    "title": "Đột quỵ, không xác định là xuất huyết hay thiếu máu"
+  },
+  {
+    "code": "I69",
+    "range": "I60-I69",
+    "title": "Di chứng của bệnh mạch não"
+  },
+  {
+    "code": "I71",
+    "range": "I70-I79",
+    "title": "Phình tách động mạch chủ"
+  },
+  {
+    "code": "E10",
+    "range": "E10-E14",
+    "title": "Đái tháo đường type 1"
+  },
+  {
+    "code": "E11",
+    "range": "E10-E14",
+    "title": "Đái tháo đường type 2"
+  },
+  {
+    "code": "E14",
+    "range": "E10-E14",
+    "title": "Đái tháo đường, không xác định"
+  },
+  {
+    "code": "E66",
+    "range": "E65-E68",
+    "title": "Béo phì (Obesity)"
+  },
+  {
+    "code": "E78",
+    "range": "E78",
+    "title": "Rối loạn lipoprotein (Tăng mỡ máu)"
+  },
+  {
+    "code": "E03",
+    "range": "E00-E07",
+    "title": "Suy giáp (Hypothyroidism)"
+  },
+  {
+    "code": "E05",
+    "range": "E00-E07",
+    "title": "Cường giáp (Hyperthyroidism)"
+  },
+  {
+    "code": "E86",
+    "range": "E86",
+    "title": "Mất nước (Dehydration)"
+  },
+  {
+    "code": "C15",
+    "range": "C15",
+    "title": "Ung thư thực quản"
+  },
+  {
+    "code": "C16",
+    "range": "C16",
+    "title": "Ung thư dạ dày"
+  },
+  {
+    "code": "C18",
+    "range": "C18",
+    "title": "Ung thư đại tràng"
+  },
+  {
+    "code": "C20",
+    "range": "C20",
+    "title": "Ung thư trực tràng"
+  },
+  {
+    "code": "C22",
+    "range": "C22",
+    "title": "Ung thư gan và ống mật trong gan"
+  },
+  {
+    "code": "C25",
+    "range": "C25",
+    "title": "Ung thư tụy"
+  },
+  {
+    "code": "C34",
+    "range": "C34",
+    "title": "Ung thư phổi"
+  },
+  {
+    "code": "C43",
+    "range": "C43",
+    "title": "U hắc tố ác tính (Melanoma)"
+  },
+  {
+    "code": "C50",
+    "range": "C50",
+    "title": "Ung thư vú"
+  },
+  {
+    "code": "C53",
+    "range": "C53",
+    "title": "Ung thư cổ tử cung"
+  },
+  {
+    "code": "C61",
+    "range": "C61",
+    "title": "Ung thư tuyến tiền liệt"
+  },
+  {
+    "code": "C64",
+    "range": "C64",
+    "title": "Ung thư thận"
+  },
+  {
+    "code": "C67",
+    "range": "C67",
+    "title": "Ung thư bàng quang"
+  },
+  {
+    "code": "C71",
+    "range": "C71",
+    "title": "U ác tính não"
+  },
+  {
+    "code": "K21",
+    "range": "K21",
+    "title": "Trào ngược dạ dày-thực quản (GERD)"
+  },
+  {
+    "code": "K25",
+    "range": "K25",
+    "title": "Loét dạ dày"
+  },
+  {
+    "code": "K26",
+    "range": "K26",
+    "title": "Loét tá tràng"
+  },
+  {
+    "code": "K27",
+    "range": "K27",
+    "title": "Loét dạ dày-tá tràng, không xác định"
+  },
+  {
+    "code": "K29",
+    "range": "K29",
+    "title": "Viêm dạ dày"
+  },
+  {
+    "code": "K35",
+    "range": "K35",
+    "title": "Viêm ruột thừa cấp"
+  },
+  {
+    "code": "K40",
+    "range": "K40",
+    "title": "Thoát vị bẹn"
+  },
+  {
+    "code": "K52",
+    "range": "K52",
+    "title": "Viêm dạ dày ruột và viêm đại tràng không do nhiễm"
+  },
+  {
+    "code": "K70",
+    "range": "K70",
+    "title": "Bệnh gan do rượu"
+  },
+  {
+    "code": "K73",
+    "range": "K73",
+    "title": "Viêm gan mạn, không phân loại khác"
+  },
+  {
+    "code": "K74",
+    "range": "K74",
+    "title": "Xơ hóa và xơ gan gan"
+  },
+  {
+    "code": "K80",
+    "range": "K80",
+    "title": "Sỏi mật (Cholelithiasis)"
+  },
+  {
+    "code": "K81",
+    "range": "K81",
+    "title": "Viêm túi mật"
+  },
+  {
+    "code": "K85",
+    "range": "K85",
+    "title": "Viêm tụy cấp"
+  },
+  {
+    "code": "K86",
+    "range": "K86",
+    "title": "Bệnh tụy khác (mạn, rối loạn)"
+  },
+  {
+    "code": "N18",
+    "range": "N18",
+    "title": "Bệnh thận mạn (CKD)"
+  },
+  {
+    "code": "N19",
+    "range": "N19",
+    "title": "Suy thận, không xác định"
+  },
+  {
+    "code": "N20",
+    "range": "N20",
+    "title": "Sỏi thận và niệu quản"
+  },
+  {
+    "code": "N30",
+    "range": "N30",
+    "title": "Viêm bàng quang (Cystitis)"
+  },
+  {
+    "code": "N39",
+    "range": "N39",
+    "title": "Rối loạn đường tiết niệu khác (bao gồm N39.0 UTI)"
+  },
+  {
+    "code": "N40",
+    "range": "N40",
+    "title": "Phì đại tuyến tiền liệt lành tính (BPH)"
+  },
+  {
+    "code": "N76",
+    "range": "N76",
+    "title": "Viêm âm hộ-âm đạo"
+  },
+  {
+    "code": "M10",
+    "range": "M10",
+    "title": "Gút (Gout)"
+  },
+  {
+    "code": "M15",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp đa vị trí"
+  },
+  {
+    "code": "M16",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp háng"
+  },
+  {
+    "code": "M17",
+    "range": "M15-M19",
+    "title": "Thoái hóa khớp gối"
+  },
+  {
+    "code": "M25",
+    "range": "M25",
+    "title": "Rối loạn khớp khác"
+  },
+  {
+    "code": "M54",
+    "range": "M54",
+    "title": "Đau lưng (Dorsalgia)"
+  },
+  {
+    "code": "M65",
+    "range": "M65",
+    "title": "Viêm bao gân (Tenosynovitis)"
+  },
+  {
+    "code": "M79",
+    "range": "M79",
+    "title": "Đau phần mềm khác"
+  },
+  {
+    "code": "L01",
+    "range": "L00-L08",
+    "title": "Chốc (Impetigo)"
+  },
+  {
+    "code": "L02",
+    "range": "L00-L08",
+    "title": "Nhọt, ổ áp-xe da"
+  },
+  {
+    "code": "L03",
+    "range": "L00-L08",
+    "title": "Viêm mô tế bào"
+  },
+  {
+    "code": "L20",
+    "range": "L20-L30",
+    "title": "Viêm da cơ địa (Atopic dermatitis)"
+  },
+  {
+    "code": "L23",
+    "range": "L20-L30",
+    "title": "Viêm da tiếp xúc dị ứng"
+  },
+  {
+    "code": "L24",
+    "range": "L20-L30",
+    "title": "Viêm da tiếp xúc kích ứng"
+  },
+  {
+    "code": "L30",
+    "range": "L20-L30",
+    "title": "Viêm da khác, không đặc hiệu"
+  },
+  {
+    "code": "B35",
+    "range": "B35-B49",
+    "title": "Nấm da (Dermatophytosis)"
+  },
+  {
+    "code": "B86",
+    "range": "B86",
+    "title": "Ghẻ (Scabies)"
+  },
+  {
+    "code": "H10",
+    "range": "H10",
+    "title": "Viêm kết mạc (Conjunctivitis)"
+  },
+  {
+    "code": "H66",
+    "range": "H65-H67",
+    "title": "Viêm tai giữa mủ"
+  },
+  {
+    "code": "J31",
+    "range": "J30-J39",
+    "title": "Viêm mũi họng mạn, không đặc hiệu"
+  },
+  {
+    "code": "J32",
+    "range": "J30-J39",
+    "title": "Viêm xoang mạn"
+  },
+  {
+    "code": "G40",
+    "range": "G40",
+    "title": "Động kinh (Epilepsy)"
+  },
+  {
+    "code": "G43",
+    "range": "G43",
+    "title": "Đau nửa đầu (Migraine)"
+  },
+  {
+    "code": "G44",
+    "range": "G44",
+    "title": "Các hội chứng đau đầu khác"
+  },
+  {
+    "code": "F32",
+    "range": "F32",
+    "title": "Giai đoạn trầm cảm (Depressive episode)"
+  },
+  {
+    "code": "F33",
+    "range": "F33",
+    "title": "Trầm cảm tái diễn"
+  },
+  {
+    "code": "F41",
+    "range": "F41",
+    "title": "Rối loạn lo âu (Anxiety disorders)"
+  },
+  {
+    "code": "F43",
+    "range": "F43",
+    "title": "Phản ứng stress nặng và rối loạn thích nghi"
+  },
+  {
+    "code": "F10",
+    "range": "F10",
+    "title": "Rối loạn liên quan rượu"
+  },
+  {
+    "code": "O14",
+    "range": "O10-O16",
+    "title": "Tiền sản giật"
+  },
+  {
+    "code": "O15",
+    "range": "O10-O16",
+    "title": "Sản giật"
+  },
+  {
+    "code": "O80",
+    "range": "O80-O84",
+    "title": "Sinh thường (đủ tháng, ngôi chỏm)"
+  },
+  {
+    "code": "O82",
+    "range": "O80-O84",
+    "title": "Sinh mổ (Phẫu thuật lấy thai)"
+  },
+  {
+    "code": "O99",
+    "range": "O94-O99",
+    "title": "Rối loạn mẹ kèm thai nghén, sinh nở, hậu sản"
+  },
+  {
+    "code": "P07",
+    "range": "P05-P08",
+    "title": "Trẻ đẻ non và nhẹ cân"
+  },
+  {
+    "code": "P22",
+    "range": "P20-P29",
+    "title": "Suy hô hấp ở trẻ sơ sinh"
+  },
+  {
+    "code": "P36",
+    "range": "P36",
+    "title": "Nhiễm khuẩn huyết ở trẻ sơ sinh"
+  },
+  {
+    "code": "D50",
+    "range": "D50-D53",
+    "title": "Thiếu máu do thiếu sắt"
+  },
+  {
+    "code": "D64",
+    "range": "D60-D64",
+    "title": "Thiếu máu khác"
+  },
+  {
+    "code": "E40",
+    "range": "E40-E46",
+    "title": "Suy dinh dưỡng nặng (Kwashiorkor/Marasmus)"
+  },
+  {
+    "code": "E46",
+    "range": "E40-E46",
+    "title": "Suy dinh dưỡng, không xác định mức độ"
+  },
+  {
+    "code": "E55",
+    "range": "E55",
+    "title": "Thiếu vitamin D"
+  },
+  {
+    "code": "E61",
+    "range": "E61",
+    "title": "Thiếu vi chất khác (kẽm, đồng, i-ốt...)"
+  },
+  {
+    "code": "X44",
+    "range": "X40-X49",
+    "title": "Ngộ độc vô tình do thuốc, dược phẩm"
+  },
+  {
+    "code": "X49",
+    "range": "X40-X49",
+    "title": "Ngộ độc vô tình do chất khác"
+  },
+  {
+    "code": "T63",
+    "range": "T63",
+    "title": "Tác hại chất độc từ động vật (rắn, côn trùng...)"
+  },
+  {
+    "code": "W19",
+    "range": "W19",
+    "title": "Ngã, không xác định"
+  },
+  {
+    "code": "V89",
+    "range": "V80-V89",
+    "title": "Tai nạn giao thông đường bộ, loại khác"
+  },
+  {
+    "code": "R05",
+    "range": "R05",
+    "title": "Ho"
+  },
+  {
+    "code": "R06",
+    "range": "R06",
+    "title": "Khó thở, bất thường hô hấp"
+  },
+  {
+    "code": "R10",
+    "range": "R10",
+    "title": "Đau bụng"
+  },
+  {
+    "code": "R11",
+    "range": "R11",
+    "title": "Buồn nôn và nôn"
+  },
+  {
+    "code": "R19",
+    "range": "R19",
+    "title": "Triệu chứng tiêu hoá khác (đầy, chướng, tiêu chảy)"
+  },
+  {
+    "code": "R50",
+    "range": "R50",
+    "title": "Sốt, không xác định nguyên nhân"
+  },
+  {
+    "code": "R51",
+    "range": "R51",
+    "title": "Đau đầu"
+  },
+  {
+    "code": "R52",
+    "range": "R52",
+    "title": "Đau mạn/đau dai dẳng"
+  },
+  {
+    "code": "Z00",
+    "range": "Z00-Z13",
+    "title": "Khám sức khoẻ tổng quát"
+  },
+  {
+    "code": "Z23",
+    "range": "Z20-Z29",
+    "title": "Nhu cầu tiêm chủng"
+  },
+  {
+    "code": "Z72",
+    "range": "Z72",
+    "title": "Vấn đề liên quan lối sống (hút thuốc, rượu, ít vận động)"
+  },
+  {
+    "code": "J30",
+    "range": "J30-J39",
+    "title": "Viêm mũi dị ứng"
+  },
+  {
+    "code": "J34",
+    "range": "J30-J39",
+    "title": "Rối loạn mũi và xoang khác"
+  },
+  {
+    "code": "J35",
+    "range": "J30-J39",
+    "title": "Bệnh amidan và VA mạn"
+  },
+  {
+    "code": "J39",
+    "range": "J30-J39",
+    "title": "Bệnh khác vùng đường hô hấp trên"
+  },
+  {
+    "code": "J41",
+    "range": "J40-J44",
+    "title": "Viêm phế quản mạn dạng đơn giản"
+  },
+  {
+    "code": "J42",
+    "range": "J40-J44",
+    "title": "Viêm phế quản mạn, không xác định"
+  },
+  {
+    "code": "J47",
+    "range": "J47",
+    "title": "Giãn phế quản"
+  },
+  {
+    "code": "I70",
+    "range": "I70-I79",
+    "title": "Xơ vữa động mạch"
+  },
+  {
+    "code": "I73",
+    "range": "I70-I79",
+    "title": "Bệnh mạch máu ngoại biên khác"
+  },
+  {
+    "code": "I84",
+    "range": "I80-I89",
+    "title": "Trĩ"
+  },
+  {
+    "code": "I87",
+    "range": "I80-I89",
+    "title": "Rối loạn tĩnh mạch khác"
+  },
+  {
+    "code": "E53",
+    "range": "E50-E64",
+    "title": "Thiếu vitamin nhóm B khác"
+  },
+  {
+    "code": "E64",
+    "range": "E50-E64",
+    "title": "Di chứng suy dinh dưỡng và thiếu vitamin"
+  },
+  {
+    "code": "E72",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá amino acid khác"
+  },
+  {
+    "code": "E73",
+    "range": "E70-E90",
+    "title": "Không dung nạp lactose"
+  },
+  {
+    "code": "E74",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá carbohydrate khác"
+  },
+  {
+    "code": "E79",
+    "range": "E70-E90",
+    "title": "Rối loạn chuyển hoá purin và pyrimidin (tăng acid uric)"
+  },
+  {
+    "code": "K58",
+    "range": "K55-K63",
+    "title": "Hội chứng ruột kích thích"
+  },
+  {
+    "code": "K59",
+    "range": "K55-K63",
+    "title": "Táo bón và rối loạn chức năng ruột khác"
+  },
+  {
+    "code": "K60",
+    "range": "K60-K62",
+    "title": "Bệnh vùng hậu môn (nứt kẽ, rò)"
+  },
+  {
+    "code": "K62",
+    "range": "K60-K62",
+    "title": "Rối loạn khác của trực tràng và hậu môn"
+  },
+  {
+    "code": "K65",
+    "range": "K65-K67",
+    "title": "Viêm phúc mạc"
+  },
+  {
+    "code": "K66",
+    "range": "K65-K67",
+    "title": "Rối loạn màng bụng khác"
+  },
+  {
+    "code": "K72",
+    "range": "K70-K77",
+    "title": "Suy gan"
+  },
+  {
+    "code": "K76",
+    "range": "K70-K77",
+    "title": "Bệnh gan khác, bao gồm gan nhiễm mỡ"
+  },
+  {
+    "code": "N10",
+    "range": "N10-N12",
+    "title": "Viêm ống thận - mô kẽ cấp"
+  },
+  {
+    "code": "N12",
+    "range": "N10-N12",
+    "title": "Viêm thận - mô kẽ, không xác định cấp hay mạn"
+  },
+  {
+    "code": "N17",
+    "range": "N17",
+    "title": "Suy thận cấp"
+  },
+  {
+    "code": "N89",
+    "range": "N80-N98",
+    "title": "Rối loạn âm đạo khác"
+  },
+  {
+    "code": "N92",
+    "range": "N80-N98",
+    "title": "Kinh nguyệt thừa/không đều"
+  }
+]

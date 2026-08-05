@@ -1,4 +1,3 @@
-
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAppointment extends Document {
@@ -58,7 +57,7 @@ const appointmentSchema = new Schema<IAppointment>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Appointment = mongoose.model<IAppointment>('Appointment', appointmentSchema);

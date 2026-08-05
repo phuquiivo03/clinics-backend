@@ -1,64 +1,69 @@
-
 import { model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import type { User } from '../types';
+import { ROLE, type User } from '../types';
 
-const DOCUMENT="User"
-const COLLECTION="Users"
+const DOCUMENT = 'User';
+const COLLECTION = 'Users';
 
 const userSchema = new Schema<User>(
   {
     name: {
-      type: String,
-      required: true,
+      type: String || null,
+      required: false,
     },
     email: {
-      type: String,
-      required: true,
-      unique: true,
+      type: String || null,
+      required: false,
       lowercase: true,
+    },
+    occupation: {
+      type: String || null,
+      required: false,
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     role: {
       type: String,
-      enum: ['admin', 'user', 'doctor'],
-      default: 'user',
+      enum: [ROLE.ADMIN, ROLE.NORMAL, ROLE.DOCTOR],
+      default: ROLE.NORMAL,
     },
     phoneNumber: {
       type: String,
+      required: true,
     },
     address: {
-      type: String,
+      type: String || null,
+    },
+    avatar: {
+      type: String || null,
     },
     dateOfBirth: {
-      type: Date,
+      type: Date || null,
     },
     gender: {
-      type: String,
+      type: String || null,
       enum: ['male', 'female', 'other'],
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
 
-  if(this.password) {
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-}
+  if (this.password) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next();
 });
-
 // Compare password method
 userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);

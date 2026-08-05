@@ -1,7 +1,7 @@
-import type { ObjectId } from "mongoose";
+import type { ObjectId } from 'mongoose';
 
 export interface IAuthenJWT {
-    id: ObjectId;
-    create: number;
-    expired: number;
+  id: ObjectId;
+  create: number;
+  expired: number;
 }

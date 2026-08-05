@@ -1,19 +1,21 @@
-import type { Document, ObjectId } from "mongoose";
+import type { ObjectId } from 'mongoose';
 
 export interface User {
   _id?: ObjectId;
-  name: string;
-  email: string;
+  avatar?: string;
+  name: string | null;
+  email: string | null;
   password?: string;
-  role?: ROLE;
+  role: ROLE;
   phoneNumber: string;
-  address?: string;
-  dateOfBirth?: Date;
-  gender?: GENDER;
+  address: string | null;
+  dateOfBirth: Date | null;
+  gender: GENDER | null;
+  occupation: string | null;
   createdAt?: Date;
   updatedAt?: Date;
+  doctor?: ObjectId;
   comparePassword(enteredPassword: string): Promise<boolean>;
-  
 }
 
 export enum ROLE {
@@ -23,7 +25,7 @@ export enum ROLE {
 }
 
 export enum GENDER {
-  MALE = "male",
-  FEMALE="female",
-  OTHER="other"
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
 }

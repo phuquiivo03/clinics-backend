@@ -1,15 +1,30 @@
 # linics-management-backend
 
-To install dependencies:
+# Getting Started
 
-```bash
-bun install
-```
+1. Clone this repository
+2. Install dependencies
 
-To run:
+   ```bash
+   bun install
+   ```
 
-```bash
-bun run index.ts
-```
+   or
+
+   ```bash
+   bun install
+   ```
+
+3. Run project
+
+   ```bash
+   bun run dev
+   ```
+
+   or
+
+   ```bash
+   npm run dev
+   ```
 
 This project was created using `bun init` in bun v1.2.5. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
